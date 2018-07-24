@@ -18,14 +18,26 @@ component extends="framework.one" output="false" {
         routes = [ ]
 	};
 
-	public void function onApplicationStart(){
-		lock scope="application" timeout="10"{
-			include "env.cfm";
-			this.datasource = StructKeyExists(env,'datasource') ? env.datasource:'';
+	variables.framework.environments = {
+		dev = { 
+				reloadApplicationOnEveryRequest = true, 
+				error = "main.error_dev" },
+		prod = { 
+			reloadApplicationOnEveryRequest = false, 
+			error = "main.error" }
+	};
 
-		}
+
+	public void function setupEnvironment(envParam){
+		include "env.cfm";
+		this.datasource = StructKeyExists(env,'datasource') ? env.datasource:'';
 	}
 
+	
+	public string function getEnvironment(){
+		include "env.cfm";
+		return env.tier;
+	}
 
 	public void function setupSession() {  }
 

@@ -17,3 +17,22 @@
 	</ul>
     <p>Back to the <a href="#buildURL('main')#">default page</a>?</p>
 </cfoutput>
+
+<cfif StructKeyExists(request.exception,'cause')>
+  <cfif structKeyExists(request.exception.cause,'TagContext')>
+    <cfset Context = request.exception.cause.TagContext>
+    <cfoutput>
+      <cfset CurTemplate = "">
+      <cfloop from="1" to="#arraylen(Context)#" index="i">
+        <cfif Context[i].template neq curTemplate>
+          <cfset curTemplate = Context[i].template>
+          <h4>#curTemplate#</h4>
+        </cfif>
+        <pre>#Context[i].CodePrintHTML#</pre>
+      </cfloop>
+  </cfoutput>
+  </cfif>
+</cfif>
+<!---
+<cfdump var="#request.exception#">
+--->
