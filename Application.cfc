@@ -18,6 +18,15 @@ component extends="framework.one" output="false" {
         routes = [ ]
 	};
 
+	public void function onApplicationStart(){
+		lock scope="application" timeout="10"{
+			include "env.cfm";
+			this.datasource = StructKeyExists(env,'datasource') ? env.datasource:'';
+
+		}
+	}
+
+
 	public void function setupSession() {  }
 
 	public void function setupRequest() {  }
