@@ -6,9 +6,10 @@
 	</head>
 
 	<body>
-		<div style="width: 800px; margin: 10px auto;">
-			<h2>Default Layout</h2>
-			<div style="border: 3px solid #333; padding: 10px"><cfoutput>#body#</cfoutput></div>
-		</div>
+		<cfoutput>
+			<div style="border: solid green 2px; padding: 20px;">
+			  #body#
+			</div>
+		  </cfoutput>
 	</body>
 </html>

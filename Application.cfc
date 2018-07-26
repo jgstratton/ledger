@@ -1,8 +1,12 @@
 component extends="framework.one" output="false" {
+	this.name = 'ledger';
 	this.applicationTimeout = createTimeSpan(0, 2, 0, 0);
 	this.setClientCookies = true;
 	this.sessionManagement = true;
 	this.sessionTimeout = createTimeSpan(0, 0, 30, 0);
+
+	//include enviornment details
+	include 'env.cfm';
 
 	// FW/1 settings
 	variables.framework = {
@@ -13,7 +17,7 @@ component extends="framework.one" output="false" {
 		SESOmitIndex = false,
 		diEngine = "di1",
 		diComponent = "framework.ioc",
-		diLocations = "model, controllers",
+		diLocations = "./model/services", // ColdFusion ORM handles Beans
         diConfig = { },
         routes = [ ]
 	};
@@ -26,22 +30,32 @@ component extends="framework.one" output="false" {
 			reloadApplicationOnEveryRequest = false, 
 			error = "main.error" }
 	};
-
-
-	public void function setupEnvironment(envParam){
-		include "env.cfm";
-		this.datasource = StructKeyExists(env,'datasource') ? env.datasource:'';
-	}
-
+	
+	//enable and set up ORM
+	this.datasource = this.env.datasource;
+	this.ormEnabled = true;
+	this.ormsettings = {
+		cfclocation="model/beans",
+		dbcreate = (getEnvironment() eq "dev") ? "dropCreate": "update",       // update database tables only
+		dialect="MySQL",         
+		eventhandling="true",
+		eventhandler="model.beans.eventhandler",
+		logsql="true"
+	};
 	
 	public string function getEnvironment(){
-		include "env.cfm";
-		return env.tier;
+		return this.env.tier;
 	}
 
 	public void function setupSession() {  }
 
-	public void function setupRequest() {  }
+	public void function setupRequest() {  
+		if(structKeyExists(url, "init")) { // use index.cfm?init to reload ORM
+            setupApplication();
+            ormReload();
+            location(url="index.cfm",addToken=false);
+        }
+	}
 
 	public void function setupView() {  }
 
