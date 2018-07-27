@@ -20,11 +20,20 @@
                 id          int(11)     NOT NULL AUTO_INCREMENT,
                 name        varchar(50) DEFAULT NULL,
                 multiplier  int(11)     DEFAULT NULL,
-                created     datetime    DEFAULT NULL,
+                created     datetime    DEFAULT now(),
                 edited      datetime    DEFAULT NULL,
 
                 PRIMARY KEY (id)
             );
+
+            <!---Pre-populate with some basic types --->
+            Insert Into categoryTypes (name,multiplier)
+            values 
+                ('Bills',-1),
+                ('Expenses',-1),
+                ('Income',1),
+                ('Transfer From',-1),
+                ('Transfer Into',1);
 
 		</cfquery>	
 	</cffunction>
