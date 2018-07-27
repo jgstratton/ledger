@@ -5,6 +5,8 @@ component extends="framework.one" output="false" {
 	this.sessionManagement = true;
 	this.sessionTimeout = createTimeSpan(0, 0, 30, 0);
 
+	this.mappings["/migrations"] = "/database/migrations";
+
 	//include enviornment details
 	include 'env.cfm';
 
@@ -36,7 +38,7 @@ component extends="framework.one" output="false" {
 	this.ormEnabled = true;
 	this.ormsettings = {
 		cfclocation="model/beans",
-		dbcreate = (getEnvironment() eq "dev") ? "dropCreate": "update",       // update database tables only
+		dbcreate = "none",	//using migrations for db table creation instead of letting hibernate create the tables
 		dialect="MySQL",         
 		eventhandling="true",
 		eventhandler="model.beans.eventhandler",
@@ -52,7 +54,10 @@ component extends="framework.one" output="false" {
 	public void function setupRequest() {  
 		if(structKeyExists(url, "init")) { // use index.cfm?init to reload ORM
             setupApplication();
-            ormReload();
+			if(getEnvironment() eq 'dev'){
+				migrate();
+			}
+			ormReload();
             location(url="index.cfm",addToken=false);
         }
 	}
@@ -63,5 +68,13 @@ component extends="framework.one" output="false" {
 
 	public string function onMissingView(struct rc = {}) {
 		return "Error 404 - Page not found.";
+	}
+
+	public void function migrate(){
+		local.migrate = new migrations.migrate(this.datasource);
+		if(getEnvironment() eq 'dev'){
+			local.migrate.refresh_migrations();
+		}
+		local.migrate.run_migrations();
 	}
 }
