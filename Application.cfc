@@ -13,8 +13,8 @@ component extends="framework.one" output="false" {
 	// FW/1 settings
 	variables.framework = {
 		action = 'action',
-		defaultSection = 'main',
-		defaultItem = 'default',
+		defaultSection = 'account',
+		defaultItem = 'list',
 		generateSES = false,
 		SESOmitIndex = false,
 		diEngine = "di1",
