@@ -1,3 +1,4 @@
+<cfset DisableLayout()>
 <!DOCTYPE html>
 
 <html>	

@@ -22,6 +22,9 @@
 				PRIMARY KEY (id)
 			);
 
+			<!--- Create the default user --->
+			Insert into users (username)
+			values ('defaultUser')
 
 		</cfquery>	
 	</cffunction>

@@ -6,7 +6,6 @@ component extends="framework.one" output="false" {
 	this.sessionTimeout = createTimeSpan(0, 0, 30, 0);
 
 	this.mappings["/migrations"] = "/database/migrations";
-	this.tag.location.addtoken = "no";
 
 	//include enviornment details
 	include 'env.cfm';
@@ -22,7 +21,9 @@ component extends="framework.one" output="false" {
 		diComponent = "framework.ioc",
 		diLocations = "./model/services", // ColdFusion ORM handles Beans
         diConfig = { },
-        routes = [ ]
+        routes = [
+			{ "/login" = "/auth/login"}
+		 ]
 	};
 
 	variables.framework.environments = {
@@ -66,10 +67,8 @@ component extends="framework.one" output="false" {
             location(url="index.cfm",addToken=false);
 		}
 		
-		
-		
-		if(not session.loggedin){
-			setView("auth.login");
+		if(not session.loggedin and listlast(cgi.path_info,"/") neq "login"){
+			location("login",false);
 		}
 	
 	}
