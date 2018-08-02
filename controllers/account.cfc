@@ -1,4 +1,4 @@
-component name="main" output="false"  accessors=true {
+component name="account" output="false"  accessors=true {
     property greetingService;
     public void function list( struct rc = {} ) {
         param name="rc.name" default="anonymous";

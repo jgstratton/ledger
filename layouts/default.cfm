@@ -2,7 +2,33 @@
 
 <html>	
 	<head>
-		<title>Checkbook FW1</title>
+        <title>Checkbook FW1</title>
+        
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">                   
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> 
+
+        <link rel="shortcut icon" href="images/credit-card-front-152-182038.png" /> 
+
+        <!---
+        <link rel="stylesheet" type="text/css" href="includes/Site_Style_Elements.css" /> 
+        <link rel="stylesheet" type="text/css" href="includes/Site_Style_Tables.css" /> 
+        <link rel="stylesheet" type="text/css" href="includes/jquery.custom.css" /> 
+        --->
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
+        
+        <link 
+            rel="stylesheet" 
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+            crossorigin="anonymous">
+
+        <!---
+        <link rel="stylesheet" type="text/css" href="includes/Site_Style_Main.css?v=<?=$appVersion;?>" />
+        --->
+
 	</head>
 
 	<body> 
@@ -166,8 +192,7 @@
                 </ul> 
             <?php } ?>
             --->
-       hey
-            #body#
+       <cfoutput>#body#</cfoutput>
         </div> <!--- .container-fluid --->
     </div>
     <!---
@@ -179,7 +204,7 @@
     --->
     </main>
 
-    <!--- Scripts needed for bootstrap 4 
+    <!--- Scripts needed for bootstrap 4 --->
     <script
         src="https://code.jquery.com/jquery-3.2.1.min.js"
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -192,10 +217,10 @@
         src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" 
         integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" 
         crossorigin="anonymous"></script>
-    --->
+    
     <!--- Scripts for UI and validate--->
 
-    <!---
+
 
     <script
         src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
@@ -213,7 +238,7 @@
     <script 
         src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.js" 
         integrity="sha256-7Ls/OujunW6k7kudzvNDAt82EKc/TPTfyKxIE5YkBzg=" 
-        crossorigin="anonymous"></script> --->
+        crossorigin="anonymous"></script> 
     
     <!---
     <script src="includes/Site_Javascript.js?v=<?=$appVersion;?>"></script>
