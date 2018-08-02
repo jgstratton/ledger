@@ -6,6 +6,7 @@ component extends="framework.one" output="false" {
 	this.sessionTimeout = createTimeSpan(0, 0, 30, 0);
 
 	this.mappings["/migrations"] = "/database/migrations";
+	this.tag.location.addtoken = "no";
 
 	//include enviornment details
 	include 'env.cfm';
@@ -49,7 +50,11 @@ component extends="framework.one" output="false" {
 		return this.env.tier;
 	}
 
-	public void function setupSession() {  }
+	public void function setupSession() {  
+		lock scope="session" timeout="5"{
+			session.loggedin = false;
+		}
+	}
 
 	public void function setupRequest() {  
 		if(structKeyExists(url, "init")) { // use index.cfm?init to reload ORM
@@ -59,7 +64,14 @@ component extends="framework.one" output="false" {
 			}
 			ormReload();
             location(url="index.cfm",addToken=false);
-        }
+		}
+		
+		
+		
+		if(not session.loggedin){
+			setView("auth.login");
+		}
+	
 	}
 
 	public void function setupView() {  }
