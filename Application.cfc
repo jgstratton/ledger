@@ -22,7 +22,8 @@ component extends="framework.one" output="false" {
 		diLocations = "./model/services", // ColdFusion ORM handles Beans
         diConfig = { },
         routes = [
-			{ "/login" = "/auth/login"}
+			{ "/login" = "/auth/login"},
+			{ "/logout" = "/auth/logout"}
 		 ]
 	};
 
@@ -51,13 +52,29 @@ component extends="framework.one" output="false" {
 		return this.env.tier;
 	}
 
+	public void function setupApplication(){
+		lock scope="application" timeout="3"{
+			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#cgi.server_port#";
+			application.facebook = createobject("component","model/services/facebook").init(
+				this.env.fbappid,
+				this.env.fbsecret,
+				"#application.root_path#/login?type=fb"
+			)
+		}
+	}
 	public void function setupSession() {  
 		lock scope="session" timeout="5"{
+			session.state = createUUID();
 			session.loggedin = false;
 		}
 	}
 
 	public void function setupRequest() {  
+
+		if(structkeyexists(url,"reloadSession")){
+			StructClear(Session);
+			setupSession();
+		}
 		if(structKeyExists(url, "init")) { // use index.cfm?init to reload ORM
             setupApplication();
 			if(getEnvironment() eq 'dev'){
@@ -68,7 +85,7 @@ component extends="framework.one" output="false" {
 		}
 		
 		if(not session.loggedin and listlast(cgi.path_info,"/") neq "login"){
-			location("login",false);
+			location("#application.root_path#/login",false);
 		}
 	
 	}

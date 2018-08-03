@@ -2,6 +2,11 @@
     "web":{
         "rewrites":{
             "enable":true
+        },
+        "SSL":{
+            "certFile":"localhost.crt",
+            "keyFile":"localhost.key",
+            "enable":"true"
         }
     }
 }
