@@ -15,7 +15,7 @@
 			Create table users (
 				id 				int(11) 		NOT NULL AUTO_INCREMENT,
 				username	 	varchar(50) 	DEFAULT NULL,
-				emailaddress 	varchar(255) 	DEFAULT NULL,
+				email 			varchar(255) 	DEFAULT NULL,
 				created 		datetime 		DEFAULT NULL,
 				edited 			datetime 		DEFAULT NULL,
 

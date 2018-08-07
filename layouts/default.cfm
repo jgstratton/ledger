@@ -68,6 +68,9 @@
                             <a class="dropdown-item" href="TRN_700.php">Manage Bills</a>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="logout">Logout</a>
+                        </li>
                         </ul>
             
                     </div>

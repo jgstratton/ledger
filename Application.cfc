@@ -75,8 +75,11 @@ component extends="framework.one" output="false" {
 			StructClear(Session);
 			setupSession();
 		}
+		
 		if(structKeyExists(url, "init")) { // use index.cfm?init to reload ORM
-            setupApplication();
+			setupApplication();
+			StructClear(Session);
+			setupSession();
 			if(getEnvironment() eq 'dev'){
 				migrate();
 			}

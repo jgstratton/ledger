@@ -21,7 +21,7 @@ component{
     }
 
     public function getMe(accesstoken){
-        cfhttp(url="https://graph.facebook.com/me?access_token=#arguments.accesstoken#", result="local.httpResult");
+        cfhttp(url="https://graph.facebook.com/me?access_token=#arguments.accesstoken#&fields=id,name,email", result="local.httpResult");
         return deserializeJSON(httpResult.filecontent);
     }
 
