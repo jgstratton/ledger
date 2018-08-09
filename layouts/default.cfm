@@ -25,9 +25,9 @@
             integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
             crossorigin="anonymous">
 
-        <!---
-        <link rel="stylesheet" type="text/css" href="includes/Site_Style_Main.css?v=<?=$appVersion;?>" />
-        --->
+        <cfoutput>
+        <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
+        </cfoutput>
 
 	</head>
 

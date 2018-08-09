@@ -14,3 +14,4 @@ component persistent="true" table="users" accessors="true" {
         EntitySave(this);
     }
 }
+

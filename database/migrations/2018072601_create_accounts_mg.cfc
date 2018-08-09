@@ -13,15 +13,19 @@
 
 			CREATE TABLE accounts (
 
-				id 		int(11) 		NOT NULL AUTO_INCREMENT,
-				name 	varchar(100) 	DEFAULT NULL,
-				created datetime 		DEFAULT NULL,
-				edited 	datetime 		DEFAULT NULL,
-				deleted datetime 		DEFAULT NULL,
-				user_id int(11) 		DEFAULT NULL,
+				id 			  int(11) 		NOT NULL AUTO_INCREMENT,
+				name 		  varchar(100) 	DEFAULT NULL,
+				linkedAccount int(11) 		Default null,
+				summary	      char(1)		default 'N',
+				created 	  datetime 		DEFAULT NULL,
+				edited 	      datetime 		DEFAULT NULL,
+				deleted 	  datetime 		DEFAULT NULL,
+				user_id 	  int(11) 		DEFAULT NULL,
+				accountType_id int(11)	DEFAULT NULL,
 
 				PRIMARY KEY (id),
-				KEY FK_accounts_user (user_id)
+				KEY FK_accounts_user (user_id),
+				KEY FK_accounts_accountTypes (accountType_id)
 			);
 
 		</cfquery>	

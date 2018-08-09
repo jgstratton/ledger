@@ -14,8 +14,7 @@ component name="auth" output="false"  accessors=true {
             Create the user record if it doesn't exsist yet*/
         if( structKeyExists(rc, 'code' )  and rc.state is session.state  ){
             local.fbToken = facebook.getAccessToken(rc.code);
-            session.user = variables.userService.getOrCreate( variables.facebook.getMe(local.fbToken).email );
-            session.user.save();
+            session.userid = variables.userService.getOrCreate( variables.facebook.getMe(local.fbToken).email ).getId();
             session.loggedin = true;
             location("#application.root_path#/",false);
         }

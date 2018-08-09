@@ -1,3 +1,4 @@
 env.cfm
 *.crt
 *.key
+settings.json
