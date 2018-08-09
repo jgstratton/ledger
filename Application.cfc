@@ -1,5 +1,6 @@
 component extends="framework.one" output="false" {
 	this.name = 'ledger';
+	this.version = "0.0.1";
 	this.applicationTimeout = createTimeSpan(0, 2, 0, 0);
 	this.setClientCookies = true;
 	this.sessionManagement = true;
@@ -55,6 +56,7 @@ component extends="framework.one" output="false" {
 	public void function setupApplication(){
 		lock scope="application" timeout="3"{
 			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#cgi.server_port#";
+			application.version = "#this.version#";
 			application.facebook = createobject("component","model/services/facebook").init(
 				this.env.fbappid,
 				this.env.fbsecret,
@@ -93,7 +95,9 @@ component extends="framework.one" output="false" {
 	
 	}
 
-	public void function setupView() {  }
+	public void function setupView() {  
+		include 'lib/viewHelpers.cfm';
+	}
 
 	public void function setupResponse() {  }
 
