@@ -46,7 +46,8 @@ component extends="framework.one" output="false" {
 		dialect="MySQL",         
 		eventhandling="true",
 		eventhandler="model.beans.eventhandler",
-		logsql="true"
+		logsql="true",
+		flushatrequestend=false
 	};
 	
 	public string function getEnvironment(){
@@ -72,6 +73,10 @@ component extends="framework.one" output="false" {
 	}
 
 	public void function setupRequest() {  
+
+		if(structkeyexists(url,"ormreload")){
+			ormReload();
+		}
 
 		if(structkeyexists(url,"reloadSession")){
 			StructClear(Session);

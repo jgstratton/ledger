@@ -26,8 +26,11 @@
             crossorigin="anonymous">
 
         <cfoutput>
-        <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
+            <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
+            <script src="#application.root_path#/assets/js/viewScripts.js?v=<?=$appVersion;?>"></script>
         </cfoutput>
+
+        
 
 	</head>
 
@@ -243,6 +246,10 @@
         integrity="sha256-7Ls/OujunW6k7kudzvNDAt82EKc/TPTfyKxIE5YkBzg=" 
         crossorigin="anonymous"></script> 
     
+    <script>
+        console.log('Run ViewScripts: ');
+        viewScripts.run();
+    </script>
     <!---
     <script src="includes/Site_Javascript.js?v=<?=$appVersion;?>"></script>
    

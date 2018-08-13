@@ -1,7 +1,7 @@
 <cfscript>
 
     matchUtilValid = function(args){
-        if(isDefined(arguments.args.val1) and isDefined(arguments.args.val2)){
+        if(StructKeyExists(args,'val1') and StructKeyExists(args,'val2')){
             return true;
         }
         return false;
@@ -30,7 +30,7 @@
     }
 
     matchCheck = function(val1,val2){
-        if(matchUtilValid(arguments)){
+      if(matchUtilValid(arguments)){
             return matchUtil(val1,val2,"eq","checked");
         }
     }
