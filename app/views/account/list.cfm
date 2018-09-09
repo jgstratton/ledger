@@ -22,74 +22,65 @@
 </div>
 
 <ul class="list-group">
-     <?php 
-        $GrandTotal = 0.00;
-        foreach($AccountTOTALs as $row) {
 
-            $AccountID = $row['AccountID'];
-            $AccountDescription = $row['AccountDescription'];
-            $AccountTotal = number_format($row['AccountTotal'],2);
-            $AccountVerified = number_format($row['VerifiedTotal'],2);  
-            $GrandTotal = $GrandTotal + $row['AccountTotal']; 
-            $icon = getAccountIcon($row['AccountTypeDescription']);
-            ?>
+    <cfloop array="#rc.accounts#" item="thisAccount" index="i">
                 
-                <li class="list-group-item">
-                    <div class="d-block d-md-none">
+        <li class="list-group-item">
+            <div class="d-block d-md-none">
+                <span class="btn btn-link"  data-accountid="<?= $AccountID ?>">
+                    #thisAccount.name# sdfsd
+                </span>
+                <div class="pull-right text-right">
+                    <?php if($row['Summary'] == 'Y'){ ?>
+                        <span class="badge badge-success">
+                            $<?= $AccountTotal ?>
+                        </span>
+                    <?php } else {?>
+                        <span class="badge badge-info">
+                            $<?= $AccountTotal ?>
+                        </span>
+                    <?php } ?>
+                    <br>
+                    <span class="badge badge-light text-muted">
+                        $<?= $AccountVerified ?>
+                    </span>
+                </div>
+            </div>
+            <div class="container-fluid d-none d-md-block">
+                <div class="row">
+                    <div class="col">
                         <span class="btn btn-link"  data-accountid="<?= $AccountID ?>">
                             <?= $icon." ".$AccountDescription ?>
                         </span>
-                        <div class="pull-right text-right">
+                    </div>
+                    <div class="col text-right ">
                             <?php if($row['Summary'] == 'Y'){ ?>
-                                <span class="badge badge-success">
-                                    $<?= $AccountTotal ?>
-                                </span>
-                            <?php } else {?>
-                                <span class="badge badge-info">
-                                    $<?= $AccountTotal ?>
-                                </span>
-                            <?php } ?>
-                            <br>
-                            <span class="badge badge-light text-muted">
-                                $<?= $AccountVerified ?>
+                            <span class="badge badge-success">
+                                $<?= $AccountTotal ?>
                             </span>
-                        </div>
+                        <?php } else {?>
+                            <span class="badge badge-info">
+                                $<?= $AccountTotal ?>
+                            </span>
+                        <?php } ?>
                     </div>
-                    <div class="container-fluid d-none d-md-block">
-                        <div class="row">
-                            <div class="col">
-                                <span class="btn btn-link"  data-accountid="<?= $AccountID ?>">
-                                    <?= $icon." ".$AccountDescription ?>
-                                </span>
-                            </div>
-                            <div class="col text-right ">
-                                 <?php if($row['Summary'] == 'Y'){ ?>
-                                    <span class="badge badge-success">
-                                        $<?= $AccountTotal ?>
-                                    </span>
-                                <?php } else {?>
-                                    <span class="badge badge-info">
-                                        $<?= $AccountTotal ?>
-                                    </span>
-                                <?php } ?>
-                            </div>
-                            <div class="col text-right">
-                                $<?= $AccountVerified ?>
-                            </div>
-                            <div class="col text-right">
-                                <button class="btn btn-link btn-sm" data-edit-trn="<?= $AccountID ?>" >
-                                    <i class="fa fa-pencil"></i> edit
-                                </button>
-                            </div>
-                        </div>
+                    <div class="col text-right">
+                        $<?= $AccountVerified ?>
                     </div>
-                    
+                    <div class="col text-right">
+                        <button class="btn btn-link btn-sm" data-edit-trn="<?= $AccountID ?>" >
+                            <i class="fa fa-pencil"></i> edit
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
 
-                </li>
-        <?php } ?>  
+        </li>
+    </cfloop> 
 </ul>
 <br>
-<button type="button" class="btn btn-primary btn-sm pull-right d-none d-md-inline" onclick="New()"><i class="fa fa-plus"></i> Create New Account</button>
+<a href="account/createEdit" class="btn btn-primary btn-sm pull-right d-none d-md-inline" ><i class="fa fa-plus"></i> Create New Account</a>
 <div class="clearfix"></div>
 
 
