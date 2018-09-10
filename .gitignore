@@ -2,3 +2,9 @@ env.cfm
 *.crt
 *.key
 settings.json
+
+.env
+/data/mysql/*
+/data/init/*
+/data/backup/*
+!.keep
