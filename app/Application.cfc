@@ -8,9 +8,6 @@ component extends="framework.one" output="false" {
 
 	this.mappings["/migrations"] = "/database/migrations";
 
-	//include enviornment details
-	include 'env.cfm';
-
 	// FW/1 settings
 	variables.framework = {
 		action = 'action',
@@ -38,7 +35,13 @@ component extends="framework.one" output="false" {
 	};
 	
 	//enable and set up ORM
-	this.datasource = this.env.datasource;
+	this.datasource = {
+		'database' :    this.getEnvVar('MYSQL_DATABASE'),
+		'host' :        "db",
+		'port' :        "3306",
+		'username' :    this.getEnvVar('MYSQL_USER'),
+		'password' :    this.getEnvVar('MYSQL_PASSWORD')
+	};
 	this.ormEnabled = true;
 	this.ormsettings = {
 		cfclocation="model/beans",
@@ -49,18 +52,20 @@ component extends="framework.one" output="false" {
 		logsql="true",
 		flushatrequestend=false
 	};
-	
+
 	public string function getEnvironment(){
-		return this.env.tier;
+		return this.getEnvVar('TIER');
 	}
 
 	public void function setupApplication(){
+		
+		
 		lock scope="application" timeout="3"{
-			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#cgi.server_port#";
+			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#this.getEnvVar('LUCEE_PORT')#";
 			application.version = "#this.version#";
 			application.facebook = createobject("component","model/services/facebook").init(
-				this.env.fbappid,
-				this.env.fbsecret,
+				this.getEnvVar('FACEBOOK_APPID'),
+				this.getEnvVar('FACEBOOK_SECRET'),
 				"#application.root_path#/login?type=fb"
 			)
 		}
@@ -87,7 +92,7 @@ component extends="framework.one" output="false" {
 			setupApplication();
 			StructClear(Session);
 			setupSession();
-			if(getEnvironment() eq 'dev'){
+			if(this.tier eq 'dev'){
 				migrate();
 			}
 			ormReload();
@@ -95,7 +100,7 @@ component extends="framework.one" output="false" {
 		}
 		
 		if(not session.loggedin and listlast(cgi.path_info,"/") neq "login"){
-			location("#application.root_path#/login",false);
+			/*location("#application.root_path#/login",false);*/
 		}
 	
 	}
@@ -112,7 +117,7 @@ component extends="framework.one" output="false" {
 
 	public void function migrate(){
 		local.migrate = new migrations.migrate(this.datasource);
-		if(getEnvironment() eq 'dev'){
+		if(this.getEnvironment() eq 'dev'){
 			local.migrate.refresh_migrations();
 		}
 		local.migrate.run_migrations();
