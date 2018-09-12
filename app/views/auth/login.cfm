@@ -1,5 +1,5 @@
 <cfoutput>
-    <cfdump var="#cookie#">
+    
     <cfif Not Session.Loggedin>
         <p class="text-info">
             Welcome to your personal checkbook ledger. Login to start balancing your life...

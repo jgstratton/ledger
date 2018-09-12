@@ -1,4 +1,5 @@
 component extends="framework.one" output="false" {
+
 	this.name = 'ledger';
 	this.version = "0.0.1";
 	this.applicationTimeout = createTimeSpan(0, 2, 0, 0);
@@ -100,7 +101,7 @@ component extends="framework.one" output="false" {
 		}
 		
 		if(not session.loggedin and listlast(cgi.path_info,"/") neq "login"){
-			/*location("#application.root_path#/login",false);*/
+			location("#application.root_path#/login",false);
 		}
 	
 	}
