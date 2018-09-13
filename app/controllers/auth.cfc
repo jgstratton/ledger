@@ -30,8 +30,7 @@ component name="auth" output="false"  accessors=true {
 
             location("#application.root_path#/",false);
         }
-            
-        
+    
     }
 
     public void function logout( struct rc = {} ){

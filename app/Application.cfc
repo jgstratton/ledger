@@ -70,7 +70,7 @@ component extends="framework.one" output="false" {
 			application.version = "#this.version#";
 			application.facebook = createobject("component","model/services/facebook").init(
 				this.getEnvVar('FACEBOOK_APPID'),
-				this.getEnvVar('FACEBOOK_SECRET'),
+				this.getEnvVar('FACEBOOK_APPSECRET'),
 				"#application.root_path#/login?type=fb"
 			)
 		}
