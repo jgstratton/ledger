@@ -36,13 +36,17 @@ component extends="framework.one" output="false" {
 	};
 	
 	//enable and set up ORM
-	this.datasource = {
-		'database' :    this.getEnvVar('MYSQL_DATABASE'),
-		'host' :        "db",
-		'port' :        "3306",
-		'username' :    this.getEnvVar('MYSQL_USER'),
-		'password' :    this.getEnvVar('MYSQL_PASSWORD')
+	this.datasources["appds"] = {
+		type: 'mysql',
+		database: this.getEnvVar('MYSQL_DATABASE'),
+		host: "db",
+		port: "3306",
+		username: this.getEnvVar('MYSQL_USER'),
+		password: this.getEnvVar('MYSQL_PASSWORD'),
+		custom: {allowMultipleQueries: true}
 	};
+	this.datasource = "appds";
+	
 	this.ormEnabled = true;
 	this.ormsettings = {
 		cfclocation="model/beans",
@@ -93,13 +97,13 @@ component extends="framework.one" output="false" {
 			setupApplication();
 			StructClear(Session);
 			setupSession();
-			if(this.tier eq 'dev'){
+			if(this.getEnvironment() eq 'dev'){
 				migrate();
 			}
 			ormReload();
             location(url="index.cfm",addToken=false);
 		}
-		
+
 		if(not session.loggedin and listlast(cgi.path_info,"/") neq "login"){
 			location("#application.root_path#/login",false);
 		}
@@ -117,10 +121,12 @@ component extends="framework.one" output="false" {
 	}
 
 	public void function migrate(){
-		local.migrate = new migrations.migrate(this.datasource);
+		
+		local.migrate = new migrations.migrate("appds");
 		if(this.getEnvironment() eq 'dev'){
 			local.migrate.refresh_migrations();
 		}
 		local.migrate.run_migrations();
+
 	}
 }

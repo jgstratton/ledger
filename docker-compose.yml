@@ -50,6 +50,8 @@ services:
      - MYSQL_PASSWORD
      - LUCEE_PORT
      - TIER
+     - FACEBOOK_APPID
+     - FACEBOOK_APPSECRET
 
   cron:
     build: ./cron
