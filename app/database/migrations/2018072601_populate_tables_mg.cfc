@@ -6,12 +6,6 @@
 		output="true" 
 		returntype="void">
 
-		<!--- Create the default user --->
-		<cfquery datasource="#this.datasource#">
-			Insert into users (username)
-			values ('defaultUser')
-		</cfquery>	
-
 		<!---Pre-populate with some basic types --->
 		<cfquery datasource="#this.datasource#">
 			
@@ -22,7 +16,7 @@
 				('Income',1),
 				('Transfer From',-1),
 				('Transfer Into',1);
-
+			
 		</cfquery>
 
 		<!--- Insert some starting categories --->
@@ -53,7 +47,7 @@
 				('Transfer Into',           5),
 				('Vacation/Trips',          2),
 				('Insurance',               2)
-
+			
 		</cfquery>
 
 		<!---Pre-populate with some basic types --->

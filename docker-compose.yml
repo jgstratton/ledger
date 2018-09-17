@@ -52,6 +52,7 @@ services:
      - TIER
      - FACEBOOK_APPID
      - FACEBOOK_APPSECRET
+     - DEFAULT_USER_EMAIL
 
   cron:
     build: ./cron

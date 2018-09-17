@@ -2,6 +2,7 @@ component extends="framework.one" output="false" {
 
 	this.name = 'ledger';
 	this.version = "0.0.1";
+	this.dbmigration = "2018091201";
 	this.applicationTimeout = createTimeSpan(0, 2, 0, 0);
 	this.setClientCookies = true;
 	this.sessionManagement = true;
@@ -97,10 +98,11 @@ component extends="framework.one" output="false" {
 			setupApplication();
 			StructClear(Session);
 			setupSession();
+			ormReload();
 			if(this.getEnvironment() eq 'dev'){
 				migrate();
 			}
-			ormReload();
+			
             location(url="index.cfm",addToken=false);
 		}
 
@@ -122,11 +124,13 @@ component extends="framework.one" output="false" {
 
 	public void function migrate(){
 		
-		local.migrate = new migrations.migrate("appds");
-		if(this.getEnvironment() eq 'dev'){
+		if(this.getEnvironment() eq 'dev'){	
+			local.migrate = new migrations.migrate("appds","_mg,_dev");	
 			local.migrate.refresh_migrations();
+		} else {
+			local.migrate = new migrations.migrate("appds");
+			local.migrate.run_migrations(this.dbmigration);
 		}
-		local.migrate.run_migrations();
 
 	}
 }

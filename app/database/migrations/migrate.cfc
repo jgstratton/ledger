@@ -3,6 +3,7 @@
 <cfcomponent output="true" hint="This component provides the methods necessary to create, run and rollback database migrations">
 
 	<cfproperty name="datasource" type="string" />
+	<cfproperty name="file_ends" type="string" />
 
 	<cffunction
 		name="init"
@@ -12,18 +13,23 @@
 		hint="The public constructor">
 
 		<cfargument name="datasource" type="string" required="true" hint="The datasource to operate on" />
-	
+		<cfargument name="file_ends" type="string" default="_mg" hint="Which file ends to include in migration" />
+
 		<cfset this.datasource = arguments.datasource />
+		<cfset this.file_ends = arguments.file_ends>
+
 		<cfset this.directory_name = getDirectoryFromPath(getCurrentTemplatePath()) />
 		<cfset this.directory_path = "migrations." />
 
-		<cfquery name="get_migrations" datasource="#this.datasource#">
+		<cfquery datasource="#this.datasource#">
             <!--- If the migrations table doesn't exist yet, then create it now --->
 			Create Table if not exists migrations (migration_number varchar(14), migration_run_at datetime)
 		</cfquery>
 
 		<cfreturn this />
 	</cffunction>
+
+
 	<cffunction name="run_migrations"
 		displayname="run_migrations"
 		access="public"
@@ -38,10 +44,11 @@
             - If provided and less greater than last run migration, then it will run up to (and including) that number
             - If omitted, it runs all migrations up to the current version
             - If 0, it refreshes all migrations
-        --->
+		--->
+		
 		<cfargument
 			name="migrate_to_version"
-			displayName="migration_name"
+			displayName="migration_number"
 			type="String"
 			required="false"
 			hint="If provided, will rollback any previously run migrations to the given migration name.  If omitted, will run all outstanding migrations. Use 0 to roll back all" />
@@ -75,16 +82,25 @@
                         --->
                         <cfif (arguments.migrate_to_version gte migration_number) and ListFind(migrations_list, migration_number) eq 0 >
                             <!--- wrap the migration in a transaction so if it fails --->
-                            <cftransaction>
-                                <cfset migration_cfc = createObject("component", "#this.directory_path##migration_name#").init(this.datasource)>
-                                <cfset migration_cfc.migrate_up() >
-                                <cfquery name="store_migration" datasource="#this.datasource#">
-                                    Insert into migrations (migration_number, migration_run_at) 
-                                    values ('#migration_number#', getdate())
-                                </cfquery>
+							<cftransaction>
+								<cftry>
+
+									<cfset migration_cfc = createObject("component", "#this.directory_path##migration_name#").init(this.datasource)>
+									<cfset migration_cfc.migrate_up() >
+									<cfquery name="store_migration" datasource="#this.datasource#">
+										Insert into migrations (migration_number, migration_run_at) 
+										values ('#migration_number#', now())
+									</cfquery>
+
+									<cfcatch>
+										<cftransaction action="rollback" />
+										<cfrethrow>
+									</cfcatch>
+
+								</cftry>
                             </cftransaction>
                         </cfif>
-    
+						
                     </cfloop>
                 
                 <!--- If the "migrate to" is less than the last ran migration, then we need to revert the migrations down until we hit the target version --->
@@ -96,12 +112,21 @@
 
                         <cfif (migration_number gt arguments.migrate_to_version) and ListFind(migrations_list, migration_number) gt 0 >
               
-                            <cftransaction>
-                                <cfset migration_cfc = createObject("component", "#this.directory_path##migration_name#").init(this.datasource)>
-                                <cfset migration_cfc.migrate_down() >
-                                <cfquery name="remove_migration" datasource="#this.datasource#">
-                                    Delete from migrations where migration_number = '#migration_number#'
-                                </cfquery>
+							<cftransaction>
+								<cftry>
+
+									<cfset migration_cfc = createObject("component", "#this.directory_path##migration_name#").init(this.datasource)>
+									<cfset migration_cfc.migrate_down() >
+									<cfquery name="remove_migration" datasource="#this.datasource#">
+										Delete from migrations where migration_number = '#migration_number#'
+									</cfquery>
+
+									<cfcatch>
+										<cftransaction action="rollback" /> 
+										<cfrethrow>
+									</cfcatch>
+
+								</cftry>
                             </cftransaction>
 
                         </cfif>
@@ -124,12 +149,20 @@
 					<cfif ListFind(migrations_list, migration_number) eq 0 >
 						<!--- wrap the migration in a transaction so if it fails --->
 						<cftransaction>
-							<cfset migration_cfc = createObject("component", "#this.directory_path##migration_name#").init(this.datasource)>
-							<cfset migration_cfc.migrate_up() >
-							<cfquery name="store_migration" datasource="#this.datasource#">
-								Insert into migrations (migration_number, migration_run_at) values
-									('#migration_number#', now())
-							</cfquery>
+							<cftry>
+								<cfset migration_cfc = createObject("component", "#this.directory_path##migration_name#").init(this.datasource)>
+								<cfset migration_cfc.migrate_up() >
+								<cfquery name="store_migration" datasource="#this.datasource#">
+									Insert into migrations (migration_number, migration_run_at) values
+										('#migration_number#', now())
+								</cfquery>
+
+								<cfcatch>
+									<cftransaction action="rollback" /> 
+									<cfrethrow>
+								</cfcatch>
+								
+							</cftry>
 						</cftransaction>
 					</cfif>
 
@@ -185,16 +218,23 @@
     <cffunction 
         name="get_migration_files" 
         access="public" 
-        output="false" 
+        output="true" 
         returntype="query">
 
 		<cfset var migration_files_unsorted = "" />
 		<cfset var migration_Files = "" />
+		<cfset var filter = "" />
+
+		<!--- Build the filter from the file_ends list --->
+		<cfloop list="#this.file_ends#" index="file_end">
+			<cfset filter = listappend(filter, "*#file_end#.cfc","|")>
+		</cfloop>
+
 		<!--- get the list of migration cfc's from the migrations folder --->
 		<cfdirectory action="LIST"
 			directory="#this.directory_name#"
 			name="migration_files_unsorted"
-			filter="*_mg.cfc"> <!--- valid migration files must end in _mg --->
+			filter="#filter#"> <!--- valid migration files must end in _mg --->
 
 		<cfquery name="migration_Files" dbtype="query">
 				select * from migration_files_unsorted
@@ -213,8 +253,31 @@
 		<cfreturn Mid(arguments.migrationFileName,st.pos[1],st.len[1])>
 	</cffunction>
 
-	<cffunction name="refresh_migrations" access="public" output="false" returntype="boolean" hint="Clear all loaded migrations">
-		<cfreturn this.run_migrations(0)> 
-		<cfreturn this.run_migrations()> 
+	<cffunction 
+		name="refresh_migrations" 
+		access="public" 
+		output="true" 
+		returntype="void" 
+		hint="Clear all loaded migrations and then run migrations again">
+
+			<cfargument
+				name="migrate_to_version"
+				displayName="migration_number"
+				type="String"
+				required="false"
+				hint="If provided, will rollback any previously run migrations to the given migration name.  If omitted, will run all outstanding migrations. Use 0 to roll back all" />
+		
+		
+			<cfset this.run_migrations(0)> 
+
+
+			<cfif StructKeyExists(arguments,"migrate_to_version")>
+				<cfset this.run_migrations(arguments.migrate_to_version)>
+			<cfelse>
+				<cfset this.run_migrations()>	 
+			</cfif>
+
+			<cfreturn />
 	</cffunction>
+
 </cfcomponent>
