@@ -53,4 +53,38 @@ component persistent="true" table="accounts" accessors="true" {
         return;
     }
     
+    public boolean function inSummary(){
+        return (this.getSummary() eq 'Y');
+    }
+    
+    public numeric function getBalance(){
+        return variables.getBalanceByType('all');
+    }
+
+    public numeric function getVerifiedBalance(){
+        return variables.getBalanceByType('verified');
+    }
+
+    private numeric function getBalanceByType(type){
+
+        local.sql = "
+            SELECT coalesce(sum(trn.amount*ctype.multiplier),0) as Balance
+            FROM transactions trn
+            LEFT JOIN categories cat on trn.category_id = cat.id
+            LEFT JOIN categoryTypes ctype on cat.categoryType_id = ctype.id
+            WHERE trn.account_id = :account_id
+        ";
+
+        if(arguments.type eq 'verified'){
+            local.sql &= 'and trn.verifiedDate is not null';
+        }
+
+        local.balanceQry = queryExecute(local.sql, {account_id: this.getid()});
+
+        return balanceQry.Balance;
+
+    }
+
+
+
 }

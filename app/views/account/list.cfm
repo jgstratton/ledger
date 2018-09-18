@@ -1,3 +1,4 @@
+<cfoutput>
 <div class="alert alert-success">
 	<span class="badge badge-light summary">
 		$<?=$AccountSummary?>
@@ -24,65 +25,64 @@
 <ul class="list-group">
 
     <cfloop array="#rc.accounts#" item="thisAccount" index="i">
-                
+        
+        <!--- Style accounts that are included in the summary --->
+        <cfset local.badgeClass = "info">
+        <cfif thisAccount.inSummary()>
+            <cfset local.badgeClass = "success">
+        </cfif>
+
         <li class="list-group-item">
+
+            <!--- Display for small devices --->
             <div class="d-block d-md-none">
-                <span class="btn btn-link"  data-accountid="<?= $AccountID ?>">
-                    #thisAccount.name# sdfsd
+                <span class="btn btn-link"  data-accountid="#thisAccount.getId()#">
+                    #thisAccount.getName()#
                 </span>
                 <div class="pull-right text-right">
-                    <?php if($row['Summary'] == 'Y'){ ?>
-                        <span class="badge badge-success">
-                            $<?= $AccountTotal ?>
-                        </span>
-                    <?php } else {?>
-                        <span class="badge badge-info">
-                            $<?= $AccountTotal ?>
-                        </span>
-                    <?php } ?>
+                    <span class="badge badge-#local.badgeClass#">
+                        $#thisAccount.getBalance()#
+                    </span>
                     <br>
                     <span class="badge badge-light text-muted">
-                        $<?= $AccountVerified ?>
+                        $#thisAccount.getVerifiedBalance()#
                     </span>
                 </div>
             </div>
+
+            <!--- Display for large devices --->
             <div class="container-fluid d-none d-md-block">
                 <div class="row">
                     <div class="col">
-                        <span class="btn btn-link"  data-accountid="<?= $AccountID ?>">
-                            <?= $icon." ".$AccountDescription ?>
+                        <span class="btn btn-link"  data-accountid="#thisAccount.getId()#">
+                            #thisAccount.getname()#
                         </span>
                     </div>
                     <div class="col text-right ">
-                            <?php if($row['Summary'] == 'Y'){ ?>
-                            <span class="badge badge-success">
-                                $<?= $AccountTotal ?>
-                            </span>
-                        <?php } else {?>
-                            <span class="badge badge-info">
-                                $<?= $AccountTotal ?>
-                            </span>
-                        <?php } ?>
+                        <span class="badge badge-#local.badgeClass#">
+                            $#thisAccount.getBalance()#
+                        </span>
                     </div>
                     <div class="col text-right">
-                        $<?= $AccountVerified ?>
+                        $#thisAccount.getVerifiedBalance()#
                     </div>
                     <div class="col text-right">
-                        <button class="btn btn-link btn-sm" data-edit-trn="<?= $AccountID ?>" >
+                        <button class="btn btn-link btn-sm" data-edit-trn="#thisAccount.getId()#" >
                             <i class="fa fa-pencil"></i> edit
                         </button>
                     </div>
                 </div>
             </div>
             
-
         </li>
     </cfloop> 
 </ul>
-<br>
-<a href="account/createEdit" class="btn btn-primary btn-sm pull-right d-none d-md-inline" ><i class="fa fa-plus"></i> Create New Account</a>
-<div class="clearfix"></div>
 
+<br>
+
+<a href="account/createEdit" class="btn btn-primary btn-sm pull-right d-none d-md-inline" ><i class="fa fa-plus"></i> Create New Account</a>
+
+<div class="clearfix"></div>
 
     <div class="container-fluid ">
     <div class="row list-group-header">
@@ -141,3 +141,4 @@
         <?php } ?>  
 </ul>
     
+</cfoutput>

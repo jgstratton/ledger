@@ -43,8 +43,7 @@ component extends="framework.one" output="false" {
 		host: "db",
 		port: "3306",
 		username: this.getEnvVar('MYSQL_USER'),
-		password: this.getEnvVar('MYSQL_PASSWORD'),
-		custom: {allowMultipleQueries: true}
+		password: this.getEnvVar('MYSQL_PASSWORD')
 	};
 	this.datasource = "appds";
 	
@@ -85,7 +84,7 @@ component extends="framework.one" output="false" {
 
 	public void function setupRequest() {  
 
-		if(structkeyexists(url,"ormreload")){
+		if(structkeyexists(url,"ormreload") or this.getEnvironment() eq 'dev'){
 			ormReload();
 		}
 
@@ -131,6 +130,6 @@ component extends="framework.one" output="false" {
 			local.migrate = new migrations.migrate("appds");
 			local.migrate.run_migrations(this.dbmigration);
 		}
-
+		
 	}
 }

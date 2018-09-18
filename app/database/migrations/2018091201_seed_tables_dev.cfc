@@ -39,11 +39,12 @@
 
             <cfloop from="1" to="#arraylen(this.accounts)#" index="local.i">
                 <cfset account = this.accounts[local.i]>
-
+                
                 <cfquery datasource="#this.datasource#">
-                    Insert Into accounts(name, accountType_id, summary, user_id)
-                    values('#account.name#', #account.accountType#, '#account.summary#', 1)
+                    Insert Into accounts(name, accountType_id, summary, user_id) 
+                    values(<cfqueryparam value="#account.name#">, <cfqueryparam value="#account.accountType#">, <cfqueryparam value="#account.summary#">,1) 
                 </cfquery>
+                
                 <cfloop from="1" to="#arraylen(account.transactions)#" index="local.j">
                     <cfset transaction = account.transactions[local.j]>
                     <cfquery datasource="#this.datasource#">
@@ -51,8 +52,9 @@
                         values ('#transaction.name#', date_add(now(), INTERVAL #transaction.datediff# DAY), #transaction.amount#,'#transaction.note#',#local.i#, #transaction.categoryid#)
                     </cfquery>
                 </cfloop>
-
+            
             </cfloop>
+
     </cffunction>
 
     <cffunction 
