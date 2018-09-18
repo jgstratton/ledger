@@ -1,6 +1,10 @@
-component {
+component{
 
-    function getOrCreate( string email ) {
+    public any function getUserById(id){
+        return entityLoadByPK( "user", arguments.id);
+    }
+
+    public any function getOrCreate( string email ) {
         local.user = entityLoad( "user", {email: arguments.email},true);
         if( not structKeyExists(local,"user")){
             local.user = entityNew( "user" );
