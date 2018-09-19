@@ -14,6 +14,7 @@ component name="account" output="false"  accessors=true {
             variables.fw.setView('account.blank');
         } else {
             rc.accounts = local.user.getAccounts();
+            rc.accountGroupsQuery = local.user.getAccountGroupsQuery();
         }
     }
 

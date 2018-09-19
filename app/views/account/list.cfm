@@ -100,45 +100,36 @@
 </div>
 
 <ul class="list-group">
-      <?php
-            $GrandTotal = 0.00;
-            foreach($AccountGroups as $row) {
-                $AccountDescription = $row["AccountDescription"];
-                $AccountTotal = number_format($row['AccountTotal'],2); 
-                $AccountVerified = number_format($row['VerifiedTotal'],2); 
-                $GrandTotal = $GrandTotal + $row['AccountTotal']; 
-                $icon = getAccountIcon($row['AccountTypeDescription']); ?>
-                <li class="list-group-item">
-                    <div class="d-block d-md-none">
-                        <?= $icon." ".$AccountDescription ?>
-                        <div class="pull-right text-right">
-                            <span class="badge badge-secondary">
-                                $<?= $AccountTotal ?>
-                            </span>
-                            <br>
-                            <span class="badge badge-light text-muted">
-                                $<?= $AccountVerified ?>
-                            </span>
-                        </div>
+    <cfloop query="#rc.accountGroupsQuery#">
+        <li class="list-group-item">
+            <div class="d-block d-md-none">
+                #name#
+                <div class="pull-right text-right">
+                    <span class="badge badge-secondary">
+                        $#balance#
+                    </span>
+                    <br>
+                    <span class="badge badge-light text-muted">
+                        $#verifiedBalance#
+                    </span>
+                </div>
+            </div>
+            <div class="container-fluid d-none d-md-block">
+                <div class="row">
+                    <div class="col">
+                        #name#
                     </div>
-                    <div class="container-fluid d-none d-md-block">
-                        <div class="row">
-                            <div class="col">
-                                <?= $icon." ".$AccountDescription ?>
-                            </div>
-                            <div class="col text-right ">
-                                $<?= $AccountTotal ?>
-                            </div>
-                            <div class="col text-right">
-                                $<?= $AccountVerified ?>
-                            </div>
-                            <div class="col"></div>
-                        </div>
+                    <div class="col text-right ">
+                        $#balance#
                     </div>
-                    
-
-                </li>
-        <?php } ?>  
+                    <div class="col text-right">
+                        $#verifiedBalance#
+                    </div>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </li>
+    </cfloop>
 </ul>
     
 </cfoutput>

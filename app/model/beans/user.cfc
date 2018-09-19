@@ -12,6 +12,38 @@ component persistent="true" table="users" accessors="true" {
     public function save(){
         EntityMerge(this);
         EntitySave(this);
+    }  
+    
+    //There's got to be a better place for this... but anyway.
+    public query function getAccountGroupsQuery(){
+
+        return queryExecute("
+            SELECT actType.id, actType.name, coalesce(Balance,0) as Balance, coalesce(VerifiedBalance,0) as VerifiedBalance
+            FROM   accountTypes actType
+            LEFT JOIN 
+                (SELECT accounts.accountType_id, sum(trn.amount*ctype.multiplier) as Balance
+                 FROM transactions trn
+                 LEFT JOIN categories cat on trn.category_id = cat.id
+                 LEFT JOIN categoryTypes ctype on cat.categoryType_id = ctype.id
+                 LEFT JOIN accounts on accounts.id = trn.account_id
+                 WHERE accounts.user_id = :user_id
+                 GROUP BY accounts.accountType_id) balanceQry
+            ON actType.id = balanceQry.accountType_id
+            LEFT JOIN 
+                (SELECT accounts.accountType_id, sum(trn.amount*ctype.multiplier) as VerifiedBalance
+                 FROM transactions trn
+                 LEFT JOIN categories cat on trn.category_id = cat.id
+                 LEFT JOIN categoryTypes ctype on cat.categoryType_id = ctype.id
+                 LEFT JOIN accounts on accounts.id = trn.account_id
+                 WHERE accounts.user_id = :user_id
+                 and trn.verifiedDate is not null
+                 GROUP BY accounts.accountType_id) verifiedBalanceQry
+            ON actType.id = verifiedBalanceQry.accountType_id
+            WHERE actType.id in 
+                (Select accountType_id
+                 FROM accounts
+                 WHERE user_id = :user_id and deleted is null)",
+            {user_id: this.getid()});        
     }
 }
 
