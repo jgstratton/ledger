@@ -1,7 +1,7 @@
 <cfoutput>
 <div class="alert alert-success">
 	<span class="badge badge-light summary">
-		$<?=$AccountSummary?>
+		$#rc.summary#
 	</span>
 	<span>- Accounts Summary</span>
 	
@@ -27,7 +27,10 @@
     <cfloop array="#rc.accounts#" item="thisAccount" index="i">
         
         <!--- Style accounts that are included in the summary --->
+        <cfset local.editUrl = buildURL('account.edit?accountid=' & thisAccount.getId())>
+        <cfset local.openUrl = buildURL('transactions.list?accountid=' & thisAccount.getId())>
         <cfset local.badgeClass = "info">
+
         <cfif thisAccount.inSummary()>
             <cfset local.badgeClass = "success">
         </cfif>
@@ -36,9 +39,9 @@
 
             <!--- Display for small devices --->
             <div class="d-block d-md-none">
-                <span class="btn btn-link"  data-accountid="#thisAccount.getId()#">
+                <a class="btn btn-link" href="#local.openUrl#">
                     #thisAccount.getName()#
-                </span>
+                </a>
                 <div class="pull-right text-right">
                     <span class="badge badge-#local.badgeClass#">
                         $#thisAccount.getBalance()#
@@ -54,9 +57,9 @@
             <div class="container-fluid d-none d-md-block">
                 <div class="row">
                     <div class="col">
-                        <span class="btn btn-link"  data-accountid="#thisAccount.getId()#">
+                        <a class="btn btn-link" href="#local.openUrl#">
                             #thisAccount.getname()#
-                        </span>
+                        </a>
                     </div>
                     <div class="col text-right ">
                         <span class="badge badge-#local.badgeClass#">
@@ -67,9 +70,9 @@
                         $#thisAccount.getVerifiedBalance()#
                     </div>
                     <div class="col text-right">
-                        <button class="btn btn-link btn-sm" data-edit-trn="#thisAccount.getId()#" >
+                        <a class="btn btn-link btn-sm" href="#local.editUrl#" >
                             <i class="fa fa-pencil"></i> edit
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -80,7 +83,7 @@
 
 <br>
 
-<a href="account/createEdit" class="btn btn-primary btn-sm pull-right d-none d-md-inline" ><i class="fa fa-plus"></i> Create New Account</a>
+<a href="#buildurl('account.create')#" class="btn btn-primary btn-sm pull-right d-none d-md-inline" ><i class="fa fa-plus"></i> Create New Account</a>
 
 <div class="clearfix"></div>
 

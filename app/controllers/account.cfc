@@ -9,21 +9,20 @@ component name="account" output="false"  accessors=true {
     }
 
     public void function list( struct rc = {} ) {
-        local.user = variables.userService.getUserById(session.userid);
-        if(not local.user.hasAccounts()){
+
+        if(not rc.user.hasAccounts()){
             variables.fw.setView('account.blank');
         } else {
-            rc.accounts = local.user.getAccounts();
-            rc.accountGroupsQuery = local.user.getAccountGroupsQuery();
+            rc.accounts = rc.user.getAccounts();
+            rc.accountGroupsQuery = rc.user.getAccountGroupsQuery();
+            rc.summary = rc.user.getSummaryBalance();
         }
     }
 
-    public void function createEdit( struct rc = {} ){
+    private void function createEdit (struct rc = {}, account){
+        var account = arguments.account;
         var accountService = variables.accountService;
-        
-        local.user = variables.userService.getUserById(session.userid);
 
-        cfparam( name='rc.accountId', default="");
         cfparam( name="rc.accountTypeId", default="");
         cfparam( name="rc.summary", default="N");
 
@@ -31,40 +30,46 @@ component name="account" output="false"  accessors=true {
         rc.errorMsg = "Correct the following items and try saving your account again.";
 
         /* If the account was submitted, run the validation */
-        if(StructKeyExists(rc,"submitAddAccount")){
+        if(StructKeyExists(rc,"submitAccount")){
             
-
-            rc.account = accountService.createAccount();
-            rc.account.setUser(local.user);
-            rc.account.setName( rc.name );
-            rc.account.setType( accountService.getAccountByid(rc.accountTypeId) );
-            rc.account.setSummary( rc.summary);
+            variables.fw.populate(account, "user, name, summary");
+            account.setType( accountService.getAccountByid(rc.accountTypeId) );
 
             if(rc.accountTypeId neq 0){
-                rc.account.setLinkedAccount(rc.account);
+                account.setLinkedAccount(account);
             } else {
-                rc.account.setLinkedAccount(accountService.getAccountByid(rc.linkedAccount));
+                account.setLinkedAccount(accountService.getAccountByid(rc.linkedAccount));
             }
 
-            rc.errors = rc.account.validate();
+            rc.errors = account.validate();
             
             /* All validation passed, add the account */
             if(arraylen(rc.errors) eq 0){
-                accountService.save(rc.account);
+                accountService.save(account);
                 location(url="../", addToken="false" );
             }
-
-        } elseif (len(rc.accountId) eq 0) {
-
-            rc.mode = 'create';
-            rc.account = accountService.createAccount();
         }
 
         //get the select list items
         rc.accountTypes = accountService.getTypes();
-        rc.accounts = local.user.getAccounts();
-
+        rc.accounts = rc.user.getAccounts();
     }
 
+    public void function create( struct rc = {} ){
+        var account = accountService.createAccount();
+        createEdit(rc, account);
+        rc.mode = 'create';
+        rc.account = account;
+        fw.setView('account.createEdit');
+    }
+
+    public void function edit( struct rc = {} ){
+        
+        var account = accountService.getAccountByid(rc.accountid);
+        createEdit(rc, account);
+        rc.mode = 'edit';
+        rc.account = account;
+        fw.setView('account.createEdit');
+    }
 
 }

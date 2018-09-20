@@ -9,7 +9,8 @@ component output="false" {
     }
 
     public any function save(account){
-        return EntitySave(arguments.account);
+        EntitySave(arguments.account);
+        ormflush();
     }
 
     public any function getTypes(){

@@ -1,17 +1,17 @@
 <cfoutput>
 
-
     <cfif rc.mode eq "create">
         <h4>Create a New Account</h4>
     <cfelse>
-        <h4>Edit Account: #rc.title# ... #rc.balance#</h4>
+        <h4>Edit Account: #rc.account.getName()# ... #dollarFormat(rc.account.getBalance())#</h4>
     </cfif>
 
     #view("includes/errors")#
-    <form name="frm#rc.mode#Account" method="post" class="form-horizontal" autocomplete="off">
+
+    <form name="frmAccount" action="#buildurl('account.edit')#" method="post" class="form-horizontal" autocomplete="off">
         
         <input type="hidden" name="mode" value="#rc.mode#">
-        <input type="hidden" name="accountId" value="#rc.account.getId()#">
+        <input type="hidden" name="accountid" value="#rc.account.getId()#">
         
         <div class="row">
             <label class="col-2 col-form-label">Account Name:</label>
@@ -29,11 +29,6 @@
                             #thisAccountType.getName()#
                         </option>
                     </cfloop>
-                    <cfif arrayLen(rc.accounts) gt 0>
-                        <option value="0" #matchSelect(0, rc.accountTypeId)#>
-                            Virtual / Sub Account 
-                        </option>
-                    </cfif>
                 </select>
             </div>
         </div>
@@ -68,14 +63,14 @@
             </div>
         </div>
 
-        <cfif len(rc.accountId) neq 0>
+        <cfif rc.account.getid() gt 0>
             <div class="row">
                 <label class="col-2"></label>
                 <div class="col-5">
-                    <button type="submit" class="btn btn-sm btn-primary">
+                    <button type="submit" name="submitAccount" class="btn btn-sm btn-primary">
                         Update Account
                     </button>
-                    <button type="button" class="btn btn-danger btn-sm pull-right" data-delete="#rc.accountId#">
+                    <button type="button" class="btn btn-danger btn-sm pull-right" data-delete="#rc.account.getid()#">
                         <i class="fa fa-trash"></i> Delete
                     </button>
                 </div>
@@ -84,7 +79,7 @@
             <div class="row">
                 <label class="col-2"></label>
                 <div class="col-5">
-                    <button type="submit" name="submitAddAccount" class="btn btn-sm btn-primary">
+                    <button type="submit" name="submitAccount" class="btn btn-sm btn-primary">
                         <i class="fa fa-plus"></i> Add Account
                     </button>
                 </div>

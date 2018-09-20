@@ -30,8 +30,6 @@
             <script src="#application.root_path#/assets/js/viewScripts.js?v=<?=$appVersion;?>"></script>
         </cfoutput>
 
-        
-
 	</head>
 
 	<body> 
@@ -51,36 +49,39 @@
                     <div class="text-right flex-nowrap d-flex d-md-none text-secondary">
                         Summary - <span class="badge badge-primary text-nowrap"><!---$<?=$AccountSummary?>---></span>
                     </div>
+
+                    <cfoutput>
+                        <div class="navbar-collapse collapse" id="navbar">
+                            <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#buildUrl('account.list')#">Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="TRN_400.php">Transfer</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="TRN_250.php">Search</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
+                                <div class="dropdown-menu">
+                                <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
+                                <a class="dropdown-item" href="TRN_500.php">Manage Categories</a>
+                                <a class="dropdown-item" href="TRN_700.php">Manage Bills</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="logout">Logout</a>
+                            </li>
+                            </ul>
+                
+                        </div>
                     
-                    <div class="navbar-collapse collapse" id="navbar">
-                        <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php">Accounts</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="TRN_400.php">Transfer</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="TRN_250.php">Search</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
-                            <div class="dropdown-menu">
-                            <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
-                            <a class="dropdown-item" href="TRN_500.php">Manage Categories</a>
-                            <a class="dropdown-item" href="TRN_700.php">Manage Bills</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="logout">Logout</a>
-                        </li>
-                        </ul>
-            
-                    </div>
-            
-                    <div class="text-right d-none d-md-inline text-secondary">
-                        Checkbook Summary - <span class="badge badge-primary"><!---$<?=$AccountSummary?>---></span>
-                    </div>
+                        <div class="text-right d-none d-md-inline text-secondary">
+                            Checkbook Summary - <span class="badge badge-primary">$#rc.user.getSummaryBalance()#</span>
+                        </div>
+                    
+                    </cfoutput>
                 </nav>
     
                 <div class="title-bar">
