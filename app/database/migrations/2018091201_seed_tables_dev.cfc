@@ -33,7 +33,7 @@
         },
         {
             name: "Christmas Club", 
-            accountType: 0, 
+            accountType: 6, 
             summary: "N",
             linkedAccount:1,
             transactions: [

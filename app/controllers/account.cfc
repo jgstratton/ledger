@@ -33,12 +33,12 @@ component name="account" output="false"  accessors=true {
         if(StructKeyExists(rc,"submitAccount")){
             
             variables.fw.populate(account, "user, name, summary");
-            account.setType( accountService.getAccountByid(rc.accountTypeId) );
-
-            if(rc.accountTypeId neq 0){
-                account.setLinkedAccount(account);
-            } else {
+            account.setType( accountService.getAccountTypeByid(rc.accountTypeId) );
+   
+            if(account.isVirtual()){
                 account.setLinkedAccount(accountService.getAccountByid(rc.linkedAccount));
+            } else {
+                account.setLinkedAccount(account);
             }
 
             rc.errors = account.validate();

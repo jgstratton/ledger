@@ -27,13 +27,10 @@ component persistent="true" table="accounts" accessors="true" {
         }
         if(Not this.hasLinkedAccount()){
             arrayAppend(local.errors,"Missing linked account");
-        } else {
-            if(this.getLinkedAccount().getId() neq this.getId() and this.hasType()){
-                arrayAppend(local.errors,"Non virtual accounts must link to themselves");
-            }
-            if(this.getLinkedAccount().getId() eq this.getid() and not this.hasType()){
-                arrayAppend(local.errors,"Virtual accounts cannot be linked to themselves");
-            }
+        } else if(not this.isVirtual() and this.getLinkedAccount().getId() neq this.getId()){
+            arrayAppend(local.errors,"Non virtual accounts must link to themselves");
+        } else if(this.isVirtual() and this.getLinkedAccount().getId() eq this.getid()){
+            arrayAppend(local.errors,"Virtual accounts cannot be linked to themselves");
         }
             
         return local.errors;
@@ -43,7 +40,7 @@ component persistent="true" table="accounts" accessors="true" {
         if(this.hasType()){
             return this.getType().getId();
         } 
-        return;
+        return '';
     }
 
     public any function getLinkedAccountID(){
@@ -53,14 +50,22 @@ component persistent="true" table="accounts" accessors="true" {
         return;
     }
     
-    public any function getIcon(){
-        return this.getType().getFa_icon();
+    public string function getIcon(){
+        if(this.hasType()){
+            return this.getType().getFa_icon();
+        }
+
+        return '';
     }
 
     public boolean function inSummary(){
         return (this.getSummary() eq 'Y');
     }
     
+    public boolean function isVirtual(){
+        return (this.getType().isVirtual());
+    }
+
     public numeric function getBalance(){
         return variables.getBalanceByType('all');
     }

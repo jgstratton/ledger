@@ -106,6 +106,7 @@
 				name 	varchar(100) 	DEFAULT NULL,
 				sortWeight int(11)		DEFAULT 1,
 				fa_icon varchar(20)		DEFAULT NULL,
+				isVirtual boolean		DEFAULT 0,
 				created datetime 		DEFAULT NULL,
 				edited 	datetime 		DEFAULT NULL,
 

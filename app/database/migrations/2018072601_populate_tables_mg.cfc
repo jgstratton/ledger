@@ -53,24 +53,15 @@
 		<!---Pre-populate with some basic types --->
 		<cfquery datasource="#this.datasource#">
 	
-			Insert Into accountTypes (name, fa_icon)
+			Insert Into accountTypes (name, fa_icon, sortWeight, isVirtual)
 			values 
-				('Checking Account', 'fa-money'),
-				('Credit Card', 'fa-credit-card'),
-				('Loans', 'fa-usd'),
-				('Savings Accounts','fa-university'),
-				('Other','fa-question-circle-o')
+				('Checking Account', 	'fa-money', 			1, 0),
+				('Credit Card', 		'fa-credit-card', 		1, 0),
+				('Loans', 				'fa-usd', 				1, 0),
+				('Savings Accounts',	'fa-university', 		1, 0),
+				('Other',				'fa-question-circle-o', 1, 0),
+				("Virtual / Sub Account",'fa-snapchat-ghost',	100,1)
 
-		</cfquery>
-
-		<!--- Insert the special "Virual" type --->
-		<cfquery datasource="#this.datasource#">
-			SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO'
-		</cfquery>
-		
-		<cfquery datasource="#this.datasource#">
-			Insert Into accountTypes (name,id, sortWeight, fa_icon)
-			Values ("Virtual / Sub Account",0,100, 'fa-snapchat-ghost')
 		</cfquery>
 
 	</cffunction>

@@ -92,10 +92,10 @@ component extends="framework.one" output="false" {
 				migrate();
 			}
 			ormReload();
-            location(url="index.cfm",addToken=false);
-		}
-
-		if(structkeyexists(url,"ormreload") or this.getEnvironment() eq 'dev'){
+			location(url="index.cfm",addToken=false);
+			
+		} else if(structkeyexists(url,"ormreload") or this.getEnvironment() eq 'dev') {
+			
 			ormReload();
 		}
 

@@ -4,6 +4,10 @@ component output="false" {
         return entityLoadByPk( "account", arguments.id);
     }
 
+    public any function getAccountTypeById(id){
+        return entityLoadByPk("accountType", arguments.id);
+    }
+    
     public any function createAccount(){
         return Entitynew( "account" );
     }
