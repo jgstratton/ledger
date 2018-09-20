@@ -6,27 +6,29 @@
             accountType: 1, 
             summary: "Y",
             transactions: [
-                { name: "Paycheck", datediff: "-30", amount="1723.42", note="", categoryid="13"},
-                { name: "Sheetz", datediff: "-29", amount="28.54", note="Gas", categoryid="2"}
+                { name: "Paycheck", datediff: "-30", amount="1723.42", note="", categoryid="13", verified="Y"},
+                { name: "Sheetz", datediff: "-29", amount="28.54", note="Gas", categoryid="2", verified="Y"},
+                { name: "Natual Gas Bill", datediff: "-28", amount="127.25", note="", categoryid="12", verified="N"},
+                { name: "Netflix", datediff: "-27", amount="12.00", note="", categoryid="19", verified="N"}
             ]
         },
         {   name: "Chase (Amazon)", 
             accountType: 1, 
             summary: "Y",
             transactions: [
-                { name: "Deposit", datediff: "-30", amount="425.00", note="", categoryid="14"},
-                { name: "Mortgage Payment", datediff: "-25", amount="650.00", note="", categoryid="1"}
+                { name: "Deposit", datediff: "-30", amount="425.00", note="", categoryid="14", verified="Y"},
+                { name: "Mortgage Payment", datediff: "-25", amount="650.00", note="", categoryid="1", verified="N"}
             ]
         },
         {   name: "Car Loan", 
             accountType: 3, 
             summary: "N",
             transactions: [
-                { name: "Loan Amount", datediff: "-365", amount="11000", note="", categoryid="21"},
-                { name: "Payment", datediff: "-335", amount="325.00", note="", categoryid="22"},
-                { name: "Payment", datediff: "-301", amount="325.00", note="", categoryid="22"},
-                { name: "Payment", datediff: "-290", amount="325.00", note="", categoryid="22"},
-                { name: "Payment", datediff: "-256", amount="325.00", note="", categoryid="22"}
+                { name: "Loan Amount", datediff: "-365", amount="11000", note="", categoryid="21", verified="Y"},
+                { name: "Payment", datediff: "-335", amount="325.00", note="", categoryid="22", verified="Y"},
+                { name: "Payment", datediff: "-301", amount="325.00", note="", categoryid="22", verified="Y"},
+                { name: "Payment", datediff: "-290", amount="325.00", note="", categoryid="22", verified="Y"},
+                { name: "Payment", datediff: "-256", amount="325.00", note="", categoryid="22", verified="N"}
             ]
         },
         {
@@ -35,7 +37,7 @@
             summary: "N",
             linkedAccount:1,
             transactions: [
-                { name: "Christmas", datediff: "-25", amount="200", note="", categoryid="21"}
+                { name: "Christmas", datediff: "-25", amount="200", note="", categoryid="21", verified="Y"}
             ]
         },
     ]>
@@ -74,8 +76,20 @@
                 <cfloop from="1" to="#arraylen(account.transactions)#" index="local.j">
                     <cfset transaction = account.transactions[local.j]>
                     <cfquery datasource="#this.datasource#">
-                        Insert into transactions (name, transactiondate, amount, note, account_id, category_id)
-                        values ('#transaction.name#', date_add(now(), INTERVAL #transaction.datediff# DAY), #transaction.amount#,'#transaction.note#',#local.i#, #transaction.categoryid#)
+                        Insert into transactions (name, transactiondate, amount, note, account_id, category_id,verifiedDate)
+                        values (
+                            '#transaction.name#', 
+                            date_add(now(), INTERVAL #transaction.datediff# DAY), 
+                            #transaction.amount#,
+                            '#transaction.note#',
+                            #local.i#, 
+                            #transaction.categoryid#,
+                            <cfif transaction.verified eq 'Y'>
+                                date_add(now(), INTERVAL #transaction.datediff# DAY)
+                            <cfelse>
+                                NULL
+                            </cfif>
+                        )
                     </cfquery>
                 </cfloop>
             
