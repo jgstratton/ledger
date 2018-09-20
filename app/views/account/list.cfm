@@ -40,7 +40,7 @@
             <!--- Display for small devices --->
             <div class="d-block d-md-none">
                 <a class="btn btn-link" href="#local.openUrl#">
-                    #thisAccount.getName()#
+                    <i class="fa fa-fw #thisAccount.getIcon()#"></i> #thisAccount.getName()#
                 </a>
                 <div class="pull-right text-right">
                     <span class="badge badge-#local.badgeClass#">
@@ -58,16 +58,16 @@
                 <div class="row">
                     <div class="col">
                         <a class="btn btn-link" href="#local.openUrl#">
-                            #thisAccount.getname()#
+                            <i class="fa fa-fw #thisAccount.getIcon()#"></i> #thisAccount.getname()#
                         </a>
                     </div>
                     <div class="col text-right ">
                         <span class="badge badge-#local.badgeClass#">
-                            $#thisAccount.getBalance()#
+                            #moneyFormat(thisAccount.getBalance())#
                         </span>
                     </div>
                     <div class="col text-right">
-                        $#thisAccount.getVerifiedBalance()#
+                        #moneyFormat(thisAccount.getVerifiedBalance())#
                     </div>
                     <div class="col text-right">
                         <a class="btn btn-link btn-sm" href="#local.editUrl#" >
@@ -106,27 +106,27 @@
     <cfloop query="#rc.accountGroupsQuery#">
         <li class="list-group-item">
             <div class="d-block d-md-none">
-                #name#
+                <i class="fa fa-fw #fa_icon#"></i> #name#
                 <div class="pull-right text-right">
                     <span class="badge badge-secondary">
-                        $#balance#
+                        #moneyFormat(balance)#
                     </span>
                     <br>
                     <span class="badge badge-light text-muted">
-                        $#verifiedBalance#
+                        #moneyFormat(verifiedBalance)#
                     </span>
                 </div>
             </div>
             <div class="container-fluid d-none d-md-block">
                 <div class="row">
                     <div class="col">
-                        #name#
+                        <i class="fa fa-fw #fa_icon#"></i> #name#
                     </div>
                     <div class="col text-right ">
-                        $#balance#
+                        #moneyFormat(balance)#
                     </div>
                     <div class="col text-right">
-                        $#verifiedBalance#
+                        #moneyFormat(verifiedBalance)#
                     </div>
                     <div class="col"></div>
                 </div>

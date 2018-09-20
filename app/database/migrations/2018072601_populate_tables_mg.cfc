@@ -53,13 +53,13 @@
 		<!---Pre-populate with some basic types --->
 		<cfquery datasource="#this.datasource#">
 	
-			Insert Into accountTypes (name)
+			Insert Into accountTypes (name, fa_icon)
 			values 
-				('Checking Account'),
-				('Credit Card'),
-				('Loans'),
-				('Savings Accounts'),
-				('Other');
+				('Checking Account', 'fa-money'),
+				('Credit Card', 'fa-credit-card'),
+				('Loans', 'fa-usd'),
+				('Savings Accounts','fa-university'),
+				('Other','fa-question-circle-o')
 
 		</cfquery>
 
@@ -69,8 +69,8 @@
 		</cfquery>
 		
 		<cfquery datasource="#this.datasource#">
-			Insert Into accountTypes (name,id, sortWeight)
-			Values ("Virtual / Sub Account",0,100)
+			Insert Into accountTypes (name,id, sortWeight, fa_icon)
+			Values ("Virtual / Sub Account",0,100, 'fa-snapchat-ghost')
 		</cfquery>
 
 	</cffunction>

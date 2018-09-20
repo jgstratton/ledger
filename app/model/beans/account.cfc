@@ -53,6 +53,10 @@ component persistent="true" table="accounts" accessors="true" {
         return;
     }
     
+    public any function getIcon(){
+        return this.getType().getFa_icon();
+    }
+
     public boolean function inSummary(){
         return (this.getSummary() eq 'Y');
     }

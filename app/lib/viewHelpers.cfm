@@ -38,4 +38,8 @@
     matchHide = function(val1,val2,output){
         return matchUtil(val1,val2,"neq",output);
     }
+
+    moneyFormat = function(number){
+        return numberformat(arguments.number, "$0.00");
+    }
 </cfscript>

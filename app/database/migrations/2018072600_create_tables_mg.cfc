@@ -105,6 +105,7 @@
 				id 		int(11) 		NOT NULL AUTO_INCREMENT,
 				name 	varchar(100) 	DEFAULT NULL,
 				sortWeight int(11)		DEFAULT 1,
+				fa_icon varchar(20)		DEFAULT NULL,
 				created datetime 		DEFAULT NULL,
 				edited 	datetime 		DEFAULT NULL,
 
