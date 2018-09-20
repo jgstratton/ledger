@@ -63,6 +63,16 @@
 
 		</cfquery>
 
+		<!--- Insert the special "Virual" type --->
+		<cfquery datasource="#this.datasource#">
+			SET SESSION sql_mode='NO_AUTO_VALUE_ON_ZERO'
+		</cfquery>
+		
+		<cfquery datasource="#this.datasource#">
+			Insert Into accountTypes (name,id, sortWeight)
+			Values ("Virtual / Sub Account",0,100)
+		</cfquery>
+
 	</cffunction>
 
 	<cffunction 

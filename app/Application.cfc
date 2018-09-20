@@ -15,8 +15,8 @@ component extends="framework.one" output="false" {
 		action = 'action',
 		defaultSection = 'account',
 		defaultItem = 'list',
-		generateSES = false,
-		SESOmitIndex = false,
+		generateSES = true,
+		SESOmitIndex = true,
 		diEngine = "di1",
 		diComponent = "framework.ioc",
 		diLocations = "./model/services", // ColdFusion ORM handles Beans
@@ -111,8 +111,15 @@ component extends="framework.one" output="false" {
 	
 	}
 
-	public void function setupView() {  
+	public void function setupView( struct rc) {  
 		include 'lib/viewHelpers.cfm';
+	}
+
+	public void function before(struct rc){
+		//user is used in most controllers and views
+		if(session.loggedin){
+			rc.user = this.getBeanFactory().getBean("userService").getUserByid(session.userid);
+		}
 	}
 
 	public void function setupResponse() {  }
