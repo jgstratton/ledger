@@ -10,14 +10,34 @@
                 { name: "Sheetz", datediff: "-29", amount="28.54", note="Gas", categoryid="2"}
             ]
         },
-        {   name: "Home Checking Account", 
+        {   name: "Chase (Amazon)", 
             accountType: 1, 
             summary: "Y",
             transactions: [
                 { name: "Deposit", datediff: "-30", amount="425.00", note="", categoryid="14"},
                 { name: "Mortgage Payment", datediff: "-25", amount="650.00", note="", categoryid="1"}
             ]
-        }
+        },
+        {   name: "Car Loan", 
+            accountType: 3, 
+            summary: "N",
+            transactions: [
+                { name: "Loan Amount", datediff: "-365", amount="11000", note="", categoryid="21"},
+                { name: "Payment", datediff: "-335", amount="325.00", note="", categoryid="22"},
+                { name: "Payment", datediff: "-301", amount="325.00", note="", categoryid="22"},
+                { name: "Payment", datediff: "-290", amount="325.00", note="", categoryid="22"},
+                { name: "Payment", datediff: "-256", amount="325.00", note="", categoryid="22"}
+            ]
+        },
+        {
+            name: "Christmas Club", 
+            accountType: 0, 
+            summary: "N",
+            linkedAccount:1,
+            transactions: [
+                { name: "Christmas", datediff: "-25", amount="200", note="", categoryid="21"}
+            ]
+        },
     ]>
 
     <cffunction 
@@ -41,8 +61,14 @@
                 <cfset account = this.accounts[local.i]>
                 
                 <cfquery datasource="#this.datasource#">
-                    Insert Into accounts(name, accountType_id, summary, user_id) 
-                    values(<cfqueryparam value="#account.name#">, <cfqueryparam value="#account.accountType#">, <cfqueryparam value="#account.summary#">,1) 
+                    Insert Into accounts(name, accountType_id, summary, user_id, LinkedAccount) 
+                    values(<cfqueryparam value="#account.name#">, <cfqueryparam value="#account.accountType#">, <cfqueryparam value="#account.summary#">,1,
+                        <cfif StructKeyExists(account,"linkedaccount")>
+                            #account.linkedAccount#
+                        <cfelse>
+                            NULL
+                        </cfif>
+                    ) 
                 </cfquery>
                 
                 <cfloop from="1" to="#arraylen(account.transactions)#" index="local.j">
