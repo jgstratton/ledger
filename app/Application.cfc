@@ -83,6 +83,17 @@ component extends="framework.one" output="false" {
 	}
 
 	public void function setupRequest() {  
+	
+		if(structKeyExists(url, "init")) { // use index.cfm?init to reload ORM
+			setupApplication();
+			StructClear(Session);
+			setupSession();
+			if(this.getEnvironment() eq 'dev'){
+				migrate();
+			}
+			ormReload();
+            location(url="index.cfm",addToken=false);
+		}
 
 		if(structkeyexists(url,"ormreload") or this.getEnvironment() eq 'dev'){
 			ormReload();
@@ -92,18 +103,7 @@ component extends="framework.one" output="false" {
 			StructClear(Session);
 			setupSession();
 		}
-		
-		if(structKeyExists(url, "init")) { // use index.cfm?init to reload ORM
-			setupApplication();
-			StructClear(Session);
-			setupSession();
-			ormReload();
-			if(this.getEnvironment() eq 'dev'){
-				migrate();
-			}
-			
-            location(url="index.cfm",addToken=false);
-		}
+
 
 		if(not session.loggedin and listlast(cgi.path_info,"/") neq "login"){
 			location("#application.root_path#/login",false);
