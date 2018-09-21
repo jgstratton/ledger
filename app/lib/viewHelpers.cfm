@@ -36,9 +36,18 @@
     }
 
     matchHide = function(val1,val2,output){
-        return matchUtil(val1,val2,"neq",output);
+        if(val1 eq val2){
+            return '';
+        }
+        return output;
     }
 
+    matchDisplay = function(val1,val2,output_true, output_false = ''){
+        if(val1 eq val2){
+            return output_true;
+        }
+        return output_false;
+    }
     moneyFormat = function(number){
         return numberformat(arguments.number, "$0.00");
     }

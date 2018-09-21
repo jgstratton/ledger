@@ -27,7 +27,7 @@
     <cfloop array="#rc.mainAccounts#" item="thisAccount" index="i">
         
         <cfset local.editUrl = buildURL('account.edit?accountid=' & thisAccount.getId())>
-        <cfset local.openUrl = buildURL('transactions.list?accountid=' & thisAccount.getId())>
+        <cfset local.openUrl = buildURL('transaction.new?accountid=' & thisAccount.getId())>
 
         <cfset local.badgeClass = "info">
         <cfif thisAccount.inSummary()>
@@ -82,6 +82,9 @@
             <cfif thisAccount.hasSubAccount()>
                 
                 <cfloop array="#thisAccount.getSubAccount()#" index="subAccount">
+
+                    <cfset local.editUrl = buildURL('account.edit?accountid=' & subAccount.getId())>
+                    <cfset local.openUrl = buildURL('transaction.new?accountid=' & subAccount.getId())>
 
                     <cfset local.badgeClass = "info">
                     <cfif subAccount.inSummary()>

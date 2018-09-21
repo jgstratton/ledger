@@ -156,19 +156,6 @@
     
         <div class="container-fluid inner-content">
             <!---
-            <?php if(in_array($curpage, array('TRN_100.PHP','TRN_200.PHP','TRN_210.PHP'))) {  ?>
-                <ul class="nav nav-tabs">
-                  <li class="nav-item">
-                    <a class="nav-link <?= matchDisplay($curpage,'TRN_100.PHP','active') ?>" href="TRN_100.php">Add Entry</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link <?= matchDisplay($curpage,'TRN_200.PHP','active') ?>" href="TRN_200.php">Verify Entries</a>
-                  </li>
-                  <li class="nav-item">
-                    <span class="nav-link <?= matchDisplay($curpage,'TRN_210.PHP','active','disabled') ?>">Edit Entry</span>
-                  </li>
-                </ul> 
-            <?php } ?>
             
             <?php if(in_array($curpage, array('TRN_250.PHP','TRN_252.PHP'))) {  ?>
                 <h3><i class="fa fa-search"></i> Search Account Transactions</h3>

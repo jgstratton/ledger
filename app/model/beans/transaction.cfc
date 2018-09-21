@@ -1,4 +1,4 @@
-component persistent="true" table="transactions" accessors="true" {
+component persistent="true" table="transactions" accessors="true" extends="_entity" {
 
     property name="id" generator="native" ormtype="integer" fieldtype="id";
     property name="account" fieldtype="many-to-one" cfc="account" fkcolumn="account_id";
@@ -12,8 +12,27 @@ component persistent="true" table="transactions" accessors="true" {
 
     property name="created" ormtype="timestamp";
     property name="edited" ormtype="timestamp";
-    property name="deleted" ormtype="timestamp";
+
+    public array function validate(){
+       
+        var errors = [];
+        
+        variables.validate_field(errors,"Description",this.getName(),"required");
+        variables.validate_field(errors,"Amount",this.getAmount(),"required,numeric");
+        variables.validate_field(errors,"Date",this.getTransactionDate(),"required,USdate");
+        
+        return errors;
+        /*
+        
+        'action' =>        ['default' => 'new'],
+        'Account' =>       ['label' => 'Account',      'required' => true,     'default' => $defaultaccount],
+       
+        'Category' =>      ['label' => 'Category',     'required' => false],
+        
+        'Date' =>          ['label' => 'Date',         'required' => true,     'default' => date('m/d/Y'), 'validate' => 'date'],
+        'Note' =>          ['label' => 'Note',         'required' => false]
+        */
 
 
-
+    }
 }
