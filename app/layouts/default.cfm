@@ -78,7 +78,7 @@
                         </div>
                     
                         <div class="text-right d-none d-md-inline text-secondary">
-                            Checkbook Summary - <span class="badge badge-primary">$#rc.user.getSummaryBalance()#</span>
+                            Checkbook Summary - <span class="badge badge-primary">#moneyFormat(rc.user.getSummaryBalance())#</span>
                         </div>
                     
                     </cfoutput>
@@ -247,10 +247,19 @@
         integrity="sha256-7Ls/OujunW6k7kudzvNDAt82EKc/TPTfyKxIE5YkBzg=" 
         crossorigin="anonymous"></script> 
     
+    <cfoutput>
+
+        <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
+        <!--- add global js variables --->
+        <script>
+            var root_path = '#application.root_path#/';
+        </script>
+
+    </cfoutput>
     <script>
-        console.log('Run ViewScripts: ');
         viewScripts.run();
     </script>
+
     <!---
     <script src="includes/Site_Javascript.js?v=<?=$appVersion;?>"></script>
    

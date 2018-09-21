@@ -19,38 +19,25 @@ component persistent="true" table="users" accessors="true" {
         EntitySave(this);
     }  
     
-    //There's got to be a better place for this... but anyway.
-    public query function getAccountGroupsQuery(){
+    public any function getAccounts(){
+        return ormExecuteQuery("
+            FROM account a
+            WHERE user = :user AND deleted IS NULL
+            ORDER BY a.linkedAccount.type.id,
+                     a.linkedAccount.name,
+                     a.type.isVirtual", 
+            {user: this});
+    }
 
-        return queryExecute("
-            SELECT act.id, accountTypes.fa_icon, act.name, coalesce(Balance,0) as Balance, coalesce(VerifiedBalance,0) as VerifiedBalance
-            FROM   accounts act
-            LEFT JOIN 
-                (SELECT coalesce(accounts.linkedAccount,accounts.id) as id, sum(trn.amount*ctype.multiplier) as Balance
-                 FROM transactions trn
-                 LEFT JOIN categories cat on trn.category_id = cat.id
-                 LEFT JOIN categoryTypes ctype on cat.categoryType_id = ctype.id
-                 LEFT JOIN accounts on accounts.id = trn.account_id
-                 WHERE accounts.user_id = :user_id
-                 GROUP BY coalesce(accounts.linkedAccount,accounts.id)) balanceQry
-            ON act.id = balanceQry.id
-            LEFT JOIN 
-                (SELECT coalesce(accounts.linkedAccount,accounts.id) as id, sum(trn.amount*ctype.multiplier) as VerifiedBalance
-                 FROM transactions trn
-                 LEFT JOIN categories cat on trn.category_id = cat.id
-                 LEFT JOIN categoryTypes ctype on cat.categoryType_id = ctype.id
-                 LEFT JOIN accounts on accounts.id = trn.account_id
-                 WHERE accounts.user_id = :user_id
-                 and trn.verifiedDate is not null
-                 GROUP BY coalesce(accounts.linkedAccount,accounts.id)) verifiedBalanceQry
-            ON act.id = verifiedBalanceQry.id
-            LEFT JOIN 
-                accountTypes on act.accountType_id = accountTypes.id
-            WHERE act.id in 
-                (Select linkedAccount
-                 FROM accounts
-                 WHERE user_id = :user_id and deleted is null)",
-            {user_id: this.getid()});        
+    public any function getAccountGroups(){
+        return ormExecuteQuery("
+            FROM account a
+            WHERE user = :user 
+            AND deleted IS NULL
+            AND a.type.isVirtual = 0
+            ORDER BY a.type.id,
+                     a.name",
+            {user: this});
     }
 
     public numeric function getSummaryBalance(){
@@ -64,7 +51,8 @@ component persistent="true" table="users" accessors="true" {
                 INNER JOIN categoryTypes ctype on cat.categoryType_id = ctype.id
                 INNER JOIN accounts on accounts.id = trn.account_id
                 WHERE accounts.user_id = :user_id
-                AND accounts.summary = 'Y'",
+                AND accounts.summary = 'Y'
+                AND accounts.deleted is null",
             {user_id: this.getid()});
         }
         return this.cached.SummaryBalance.Balance;

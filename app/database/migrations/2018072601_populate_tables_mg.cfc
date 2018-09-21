@@ -60,7 +60,7 @@
 				('Loans', 				'fa-usd', 				1, 0),
 				('Savings Accounts',	'fa-university', 		1, 0),
 				('Other',				'fa-question-circle-o', 1, 0),
-				("Virtual / Sub Account",'fa-snapchat-ghost',	100,1)
+				("Virtual / Sub Account",'',	100,1)
 
 		</cfquery>
 

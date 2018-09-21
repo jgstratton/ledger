@@ -3,14 +3,17 @@ component persistent="true" table="accounts" accessors="true" {
     property name="id" generator="native" ormtype="integer" fieldtype="id";
     property name="user" fieldtype="many-to-one" cfc="user" fkcolumn="user_id";
     property name="name" ormtype="string" length="100";
-    property name="linkedAccount" fieldtype="one-to-one" cfc="account" fkcolumn="linkedAccount";
+
+    property name="linkedAccount" fieldtype="many-to-one" cfc="account" fkcolumn="linkedAccount";
+    property name="subAccount" fieldtype="one-to-many" cfc="account" fkcolumn="linkedAccount" inverse="true";
+
     property name="summary" ormType="string" length="1";
     
     property name="created" ormtype="timestamp";
     property name="edited" ormtype="timestamp";
     property name="deleted" ormtype="timestamp";
 
-    property name="transactions" fieldtype="one-to-many" cfc="transaction" fkcolumn="id";
+    property name="transactions" fieldtype="one-to-many" cfc="transaction" fkcolumn="account_id";
     property name="type" fieldtype="many-to-one" cfc="accountType" fkcolumn="accountType_id";
 
     public function validate(){
@@ -25,12 +28,17 @@ component persistent="true" table="accounts" accessors="true" {
         if(listContains('Y,N',this.getSummary()) eq 0 ){
             arrayAppend(local.errors, "Invalid entry for summary flag");
         }
-        if(Not this.hasLinkedAccount()){
-            arrayAppend(local.errors,"Missing linked account");
-        } else if(not this.isVirtual() and this.getLinkedAccount().getId() neq this.getId()){
-            arrayAppend(local.errors,"Non virtual accounts must link to themselves");
-        } else if(this.isVirtual() and this.getLinkedAccount().getId() eq this.getid()){
-            arrayAppend(local.errors,"Virtual accounts cannot be linked to themselves");
+
+        if(not this.isVirtual() and this.hasLinkedAccount()){
+            arrayAppend(local.errors,"Non virtual accounts cannot have a linked account.");
+        }
+        
+        if(this.isVirtual() and not this.hasLinkedAccount()){
+            arrayAppend(local.errors,"Virtual accounts must be linked to a parent account");
+        }
+
+        if(this.isVirtual() and this.getLinkedAccountID() eq this.getId()){
+            arrayappend(local.errors, "Virtual account cannot be linked to itself.");
         }
             
         return local.errors;
@@ -63,37 +71,66 @@ component persistent="true" table="accounts" accessors="true" {
     }
     
     public boolean function isVirtual(){
-        return (this.getType().isVirtual());
+        if(this.hasType()){
+            return (this.getType().isVirtual());
+        }
+        return 0;
     }
 
     public numeric function getBalance(){
-        return variables.getBalanceByType('all');
+        return variables.calculateBalance();
     }
 
     public numeric function getVerifiedBalance(){
-        return variables.getBalanceByType('verified');
+        return variables.calculateBalance(verifiedOnly:true);
     }
 
-    private numeric function getBalanceByType(type){
+    public numeric function getLinkedBalance(){
+        return variables.calculateBalance(includeLinked:true);
+    }
 
-        local.sql = "
-            SELECT coalesce(sum(trn.amount*ctype.multiplier),0) as Balance
-            FROM transactions trn
-            LEFT JOIN categories cat on trn.category_id = cat.id
-            LEFT JOIN categoryTypes ctype on cat.categoryType_id = ctype.id
-            WHERE trn.account_id = :account_id
-        ";
+    public numeric function getVerifiedLinkedBalance(){
+        return variables.calculateBalance(verifiedOnly:true,includeLinked:true);
+    }
 
-        if(arguments.type eq 'verified'){
-            local.sql &= 'and trn.verifiedDate is not null';
+    /*
+        calculate the account balance by verified/all and includeLinked
+    */
+    private numeric function calculateBalance(boolean verifiedOnly = false, boolean includeLinked = false){
+        var condition1 = '1=2';
+        var condition2 = '1=1';
+
+        if(includeLinked){
+            condition1 = "a.linkedAccount = :thisAccount";
         }
 
-        local.balanceQry = queryExecute(local.sql, {account_id: this.getid()});
+        if(verifiedOnly){
+            condition2 = "trn.verifiedDate is not null";
+        }
 
-        return balanceQry.Balance;
+        local.hql = "
+            SELECT coalesce(sum(trn.amount * catType.multiplier),0)
+            FROM account a
+            JOIN a.transactions trn
+            JOIN trn.category cat
+            JOIN cat.type catType
+            WHERE (a = :thisAccount OR #condition1#) AND (#condition2#)
+        ";
+
+        return ORMExecuteQuery(local.hql, {thisAccount: this},true);
 
     }
 
-
+    /*
+    public any function getLinkedAccounts(){
+        return ormExecuteQuery("
+            FROM account a
+            WHERE linkedAccount = :thisAccount 
+            AND deleted IS NULL
+            AND a.isVirtual = 1
+            ORDER BY a.name",
+            {thisAccount: this});
+    }
+*/
 
 }

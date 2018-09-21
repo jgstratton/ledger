@@ -8,7 +8,7 @@ component persistent="true" table="categories" accessors="true" {
     property name="deleted" ormtype="timestamp";
 
     property name="transactions" fieldtype="one-to-many" cfc="transaction" fkcolumn="id";
-    property name="types" fieldtype="many-to-one" cfc="categoryType" fkcolumn="categoryType_id";
+    property name="type" fieldtype="many-to-one" cfc="categoryType" fkcolumn="categoryType_id";
 
 
 }

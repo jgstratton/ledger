@@ -13,8 +13,7 @@ component name="account" output="false"  accessors=true {
         if(not rc.user.hasAccounts()){
             variables.fw.setView('account.blank');
         } else {
-            rc.accounts = rc.user.getAccounts();
-            rc.accountGroupsQuery = rc.user.getAccountGroupsQuery();
+            rc.mainAccounts = rc.user.getAccountGroups();
             rc.summary = rc.user.getSummaryBalance();
         }
     }
@@ -38,7 +37,7 @@ component name="account" output="false"  accessors=true {
             if(account.isVirtual()){
                 account.setLinkedAccount(accountService.getAccountByid(rc.linkedAccount));
             } else {
-                account.setLinkedAccount(account);
+                account.setLinkedAccount(javacast("null",""));
             }
 
             rc.errors = account.validate();
@@ -46,13 +45,13 @@ component name="account" output="false"  accessors=true {
             /* All validation passed, add the account */
             if(arraylen(rc.errors) eq 0){
                 accountService.save(account);
-                location(url="../", addToken="false" );
+                variables.fw.redirect("account.list");
             }
         }
 
         //get the select list items
         rc.accountTypes = accountService.getTypes();
-        rc.accounts = rc.user.getAccounts();
+        rc.accounts = rc.user.getAccountGroups();
     }
 
     public void function create( struct rc = {} ){
@@ -70,6 +69,11 @@ component name="account" output="false"  accessors=true {
         rc.mode = 'edit';
         rc.account = account;
         fw.setView('account.createEdit');
+    }
+
+    public void function delete( struct rc = {}){
+        accountService.deleteAccountByid(rc.accountid);
+        variables.fw.redirect('account.list');
     }
 
 }

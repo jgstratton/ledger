@@ -4,10 +4,27 @@ component output="false" {
         return entityLoadByPk( "account", arguments.id);
     }
 
+    /* 
+     Soft-delete accounts when transactions exist, if no
+     transactions exist then delete the entire account
+    */
+    public any function deleteAccountByid(id){
+    
+        transaction{
+            var account = EntityLoadByPk("account",arguments.id);
+            if(account.hasTransactions()){
+                account.setDeleted(now());
+            } else {
+                EntityDelete(account);
+            }
+        }  
+    
+    }
+
     public any function getAccountTypeById(id){
         return entityLoadByPk("accountType", arguments.id);
     }
-    
+
     public any function createAccount(){
         return Entitynew( "account" );
     }

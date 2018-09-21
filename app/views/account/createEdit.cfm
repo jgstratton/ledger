@@ -8,7 +8,7 @@
 
     #view("includes/errors")#
 
-    <form name="frmAccount" action="#buildurl('account.edit')#" method="post" class="form-horizontal" autocomplete="off">
+    <form name="frmAccount" method="post" class="form-horizontal" autocomplete="off">
         
         <input type="hidden" name="mode" value="#rc.mode#">
         <input type="hidden" name="accountid" value="#rc.account.getId()#">
@@ -95,15 +95,25 @@
 
         var $typeSelect = $("[name='accountTypeId']"),
             $linkedAccount = $("#linkedAccount"),
+            $btnDelete = $("[data-delete]"),
+            accountid = $("[name='accountid']").val(),
+
             toggle = function(){
                 if($typeSelect.find("option:selected").data('virtual') == 0){
                     $linkedAccount.collapse('hide');
                 } else {
                     $linkedAccount .collapse('show');
                 }
+            },
+
+            deleteAccount = function(){
+                jConfirm('Delete this account?', function(){
+                    post(root_path + 'account/delete', {accountid: accountid}) 
+                });
             };
 
         $typeSelect.change(toggle);
+        $btnDelete.click(deleteAccount);
         toggle();
     });
 
