@@ -123,6 +123,14 @@ html, body {
       width:auto;
   }
   
+  .margin-l-20{
+      padding-left:20px;
+  }
+
+  hr.sm{
+      margin-top:5px;
+      margin-bottom:5px;
+  }
   
   @media (max-width: 576px) {
       html{
