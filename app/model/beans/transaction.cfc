@@ -21,18 +21,21 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
         variables.validate_field(errors,"Amount",this.getAmount(),"required,numeric");
         variables.validate_field(errors,"Date",this.getTransactionDate(),"required,USdate");
         
+        if(not this.hasCategory()){
+            arrayAppend(errors,"Please select a transaction type");
+        }
+
+        if(not this.hasAccount()){
+            arrayAppend(errors,"The account is required");
+        }
         return errors;
-        /*
-        
-        'action' =>        ['default' => 'new'],
-        'Account' =>       ['label' => 'Account',      'required' => true,     'default' => $defaultaccount],
-       
-        'Category' =>      ['label' => 'Category',     'required' => false],
-        
-        'Date' =>          ['label' => 'Date',         'required' => true,     'default' => date('m/d/Y'), 'validate' => 'date'],
-        'Note' =>          ['label' => 'Note',         'required' => false]
-        */
 
+    }
 
+    public any function getCategoryId(){
+        if(this.hasCategory()){
+            return this.getCategory().getid();
+        }
+        return 1;
     }
 }

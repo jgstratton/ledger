@@ -4,73 +4,63 @@
     #view("transaction/_errors")#
     #view("transaction/_form")#
 
+    <h6 class="small text-muted">Recent Transactions</h6>
+
+    <table class="table">
+    
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th class="d-none d-md-table-cell">Category</th>
+                <th class="d-none d-md-table-cell">Note</th>
+                <th style="text-align:right">Amount</th>
+                <th>&nbsp;</th>
+            </tr>
+    
+        </thead>
+
+        <cfloop array="#rc.transactions#" item="local.transaction">
+            <!---
+$TranStyle = "";
+                if($TranAmount < 0){
+                    $TranAmount = number_format($TranAmount * -1.00,2, '.', '');
+                    $TranStyle = "color:red";
+                }
+
+            --->
+
+            <cfset local.rowClass = ''>
+            <cfif StructKeyExists(rc,"lastTransactionId") and local.transaction.getid() eq rc.lastTransactionid>
+                <cfset local.rowClass = "bg-success transition-ease">
+            </cfif>
+
+            <tr class="#local.rowClass#">
+                <td>#dayFormat(local.transaction.getTransactionDate())#</td>
+                <td>#local.transaction.getName()#</td>
+                <td class="d-none d-md-table-cell">
+                    <cfif local.transaction.hasCategory()>
+                        #local.transaction.getCategory().getName()#
+                    </cfif>
+                </td>
+                <td class="d-none d-md-table-cell">#local.transaction.getNote()#</td>
+                <td style="<?= $TranStyle ?>" align="right">#moneyFormat(local.transaction.getAmount())#</td>
+                <td>
+                    <button type="submit" class="btn btn-link" data-edit-trans="#rc.transaction.getid()#">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                </td>
+            </tr>
+
+        </cfloop>
+
+    </table>
 
     <!---
-
-           
-   
 
    
 <br>
 
-
-<h6 class="small text-muted">Recent Transactions</h6>
-    
-<table class="table">
-    
- 
-    <thead>
-        <tr>
-            <th style="cursor: pointer;">Date</th>
-            <th>Description</th>
-            <th class="d-none d-md-table-cell">Category</th>
-            <th class="d-none d-md-table-cell">Note</th>
-            <th style="text-align:right">Amount</th>
-            <th>&nbsp;</th>
-        </tr>
-
-    </thead>
-
-
-        <?php
-
-        while($row = $accounttransactions->fetch(PDO::FETCH_ASSOC)) {
-            $TranDate=$row["phpEntryDate"];
-            $TranID=$row["TransactionID"];
-            $TranTitle=$row["EntryTitle"];
-            $TranCat=$row["CategoryDescription"];
-            $TranAmount=Number_format($row["Amount"],2, '.', '');
-            $TranNote=$row["Note"];
-            
-            $TranStyle = "";
-            if($TranAmount < 0){
-                $TranAmount = number_format($TranAmount * -1.00,2, '.', '');
-                $TranStyle = "color:red";
-            }
-            
-            $rowStyle = '';
-            if(isset($editTRN) && $editTRN == $TranID){
-                $rowStyle = "bg-warning";
-            } else if(isset($_SESSION['HighlightTrans']) && $_SESSION['HighlightTrans'] == $TranID){
-                $rowStyle = "bg-success transition-ease";
-            }
-            ?>
-            <tr class="<?= $rowStyle ?>">
-                <td><?= $fn->date('m/d/Y',$TranDate) ?></td>
-                <td><?= $TranTitle?></td>
-                <td class="d-none d-md-table-cell"><?= $TranCat ?></td>
-                <td class="d-none d-md-table-cell"><?= $TranNote ?></td>
-                <td style="<?= $TranStyle ?>" align="right">$<?= $TranAmount ?>&nbsp;&nbsp;</td>
-                <td>
-                    <?php if( in_array($_POST['action'], ['insert','new']) ) { ?>
-                    <button type="submit" class="btn btn-link" data-edit-trans="<?= $TranID ?>">
-                        <i class="fa fa-pencil"></i>
-                    </button>
-                    <?php } ?>
-                </td>
-            </tr>
-        <?php } //end while loop ?>
-	</table>
 
     <br>
 

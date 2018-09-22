@@ -23,6 +23,7 @@
 		<cfquery datasource="#this.datasource#">
 			Insert Into categories(name,categoryType_id)
 			Values 
+				('',						2),
 				('Clothing',                2),
 				('Credit Card Payments',    2),
 				('Dining Out',              2),

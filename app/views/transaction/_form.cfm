@@ -25,9 +25,8 @@
             <label class="col-3 col-form-label">Type:</label>
             <div class="col-9">
                 <select name="Category" class="form-control form-control-sm">
-                    <option value="0"></option>
                     <cfloop array="#rc.categories#" item="local.category">
-                        <option value="#local.category.getid()#" #matchSelect(local.category.getid(), rc.transaction.getid())#>
+                        <option value="#local.category.getid()#" #matchSelect(local.category.getid(), rc.transaction.getCategoryid())#>
                             #local.category.getName()#
                         </option>
                     </cfloop>
@@ -48,7 +47,7 @@
             <div class="col-9">
 
                 <div class="input-group">
-                    <input type="text" name="Date" value="#rc.transaction.getTransactionDate()#" class="form-control form-control-sm" data-datepicker>
+                    <input type="text" name="transactionDate" value="#rc.transaction.getTransactionDate()#" class="form-control form-control-sm" data-datepicker>
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>

@@ -13,7 +13,13 @@ component name="account" output="false"  accessors=true {
 
         if(StructKeyExists(rc,'submitTransaction')){
             variables.fw.populate(transaction);
+            transaction.setCategory(categoryService.getCategoryById(rc.category));
             rc.errors = transaction.validate();
+            if(arrayLen(rc.errors) eq 0){
+                transactionService.save(transaction);
+                rc.lastTransactionid = transaction.getid();
+                variables.fw.redirect(action='transaction.new', append="lastTransactionid,accountid");
+            }
         }
         rc.categories = categoryService.getCategories();
 
@@ -22,6 +28,7 @@ component name="account" output="false"  accessors=true {
     public void function new( struct rc = {} ){
         rc.account = accountService.getAccountByID(rc.accountid);
         rc.transaction = transactionService.createTransaction(rc.account);
+        rc.transactions = transactionService.getRecentTransactions(rc.account);
         variables.editCreate(rc);
     }
 }

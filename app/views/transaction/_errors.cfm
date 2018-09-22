@@ -1,5 +1,5 @@
 <cfoutput>
-    <cfif ArrayLen(rc.errors) gt 0>
+    <cfif StructKeyExists(rc,"errors") and ArrayLen(rc.errors) gt 0>
         <div class="alert alert-danger">
             <div class="">
                 <i class="fa fa-exclamation-triangle"></i> Please correct the following errors and then try to save your transaction again.
