@@ -51,4 +51,7 @@
     moneyFormat = function(number){
         return numberformat(arguments.number, "$0.00");
     }
+    dayFormat = function(date){
+        return dateformat(arguments.date,"mm/dd/yyyy");
+    }
 </cfscript>

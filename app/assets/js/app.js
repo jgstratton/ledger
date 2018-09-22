@@ -55,3 +55,13 @@ post = function(path, formData){
     $("body").append($form);
     $form.submit();
 }
+
+$("[data-datepicker]").datepicker().click(function(){
+    var $this = $(this);
+    if(Math.max(document.documentElement.clientWidth, window.innerWidth || 0) < 768){
+        $this.prop('readonly',true);
+    } else {
+        $this.prop('readonly',false);
+    }
+    
+}).attr("autocomplete", "off");  
