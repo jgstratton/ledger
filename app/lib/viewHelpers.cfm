@@ -48,10 +48,21 @@
         }
         return output_false;
     }
+
+    
     moneyFormat = function(number){
-        return numberformat(arguments.number, "$0.00");
+        return numberformat(arguments.number, "$,0.00");
     }
+
     dayFormat = function(date){
         return dateformat(arguments.date,"mm/dd/yyyy");
     }
+    
+   function lenShow( string checkLen, string output ){
+        if ( len( arguments.checkLen ) ){
+            return arguments.output;
+        }
+        return '';
+    }
+
 </cfscript>

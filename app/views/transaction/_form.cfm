@@ -2,8 +2,9 @@
     <form method="post" style="max-width:600px">
 
         <input type="hidden" name="account_id" value="#rc.account.getid()#">
-        <input type="hidden" name="id" value="#rc.transaction.getid()#">
-        
+        <input type="hidden" name="transactionid" value="#rc.transaction.getid()#">
+        <input type="hidden" name="returnPage" value="#rc.returnPage#">
+
         <div class="row">
             <label class="col-3 col-form-label">Account:</label>
             <div class="col-9">
@@ -47,7 +48,7 @@
             <div class="col-9">
 
                 <div class="input-group">
-                    <input type="text" name="transactionDate" value="#rc.transaction.getTransactionDate()#" class="form-control form-control-sm" data-datepicker>
+                    <input type="text" name="transactionDate" value="#dayFormat(rc.transaction.getTransactionDate())#" class="form-control form-control-sm" data-datepicker>
                     <div class="input-group-append">
                         <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                     </div>

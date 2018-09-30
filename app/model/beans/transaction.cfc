@@ -38,4 +38,8 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
         }
         return 1;
     }
+
+    public numeric function getSignedAmount(){
+        return (this.getAmount() * this.getCategory().getType().getMultiplier());
+    }
 }

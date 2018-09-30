@@ -21,6 +21,16 @@ component output="false" {
     
     }
 
+    public any function getUserAccounts( user ) {
+        return ormExecuteQuery("
+            FROM account as a
+            WHERE user = :user AND deleted IS NULL
+            ORDER BY a.linkedAccount.type.id,
+                     a.linkedAccount.name,
+                     a.id", 
+            {user: arguments.user});
+    }
+
     public any function getAccountTypeById(id){
         return entityLoadByPk("accountType", arguments.id);
     }
@@ -30,6 +40,10 @@ component output="false" {
     }
 
     public any function save(account){
+        //by default, link an accoun to iteself
+        if(not arguments.account.hasLinkedAccount()){
+            arguments.account.setLinkedAccount(arguments.account);
+        }
         EntitySave(arguments.account);
         ormflush();
     }

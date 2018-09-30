@@ -65,3 +65,45 @@ $("[data-datepicker]").datepicker().click(function(){
     }
     
 }).attr("autocomplete", "off");  
+
+//create a jquery function similar to $.getJSON but have it use POST instead of GET
+postJSON = function(url, data, callback){
+   
+    $.ajax({
+        url: url,
+        type: "POST",
+        dataType: "json",
+        data:data
+    })
+    .done(function(data){
+        callback(data);
+    })
+    .fail(function(a, b){
+        $("body").append(a.responseText);
+    });
+}
+
+//Remove on-load highlights
+$(".temp-highlight-row.table-success").removeClass("table-success");
+
+/* 
+    Get elements by the data-js-hook attribute  (which can be a list of hooks)
+     1. Get all elements that contain the jsHook variable
+     2. Only return results that match a list item
+*/
+var jsHook = {
+
+    getElement: function(hookName){
+        var $matchedElements = $("[data-js-hook*=" + hookName + "]");
+        
+        return $matchedElements.filter(function(){
+            var hooks = $(this).data('jsHook').split(",");
+            for( var i = 0; i < hooks.length; i++ ){
+                if(hooks[i] == hookName){
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+}

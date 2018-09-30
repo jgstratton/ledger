@@ -1,0 +1,18 @@
+.verify-row > td, .verify-row > th{
+    background-color:white;
+    transition: all 0.5s ease;
+}
+  
+.verify-row.verified > td, .verify-row.verified > th{
+    background-color:#c3e6cb;
+}
+  
+.verify-row.last-verified > td, .verify-row.last-verified > th{
+    background-color:rgb(104, 176, 255);
+    color:black !important;
+}
+
+.verify-row.last-verified .text-danger,
+.verify-row.last-verified .btn-link{
+    color:black !important;
+}

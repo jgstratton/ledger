@@ -18,7 +18,7 @@ component name="account" output="false"  accessors=true {
             if(arrayLen(rc.errors) eq 0){
                 transactionService.save(transaction);
                 rc.lastTransactionid = transaction.getid();
-                variables.fw.redirect(action='transaction.new', append="lastTransactionid,accountid");
+                variables.fw.redirect(action='transaction.#rc.returnpage#', append="lastTransactionid,accountid");
             }
         }
         rc.categories = categoryService.getCategories();
@@ -29,6 +29,25 @@ component name="account" output="false"  accessors=true {
         rc.account = accountService.getAccountByID(rc.accountid);
         rc.transaction = transactionService.createTransaction(rc.account);
         rc.transactions = transactionService.getRecentTransactions(rc.account);
+        rc.returnPage = 'new';
         variables.editCreate(rc);
+    }
+
+    public void function edit( struct rc = {} ){
+        rc.transaction = transactionService.getTransactionById(rc.transactionid);
+        rc.account = rc.transaction.getAccount();
+        rc.accountid = rc.accountid = rc.account.getid();
+        variables.editCreate(rc);
+    }
+
+    public void function verify( struct rc = {} ){
+        rc.account = accountService.getAccountById(rc.accountid);
+        rc.unverifiedTransactions = transactionService.getUnverifiedTransactions(rc.account);
+        rc.verifiedTransactions = transactionService.getVerifiedTransactions(rc.account);
+        rc.lastVerifiedTransaction = transactionService.getLastVerifiedTransaction(rc.account);
+    }
+
+    public void function after( struct rc = {} ){
+        rc.accounts = accountService.getUserAccounts(rc.user);
     }
 }

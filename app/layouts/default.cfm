@@ -1,3 +1,4 @@
+<cfoutput>
 <!DOCTYPE html>
 
 <html>	
@@ -10,12 +11,6 @@
 
         <link rel="shortcut icon" href="images/credit-card-front-152-182038.png" /> 
 
-        <!---
-        <link rel="stylesheet" type="text/css" href="includes/Site_Style_Elements.css" /> 
-        <link rel="stylesheet" type="text/css" href="includes/Site_Style_Tables.css" /> 
-        <link rel="stylesheet" type="text/css" href="includes/jquery.custom.css" /> 
-        --->
-
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
 
@@ -25,10 +20,11 @@
             integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
             crossorigin="anonymous">
 
-        <cfoutput>
-            <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
-            <script src="#application.root_path#/assets/js/viewScripts.js?v=<?=$appVersion;?>"></script>
-        </cfoutput>
+
+        <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
+        <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/transactions.css?v=#application.version#" />
+        <script src="#application.root_path#/assets/js/viewScripts.js?v=#application.version#"></script>
+
 
 	</head>
 
@@ -38,7 +34,7 @@
 
                 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
                     <div>
-                        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbar">
+                        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="##navbar">
                             <i class="fa fa-bars"></i>
                         </button>
                         <span class="navbar-brand">
@@ -50,80 +46,46 @@
                         Summary - <span class="badge badge-primary text-nowrap"><!---$<?=$AccountSummary?>---></span>
                     </div>
 
-                    <cfoutput>
-                        <div class="navbar-collapse collapse" id="navbar">
-                            <ul class="navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#buildUrl('account.list')#">Accounts</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="TRN_400.php">Transfer</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="TRN_250.php">Search</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
-                                <div class="dropdown-menu">
-                                <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
-                                <a class="dropdown-item" href="TRN_500.php">Manage Categories</a>
-                                <a class="dropdown-item" href="TRN_700.php">Manage Bills</a>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="logout">Logout</a>
-                            </li>
-                            </ul>
+                    <div class="navbar-collapse collapse" id="navbar">
+                        <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#buildUrl('account.list')#">Accounts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="TRN_400.php">Transfer</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="TRN_250.php">Search</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
+                            <div class="dropdown-menu">
+                            <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
+                            <a class="dropdown-item" href="TRN_500.php">Manage Categories</a>
+                            <a class="dropdown-item" href="TRN_700.php">Manage Bills</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="logout">Logout</a>
+                        </li>
+                        </ul>
+            
+                    </div>
                 
-                        </div>
+                    <div class="text-right d-none d-md-inline text-secondary">
+                        Checkbook Summary - <span class="badge badge-primary">#moneyFormat(rc.user.getSummaryBalance())#</span>
+                    </div>
                     
-                        <div class="text-right d-none d-md-inline text-secondary">
-                            Checkbook Summary - <span class="badge badge-primary">#moneyFormat(rc.user.getSummaryBalance())#</span>
-                        </div>
-                    
-                    </cfoutput>
                 </nav>
     
                 <div class="title-bar">
                 <hr>
-    
-            <!---
-            <?php if(matchList('trn_100.php,trn_200.php,trn_210.php',$curpage)) { ?>
-                <div class="row nav-2">
-                    <div class="col text-left">
-                      <div class="dropdown">
-                        <button type="button" class="btn btn-link  dropdown-toggle" data-toggle="dropdown"><?=$DefaultAccountDescr?></button>
-                        <div class="dropdown-menu bg-dark">
-    
-                            <?php
-                                while($row = $AccountListDefault->fetch(PDO::FETCH_ASSOC)) {  ?>
-    
-                                    <button type="button" class="dropdown-item text-light" data-change-account="<?= $row['AccountID'] ?>" <?= matchDisplay($row["AccountID"],$DefaultAccount,'disabled') ?> >
-                                        <?= $row['AccountDescription'] ?>
-                                    </button>
-    
-                            <?php } ?>
-    
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col text-right">
-                        <div>
-                            Account Total - 
-                            <span class="badge badge-success" id="defaultBalance">
-                                $<?= $DefaultBalance ?>
-                            </span>
-                        </div>
-                        <div>
-                            Verified Total - 
-                            <span class="badge badge-dark" id="defaultVerified">
-                                $<?= $LinkVerified ?>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            <?php } ?> 
                 
+                <cfif request.section eq "transaction">
+                    #view('transaction/_header')#
+                </cfif>
+
+               <!--- 
     
     
             <h6 class="small text-muted">
@@ -186,7 +148,7 @@
                 </ul> 
             <?php } ?>
             --->
-       <cfoutput>#body#</cfoutput>
+       #body#
         </div> <!--- .container-fluid --->
     </div>
     <!---
@@ -228,15 +190,14 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/1.0.5/jquery.mobile-events.js"></script>
     
-    <cfoutput>
 
-        <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
-        <!--- add global js variables --->
-        <script>
-            var root_path = '#application.root_path#/';
-        </script>
+    <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
+    <!--- add global js variables --->
+    <script>
+        var root_path = '#application.root_path#/';
+    </script>
 
-    </cfoutput>
+
     <script>
         viewScripts.run();
     </script>
@@ -270,6 +231,8 @@
 			
 	</body>
 </html>
+
+</cfoutput>
 
 
 

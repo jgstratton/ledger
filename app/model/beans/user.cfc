@@ -19,16 +19,6 @@ component persistent="true" table="users" accessors="true" {
         EntitySave(this);
     }  
     
-    public any function getAccounts(){
-        return ormExecuteQuery("
-            FROM account a
-            WHERE user = :user AND deleted IS NULL
-            ORDER BY a.linkedAccount.type.id,
-                     a.linkedAccount.name,
-                     a.type.isVirtual", 
-            {user: this});
-    }
-
     public any function getAccountGroups(){
         return ormExecuteQuery("
             FROM account a

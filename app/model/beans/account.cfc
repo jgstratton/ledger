@@ -5,7 +5,7 @@ component persistent="true" table="accounts" accessors="true" {
     property name="name" ormtype="string" length="100";
 
     property name="linkedAccount" fieldtype="many-to-one" cfc="account" fkcolumn="linkedAccount";
-    property name="subAccount" fieldtype="one-to-many" cfc="account" fkcolumn="linkedAccount" inverse="true";
+    property name="subAccount" fieldtype="one-to-many" type="array" cfc="account" fkcolumn="linkedAccount" inverse="true";
 
     property name="summary" ormType="string" length="1";
     
@@ -15,6 +15,19 @@ component persistent="true" table="accounts" accessors="true" {
 
     property name="transactions" fieldtype="one-to-many" cfc="transaction" fkcolumn="account_id";
     property name="type" fieldtype="many-to-one" cfc="accountType" fkcolumn="accountType_id";
+
+
+    public function hasSubAccount(){
+        return Arraylen(this.getSubAccount());
+    }
+
+    public function getSubAccount(){
+        return ORMExecuteQuery("
+            from account a 
+            where a.linkedAccount = :account
+            and a <> :account" , 
+        {account: this});
+    }
 
     public function validate(){
         local.errors = [];
@@ -97,11 +110,11 @@ component persistent="true" table="accounts" accessors="true" {
         calculate the account balance by verified/all and includeLinked
     */
     private numeric function calculateBalance(boolean verifiedOnly = false, boolean includeLinked = false){
-        var condition1 = '1=2';
+        var condition1 = 'a = :thisAccount';
         var condition2 = '1=1';
 
         if(includeLinked){
-            condition1 = "a.linkedAccount = :thisAccount";
+            condition1 = "a.linkedAccount = :linkedAccount";
         }
 
         if(verifiedOnly){
@@ -109,16 +122,17 @@ component persistent="true" table="accounts" accessors="true" {
         }
 
         local.hql = "
-            SELECT coalesce(sum(trn.amount * catType.multiplier),0)
-            FROM account a
-            JOIN a.transactions trn
-            JOIN trn.category cat
-            JOIN cat.type catType
-            WHERE (a = :thisAccount OR #condition1#) AND (#condition2#)
+            SELECT  coalesce(sum(trn.amount * catType.multiplier),0)
+            FROM    account a
+            JOIN    a.transactions trn
+            JOIN    trn.category cat
+            JOIN    cat.type catType
+            
+            WHERE (#condition1#) AND (#condition2#) and a.deleted is null
         ";
-
-        return ORMExecuteQuery(local.hql, {thisAccount: this},true);
-
+        
+        return ORMExecuteQuery(local.hql ,{ thisAccount: this, linkedAccount: this.getLinkedAccount() }, true);
+        
     }
 
     /*
