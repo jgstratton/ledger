@@ -47,6 +47,14 @@ component name="account" output="false"  accessors=true {
         rc.lastVerifiedTransaction = transactionService.getLastVerifiedTransaction(rc.account);
     }
 
+    public void function clear( struct rc = {} ){
+        rc.account = accountService.getAccountById(rc.accountid);   
+    }
+
+    public void function clear( struct rc = {} ){
+        rc.account = accountService.getAccountById(rc.accountid);   
+    }
+
     public void function after( struct rc = {} ){
         rc.accounts = accountService.getUserAccounts(rc.user);
     }

@@ -74,7 +74,7 @@
                     $clearBtn = $transactionRow.find("button.btn-primary"),
                     $undoBtn = $transactionRow.find("button.btn-danger"),
                     
-                    getRow = function($anyElement){
+                    getRow = function($rowElement){
                         return $rowElement.closest("tr");
                     },
 
