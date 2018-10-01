@@ -1,0 +1,11 @@
+{
+    "web": {
+        "host": "localhost",
+        "webroot": "/app/src",
+        "directoryBrowsing": false,
+        "rewrites": {
+            "enable": true,
+            "logEnable": true
+        }
+    }
+}

@@ -33,17 +33,17 @@ services:
      - localnet
 
   lucee:
-    build: ./lucee
+    image: ortussolutions/commandbox:lucee5
     container_name: "${CONTAINER_PREFIX}_lucee"
     restart: 'always'
     depends_on:
      - db
     ports: 
-     - "${LUCEE_PORT}:80"
+     - "${LUCEE_PORT}:8080"
     networks:
      - localnet
     volumes:
-     - ./app:/var/www/
+     - ./app:/app
     environment:
      - MYSQL_DATABASE
      - MYSQL_USER
@@ -53,6 +53,7 @@ services:
      - FACEBOOK_APPID
      - FACEBOOK_APPSECRET
      - DEFAULT_USER_EMAIL
+     - cfconfigfile
 
   cron:
     build: ./cron
