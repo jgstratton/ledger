@@ -42,4 +42,9 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
     public numeric function getSignedAmount(){
         return (this.getAmount() * this.getCategory().getType().getMultiplier());
     }
+
+    public boolean function isVerified(){
+        return len(this.getVerifiedDate());
+    }
+
 }

@@ -44,15 +44,36 @@ component name="account" output="false"  accessors=true {
         rc.account = accountService.getAccountById(rc.accountid);
         rc.unverifiedTransactions = transactionService.getUnverifiedTransactions(rc.account);
         rc.verifiedTransactions = transactionService.getVerifiedTransactions(rc.account);
-        rc.lastVerifiedTransaction = transactionService.getLastVerifiedTransaction(rc.account);
+        rc.lastVerifiedId = transactionService.getLastVerifiedID(rc.account);
+    }
+
+    public void function clearOrUndo( struct rc = {}){
+        
+        var transaction = transactionService.getTransactionById(rc.transactionId);
+        var account = transaction.getAccount();
+
+        switch (listGetAt(rc.action,2,".")){
+            case 'clear' :
+                transactionService.verifyTransaction(transaction);
+                break;
+            case 'undo' :
+                transactionService.unverifyTransaction(transaction);
+                break;
+        }
+        
+        rc.jsonResponse.verifiedLinkedBalance = account.getVerifiedLinkedBalance();
+        rc.jsonResponse.lastVerifiedId = transactionService.getLastVerifiedID(account);
+        
+        variables.fw.setView('main.jsonresponse');
+        
     }
 
     public void function clear( struct rc = {} ){
-        rc.account = accountService.getAccountById(rc.accountid);   
+        variables.clearOrUndo(rc);
     }
 
-    public void function clear( struct rc = {} ){
-        rc.account = accountService.getAccountById(rc.accountid);   
+    public void function undo( struct rc = {} ){
+        variables.clearOrUndo(rc);
     }
 
     public void function after( struct rc = {} ){

@@ -49,6 +49,12 @@
         return output_false;
     }
 
+    displayIf = function(condition, value){
+        if(condition){
+            return value;
+        }
+        return '';
+    }
     
     moneyFormat = function(number){
         return numberformat(arguments.number, "$,0.00");

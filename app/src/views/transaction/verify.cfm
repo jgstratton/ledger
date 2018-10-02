@@ -18,7 +18,8 @@
                         <th class="d-none d-md-table-cell">Category</th>
                         <th class="d-none d-md-table-cell">Note</th>
                         <th style="text-align:right">Amount</th>
-                        <th>&nbsp;</th>
+                        <th></th>
+                        <th></th>
                     </tr>
             
                 </thead>
@@ -35,7 +36,7 @@
                     <cfif len(local.transaction.getVerifiedDate())>
                         <cfset local.rowClass &= ' verified'>
                     </cfif>
-                    <cfif local.transaction.getid() eq rc.lastVerifiedTransaction.getid()>
+                    <cfif local.transaction.getid() eq rc.lastVerifiedId>
                         <cfset local.rowClass &= ' last-verified'>
                     </cfif>
                     
@@ -53,10 +54,10 @@
                             <button type="submit" class="btn btn-link" data-edit-transaction="#local.transaction.getid()#">
                                 <i class="fa fa-pencil"></i>
                             </button>
-                        </td>
+                        </td>              
                         <td class="right d-none d-md-table-cell">
-                            <button type="button" class="btn btn-sm btn-primary">clear</button>
-                            <button type="button" class="btn btn-sm btn-danger">undo</button>
+                            <button type="button" class="btn btn-sm btn-primary #displayIf(local.transaction.isVerified(), 'd-none')#">clear</button>
+                            <button type="button" class="btn btn-sm btn-danger #displayIf(!local.transaction.isVerified(), 'd-none')#">undo</button>
                         </td>   
                     </tr>
 
@@ -70,9 +71,9 @@
                 var viewId = '#local.viewId#',
                     $viewDiv = $("##" + viewId),
                     $editBtn = $viewDiv.find("[data-edit-transaction]"),
-                    $transactionRow = $viewDiv.find("tr[data-trn]"),
-                    $clearBtn = $transactionRow.find("button.btn-primary"),
-                    $undoBtn = $transactionRow.find("button.btn-danger"),
+                    $transactionRows = $viewDiv.find("tr[data-trn]"),
+                    $clearBtn = $transactionRows.find("button.btn-primary"),
+                    $undoBtn = $transactionRows.find("button.btn-danger"),
                     
                     getRow = function($rowElement){
                         return $rowElement.closest("tr");
@@ -80,15 +81,19 @@
 
                     clear = function($tr){
                         var transactionId = $tr.data("trn");
-                        $tr.addClass('highlight');  
+                        $tr.addClass('verified');  
                         $tr.removeClass('default');
+                        $tr.find("button").removeClass('d-none');
+                        $tr.find("button.btn-primary").addClass('d-none');
                         updateSummary('clear',transactionId);
                     },
                 
                     undo = function($tr){
                         var transactionId = $tr.data("trn");
                         $tr.addClass('default');  
-                        $tr.removeClass('highlight');
+                        $tr.removeClass('verified');
+                        $tr.find("button").removeClass('d-none');
+                        $tr.find("button.btn-danger").addClass('d-none');
                         updateSummary('undo',transactionId);
                     },
                     
@@ -96,10 +101,10 @@
                         postJSON( root_path + 'transaction/' + action, {
                             transactionId: trnID
                         }, function(data){
-                            jsHook.getElement('accountBalance').html("$" + data.DefaultBalance);
-                            jsHook.getElement('accountBalanceVerified').html("$" + data.LinkVerified);
-                            $transactionRow.removeClass('last-verified');
-                            $transactionRow.find("[data-trn='" + data.LastVerified + "']").addClass('primary');
+                            console.log(data);
+                            jsHook.getElement('linkedBalanceVerified').html("$" + data.verifiedLinkedBalance);
+                            $transactionRows.removeClass('last-verified');
+                            $transactionRows.filter("[data-trn='" + data.lastVerifiedId + "']").addClass('last-verified');
                         });
                     };
 
@@ -110,14 +115,30 @@
                     });
                 });
 
-                $clearBtn.click(function(){
-                    clear(getRow($(this)));
+                $clearBtn.click( function() {
+                    clear( getRow($(this)) );
                 });
 
-                $undoBtn.click(function(){
-                    undo(getRow($(this)));
+                $undoBtn.click( function() {
+                    undo( getRow($(this)) );
                 });
                 
+                $transactionRows.swipe(function(e,touch){
+                    var $tr = $(this)
+                        screenWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                    
+                    if(screenWidth < 768){
+                        switch(touch.direction){
+                            case 'right':
+                                clear($tr); break;
+                            case 'left':
+                                undo($tr);  break;
+                        }
+                    }
+                    
+
+                });
+
             });
         </script>
 

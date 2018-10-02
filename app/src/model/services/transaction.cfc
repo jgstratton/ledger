@@ -40,12 +40,32 @@ component output="false" {
         ",{account:arguments.account});
     }
 
-    public any function getLastVerifiedTransaction(account){
-        return ORMExecuteQuery("
-            FROM transaction t
-            WHERE account = :account
-            AND t.verifiedDate is not null
-            ORDER BY t.verifiedDate desc
-        ", { account: arguments.account }, true, { maxResults: 1 } );
+    public any function getLastVerifiedID(account){
+        var qryLastVerifiedId = queryExecute("
+            Select  coalesce(max(ID),0) as lastId
+            From    transactions
+            Where   VerifiedDate = 
+                (select max(verifiedDate) 
+                 from transactions
+                 where account_id = :accountid)
+            and account_id = :accountid",
+            {accountid: account.getId()}
+        );  
+
+        return qryLastVerifiedId.lastId;
+    }
+
+    public void function verifyTransaction(transaction){
+        transaction{ 
+            if( not len(transaction.getVerifiedDate()) ){
+                transaction.setVerifiedDate(now());
+            }
+        }
+    }
+
+    public void function unverifyTransaction(transaction){
+        transaction{ 
+            transaction.setVerifiedDate(javaCast("null",""));
+        }
     }
 }
