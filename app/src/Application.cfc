@@ -131,10 +131,10 @@ component extends="framework.one" output="false" {
 	public void function migrate(){
 		
 		if(this.getEnvironment() eq 'dev'){	
-			local.migrate = new migrations.migrate("appds","_mg,_dev");	
+			local.migrate = new migrations.migrate("_mg,_dev");	
 			local.migrate.refresh_migrations();
 		} else {
-			local.migrate = new migrations.migrate("appds");
+			local.migrate = new migrations.migrate();
 			local.migrate.run_migrations(this.dbmigration);
 		}
 		

@@ -1,28 +1,14 @@
-<cfcomponent output="false">
+component{
+    public any function init() {
+        return this;
+    }
 
-	<cfproperty name="datasource" type="string" />
+    public void function migrate_up(){
+        //
+    }
 
-	<cffunction name="init" access="public" output="false" returntype="any" hint="Constructor">
-		<cfargument name="datasource" type="string" required="true" />
-		<cfset this.datasource = arguments.datasource />
-		<cfreturn this />
-    </cffunction>
+    public void function migrate_down(){
+        //
+    }
 
-    <cffunction 
-        name="migrate_up" 
-        access="public" 
-        output="false"
-        returntype="void">
-	
-	</cffunction>
-
-    <cffunction 
-        name="migrate_down" 
-        access="public" 
-        output="false" 
-        returntype="void">
-	
-	</cffunction>
-
-
-</cfcomponent>
+}

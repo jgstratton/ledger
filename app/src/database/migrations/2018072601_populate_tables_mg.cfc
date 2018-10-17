@@ -7,7 +7,7 @@
 		returntype="void">
 
 		<!---Pre-populate with some basic types --->
-		<cfquery datasource="#this.datasource#">
+		<cfquery>
 			
 			Insert Into categoryTypes (name,multiplier)
 			values 
@@ -20,7 +20,7 @@
 		</cfquery>
 
 		<!--- Insert some starting categories --->
-		<cfquery datasource="#this.datasource#">
+		<cfquery>
 			Insert Into categories(name,categoryType_id)
 			Values 
 				('',						2),
@@ -52,7 +52,7 @@
 		</cfquery>
 
 		<!---Pre-populate with some basic types --->
-		<cfquery datasource="#this.datasource#">
+		<cfquery>
 	
 			Insert Into accountTypes (name, fa_icon, sortWeight, isVirtual)
 			values 
@@ -74,19 +74,19 @@
 		returntype="void">
 
 
-		<cfquery datasource="#this.datasource#">
+		<cfquery>
 			Delete From accountTypes
 		</cfquery>
 
-		<cfquery datasource="#this.datasource#">
+		<cfquery>
 			Delete From categories
 		</cfquery>
 
-		<cfquery datasource="#this.datasource#">
+		<cfquery>
 			Delete From categoryTypes
 		</cfquery>
 
-		<cfquery datasource="#this.datasource#">
+		<cfquery>
 			Delete From users
 		</cfquery>
 

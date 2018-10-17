@@ -68,7 +68,7 @@
             <cfset var transaction = {}>
 
             <!--- Add Default Test User using env variable --->
-            <cfquery name="qryInsertUser" datasource="#this.datasource#">
+            <cfquery name="qryInsertUser">
                 Insert into users (username, email)
                 Values ('#local.user_email#', '#local.user_email#')
             </cfquery>
@@ -76,7 +76,7 @@
             <cfloop from="1" to="#arraylen(this.accounts)#" index="local.i">
                 <cfset account = this.accounts[local.i]>
                 
-                <cfquery datasource="#this.datasource#">
+                <cfquery>
                     Insert Into accounts(name, accountType_id, summary, user_id, LinkedAccount) 
                     values(<cfqueryparam value="#account.name#">, <cfqueryparam value="#account.accountType#">, <cfqueryparam value="#account.summary#">,1,
                         <cfif StructKeyExists(account,"linkedaccount")>
@@ -90,7 +90,7 @@
                 <cfif StructKeyExists(account,"transactions")>
                     <cfloop from="1" to="#arraylen(account.transactions)#" index="local.j">
                         <cfset transaction = account.transactions[local.j]>
-                        <cfquery datasource="#this.datasource#">
+                        <cfquery>
                             Insert into transactions (name, transactiondate, amount, note, account_id, category_id,verifiedDate)
                             values (
                                 '#transaction.name#', 
@@ -118,15 +118,15 @@
 		output="true" 
         returntype="void">
             <!--- Delete seeds... for now, just delete everthing.  We can get more sophisticated (if needed) later. --->
-            <cfquery datasource="#this.datasource#">
+            <cfquery>
                 Delete from users
             </cfquery>
 
-            <cfquery datasource="#this.datasource#">
+            <cfquery>
                 Delete from accounts
             </cfquery>
 
-            <cfquery datasource="#this.datasource#">
+            <cfquery>
                 Delete from transactions
             </cfquery>
 

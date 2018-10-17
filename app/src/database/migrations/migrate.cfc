@@ -1,283 +1,183 @@
 <!--- adapted from... https://github.com/dominknow/CFMigrate --->
 
-<cfcomponent output="true" hint="This component provides the methods necessary to create, run and rollback database migrations">
+/**
+ * This component provides the methods necessary to create, run and rollback database migrations
+ */
+component{
+	property name="file_ends";
 
-	<cfproperty name="datasource" type="string" />
-	<cfproperty name="file_ends" type="string" />
+	public any function init(string file_ends = "_mg") {
+		this.file_ends = arguments.file_ends;
+		this.directory_name = getDirectoryFromPath( getCurrentTemplatePath() );
+		this.directory_path = "migrations.";
 
-	<cffunction
-		name="init"
-		access="public"
-		output="false"
-		returntype="any"
-		hint="The public constructor">
-
-		<cfargument name="datasource" type="string" required="true" hint="The datasource to operate on" />
-		<cfargument name="file_ends" type="string" default="_mg" hint="Which file ends to include in migration" />
-
-		<cfset this.datasource = arguments.datasource />
-		<cfset this.file_ends = arguments.file_ends>
-
-		<cfset this.directory_name = getDirectoryFromPath(getCurrentTemplatePath()) />
-		<cfset this.directory_path = "migrations." />
-
-		<cfquery datasource="#this.datasource#">
-            <!--- If the migrations table doesn't exist yet, then create it now --->
+		// If the migrations table doesn't exist yet, then create it now 
+		QueryExecute("
 			Create Table if not exists migrations (migration_number varchar(14), migration_run_at datetime)
-		</cfquery>
+		");
 
-		<cfreturn this />
-	</cffunction>
+		return this;
+	}
 
+	/**
+	 * Method called to run outstanding migrations, or to roll back to a previous migration
+	 *
+	 * @migrate_to_version 
+	 * 	- If provided and less than last run migration, then it will rollback to given migration number
+     *  - If provided and less greater than last run migration, then it will run up to (and including) that number
+     *  - If omitted, it runs all migrations up to the current version
+     *  - If 0, it refreshes all migrations
+	 * 
+	 */
+	public void function run_migrations(string migrate_to_version) {
+		var migrations_list = get_migration_list() ;
+		var migration_files = get_migration_files();
 
-	<cffunction name="run_migrations"
-		displayname="run_migrations"
-		access="public"
-		output="true"
-		returntype="boolean"
-		hint="Method called to run outstanding migrations, or to roll back to a previous migration">
+		// If a migration version was provided and it is less than the last run migration,
+		// then rollback the migrations until we hit that version
 
-        <!---
-            migrate_to_version
+		if( structKeyExists(arguments,"migrate_to_version") ){
+			// If the "migrate to" is greater than last ran migration, then run all the migrations up to that point
+			if( arguments.migrate_to_version > listLast( migrations_list ) ){
+				for( migrationFile in migration_files ){
+					var migration_number = get_migration_file_number( migrationFile.name );
+					// strip the .cfc from the file name
+					var migration_name = left( migrationFile.name, len(migrationFile.name) - 4 );
+					// If the migration hasn't been run yet, then run the migration
+					if( arguments.migrate_to_version >= migration_number and listFind( migrations_list, migration_number ) == 0 ){
+					var migration_cfc = createObject("component", "#this.directory_path##migration_name#").init();
+						run_migration(migration_cfc, migration_number);
+					}
+				}
 
-            - If provided and less than last run migration, then it will rollback to given migration number
-            - If provided and less greater than last run migration, then it will run up to (and including) that number
-            - If omitted, it runs all migrations up to the current version
-            - If 0, it refreshes all migrations
-		--->
-		
-		<cfargument
-			name="migrate_to_version"
-			displayName="migration_number"
-			type="String"
-			required="false"
-			hint="If provided, will rollback any previously run migrations to the given migration name.  If omitted, will run all outstanding migrations. Use 0 to roll back all" />
+			 // If the "migrate to" is less than the last ran migration, then we need to revert the migrations down until we hit the target version
+			} else if( arguments.migrate_to_version < listLast( migrations_list ) ){
+				for( var i = migration_files.recordcount; i >= 1; i--){
+					var migration_number = get_migration_file_number( migration_files.name[i] );
+					var migration_name = left( migration_files.name[i], len(migration_files.name[i]) - 4);
+					if( migration_number > arguments.migrate_to_version and listFind(migrations_list, migration_number) > 0 ){
+						var migration_cfc = createObject("component", "#this.directory_path##migration_name#").init();
+						revert_migration(migration_cfc, migration_number);
 
-			<cfset var migrations_list = "">
-			<cfset var migration_number = "">
-			<cfset var get_migrations = "" />
-			<cfset var migration_files = "" />
-			<cfset var store_migration = "" />
-			<cfset var i = "" />
+					}
+				}
+			}
 
-			<cfset migrations_list = get_migration_list() />
-			<cfset migration_files = get_migration_files() />
+		} else {
 
-            <!--- 
-                If a migration version was provided and it is less than the last run migration,
-                then rollback the migrations until we hit that version
-            --->
-			
-            <cfif isdefined("arguments.migrate_to_version")>
-                
-                <!--- If the "migrate to" is greater than last ran migration, then run all the migrations up to that point --->
-                <cfif arguments.migrate_to_version gt listLast(migrations_list)>
-                    <cfloop query="migration_files">
-                        <cfset migration_number = get_migration_file_number(migration_files.name)>
-                        <!--- strip the .cfc from the file name --->
-                        <cfset migration_name = left(migration_files.name, len(migration_files.name) - 4)>
-    
-                        <!--- 
-                            If the migration hasn't been run yet, then run the migration
-                        --->
-                        <cfif (arguments.migrate_to_version gte migration_number) and ListFind(migrations_list, migration_number) eq 0 >
-                            <!--- wrap the migration in a transaction so if it fails --->
-							<cftransaction>
-								<cftry>
+			// No migration version was passed in, so run all of the migrations that have not yet been run
+			for( migrationFile in migration_files ){
+				var migration_number = get_migration_file_number( migrationFile.name );
+				var migration_name = left( migrationFile.name, len(migrationFile.name) - 4 );
 
-									<cfset migration_cfc = createObject("component", "#this.directory_path##migration_name#").init(this.datasource)>
-									<cfset migration_cfc.migrate_up() >
-									<cfquery name="store_migration" datasource="#this.datasource#">
-										Insert into migrations (migration_number, migration_run_at) 
-										values ('#migration_number#', now())
-									</cfquery>
+				//if the migration has not been run yet then run it
+				if( listFind( migrations_list, migration_number ) == 0 ){
+					var migration_cfc = createObject("component", "#this.directory_path##migration_name#").init();
+					run_migration(migration_cfc, migration_number);
 
-									<cfcatch>
-										<cftransaction action="rollback" />
-										<cfrethrow>
-									</cfcatch>
+				}
+			}
+		}
 
-								</cftry>
-                            </cftransaction>
-                        </cfif>
-						
-                    </cfloop>
-                
-                <!--- If the "migrate to" is less than the last ran migration, then we need to revert the migrations down until we hit the target version --->
-				<cfelseif arguments.migrate_to_version lt listLast(migrations_list)>
+	}
 
-                    <cfloop from="#migration_files.recordcount#" to="1" index="i" step="-1">
-                        <cfset migration_number = get_migration_file_number(migration_files.name[i])>
-                        <cfset migration_name = left(migration_files.name[i], len(migration_files.name[i]) - 4)>
+	public void function run_migration( component migration, string migration_number ){
+		transaction{
+			try{	
+				migration.migrate_up();
+				queryExecute("
+					Insert into migrations (migration_number, migration_run_at) 
+					values (:migration_number, now())
+					", {migration_number: migration_number});
+			} catch(any e) {
+				migration.migrate_down();
+				rethrow;
+			}
+		}
+	}
 
-                        <cfif (migration_number gt arguments.migrate_to_version) and ListFind(migrations_list, migration_number) gt 0 >
-              
-							<cftransaction>
-								<cftry>
+	public void function revert_migration( component migration, string migration_number ){
+		transaction{
+			try{
+				migration.migrate_down();
+				queryExecute("
+					Delete from migrations 
+					where migration_number = :migration_number
+				", { migration_number: migration_number} );
+			} catch( any e) {
+				migration.migrate_up();
+				rethrow;
+			}
+		}
+	}
 
-									<cfset migration_cfc = createObject("component", "#this.directory_path##migration_name#").init(this.datasource)>
-									<cfset migration_cfc.migrate_down() >
-									<cfquery name="remove_migration" datasource="#this.datasource#">
-										Delete from migrations where migration_number = '#migration_number#'
-									</cfquery>
+	/**
+	 * list_migrations
+	 * 
+	 * Returns an array of migration files names to be run
+	 */
+	public array function list_migrations(){
+		var migrationsNeedRan = [];
+		var migrations_list = get_migration_list();
+		var migration_files_sorted = get_migration_files();
 
-									<cfcatch>
-										<cftransaction action="rollback" /> 
-										<cfrethrow>
-									</cfcatch>
+		for( migration_file in migration_files_sorted ){
+			var migration_number = get_migration_file_number(migration_files_sorted.name);
+			if( !listFind( migrations_list, migration_number ) ){
+				migrationsNeedRan.append(migration_files_sorted.name);
+			}
+		}
 
-								</cftry>
-                            </cftransaction>
+		return migrationsNeedRan;
+	}
 
-                        </cfif>
-                    </cfloop>
+	/**
+	 * return a list of migation numbers that have already been run
+	 */
+	private string function get_migration_list() {
+		var get_migrations = queryExecute("
+			Select migration_number from migrations
+			order by migration_number
+		");
+		return valueList(get_migrations.migration_number);
+	}
 
-                </cfif>
+	public query function get_migration_files(){
+		var fileEndsArray = listToArray(this.file_ends);
+		var filter = '';
 
-            </cfif>
+		for( fileEnd in fileEndsArray ){
+			filter = listAppend(filter, "*#fileEnd#.cfc","|");
+		}
 
-       
-            <cfif Not StructKeyExists(arguments,"migrate_to_version")>
-                
-			    <!--- No migration version was passed in, so run all of the migrations that have not yet been run --->
-				<cfloop query="migration_files">
-					<cfset migration_number = get_migration_file_number(migration_files.name)>
-					<!--- strip the .cfc from the file name --->
-					<cfset migration_name = left(migration_files.name, len(migration_files.name) - 4)>
+		var migration_files_unsorted = directoryList("#this.directory_name#", false, "query", filter);
+		var migration_files_sorted = queryExecute("
+			select * from migration_files_unsorted
+			order by name ASC
+		", {}, { dbtype: "query" } );
 
-					<!--- If the migration has not been run, run it --->
-					<cfif ListFind(migrations_list, migration_number) eq 0 >
-						<!--- wrap the migration in a transaction so if it fails --->
-						<cftransaction>
-							<cftry>
-								<cfset migration_cfc = createObject("component", "#this.directory_path##migration_name#").init(this.datasource)>
-								<cfset migration_cfc.migrate_up() >
-								<cfquery name="store_migration" datasource="#this.datasource#">
-									Insert into migrations (migration_number, migration_run_at) values
-										('#migration_number#', now())
-								</cfquery>
+		return migration_files_sorted;
+	}
 
-								<cfcatch>
-									<cftransaction action="rollback" /> 
-									<cfrethrow>
-								</cfcatch>
-								
-							</cftry>
-						</cftransaction>
-					</cfif>
+	private function get_migration_file_number(string migrationFileName){
+		var REmigration_version = "\d{10}";
+		var st = ReFind(Remigration_version, arguments.migrationFileName,1,"true");
+		return mid( arguments.migrationFileName, st.pos[1], st.len[1] );
+	}
 
-				</cfloop>
-
-			</cfif>
-
-		<cfreturn true />
-	</cffunction>
-
-	<cffunction name="list_migrations"
-		displayname="list_migrations"
-		access="public"
-		output="true"
-		returntype="any"
-		hint="Returns a list of migration files to be run">
-
-		<cfset var migrations_list = "" />
-		<cfset var migration_files_sorted = "" />
-		<cfset var toRun = arrayNew(1) />
-		<cfset var migration_number = "" />
-
-		<cfset migrations_list = get_migration_list() />
-		<cfset migration_files_sorted = get_migration_files() />
-		<cfloop query="migration_files_sorted">
-			<cfset migration_number = get_migration_file_number(migration_files_sorted.name) />
-			<cfif NOT listFind(migrations_list, migration_number)>
-				<cfset arrayAppend(toRun, migration_files_sorted.name) />
-			</cfif>
-		</cfloop>
-
-		<cfreturn toRun />
-	</cffunction>
-
-    <cffunction 
-        name="get_migration_list" 
-        access="private" 
-        output="false" 
-        returntype="any">
-
-		<cfset var get_migrations = "" />
-		<cfset var migrations_list = "" />
-
-        <cfquery name="get_migrations" datasource="#this.datasource#">
-            Select migration_number from migrations
-            order by migration_number
-		</cfquery>
-		<cfset migrations_list = ValueList(get_migrations.migration_number)>
-
-		<cfreturn migrations_list />
-	</cffunction>
-
-    <cffunction 
-        name="get_migration_files" 
-        access="public" 
-        output="true" 
-        returntype="query">
-
-		<cfset var migration_files_unsorted = "" />
-		<cfset var migration_Files = "" />
-		<cfset var filter = "" />
-
-		<!--- Build the filter from the file_ends list --->
-		<cfloop list="#this.file_ends#" index="file_end">
-			<cfset filter = listappend(filter, "*#file_end#.cfc","|")>
-		</cfloop>
-
-		<!--- get the list of migration cfc's from the migrations folder --->
-		<cfdirectory action="LIST"
-			directory="#this.directory_name#"
-			name="migration_files_unsorted"
-			filter="#filter#"> <!--- valid migration files must end in _mg --->
-
-		<cfquery name="migration_Files" dbtype="query">
-				select * from migration_files_unsorted
-				order by name ASC
-		</cfquery>
-
-		<cfreturn migration_Files />
-	</cffunction>
-
-	<cffunction name="get_migration_file_number" access="private" output="false" returntype="string">
-		<cfargument name="migrationFileName" type="string" required="true" />
-		<cfset var st = "">
-		<cfset var REmigration_version = "\d{10}">
-
-		<cfset st = REFind(REmigration_version,arguments.migrationFileName,1,"TRUE")>
-		<cfreturn Mid(arguments.migrationFileName,st.pos[1],st.len[1])>
-	</cffunction>
-
-	<cffunction 
-		name="refresh_migrations" 
-		access="public" 
-		output="true" 
-		returntype="void" 
-		hint="Clear all loaded migrations and then run migrations again">
-
-			<cfargument
-				name="migrate_to_version"
-				displayName="migration_number"
-				type="String"
-				required="false"
-				hint="If provided, will rollback any previously run migrations to the given migration name.  If omitted, will run all outstanding migrations. Use 0 to roll back all" />
-		
-		
-			<cfset this.run_migrations(0)> 
-
-
-			<cfif StructKeyExists(arguments,"migrate_to_version")>
-				<cfset this.run_migrations(arguments.migrate_to_version)>
-			<cfelse>
-				<cfset this.run_migrations()>	 
-			</cfif>
-
-			<cfreturn />
-	</cffunction>
-
-</cfcomponent>
+	/**
+	 * refresh_migrations
+	 * 
+	 * @migrate_to_version
+	 *  - If provided, will rollback any previously run migrations to the given migration name.  
+	 *  - If omitted, will run all outstanding migrations. Use 0 to roll back all
+	 */
+	public void function refresh_migrations( migrate_to_version ){
+		run_migrations(0);
+		if( structKeyExists(arguments, "migrate_to_version" ) ){
+			run_migrations( arguments.migrate_to_version );
+		} else {
+			run_migrations();
+		}
+	}
+}
