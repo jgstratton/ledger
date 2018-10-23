@@ -44,6 +44,7 @@ services:
      - localnet
     volumes:
      - ./app:/app
+     - ./logs/lucee/:/var/log
     environment:
      - MYSQL_DATABASE
      - MYSQL_USER

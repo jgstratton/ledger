@@ -82,6 +82,7 @@ component{
 	}
 
 	public void function run_migration( component migration, string migration_number ){
+		getLogger().debug("Migrate up #migration_number#");
 		transaction{
 			try{	
 				migration.migrate_up();
@@ -97,6 +98,7 @@ component{
 	}
 
 	public void function revert_migration( component migration, string migration_number ){
+		getLogger().debug("Migrate down #migration_number#");
 		transaction{
 			try{
 				migration.migrate_down();
@@ -180,4 +182,9 @@ component{
 			run_migrations();
 		}
 	}
+
+	private any function getLogger(){
+		return new services.logger();
+	}
+
 }

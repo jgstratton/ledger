@@ -7,4 +7,5 @@ settings.json
 /data/mysql/*
 /data/init/*
 /data/backup/*
+/logs/*
 !.keep

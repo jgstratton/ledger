@@ -9,6 +9,7 @@ component extends="framework.one" output="false" {
 	this.sessionTimeout = createTimeSpan(0, 0, 30, 0);
 
 	this.mappings["/migrations"] = "/database/migrations";
+	this.mappings["/services"] = "/model/services";
 
 	// FW/1 settings
 	variables.framework = {
