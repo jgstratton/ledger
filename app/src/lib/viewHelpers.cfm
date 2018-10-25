@@ -49,9 +49,11 @@
         return output_false;
     }
 
-    displayIf = function(condition, value){
+    displayIf = function(condition, value, default){
         if(condition){
             return value;
+        } elseif( arguments.keyExists('default') ){
+            return default;
         }
         return '';
     }

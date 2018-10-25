@@ -16,7 +16,12 @@ component persistent="true" table="accounts" accessors="true" {
     property name="transactions" fieldtype="one-to-many" cfc="transaction" fkcolumn="account_id";
     property name="type" fieldtype="many-to-one" cfc="accountType" fkcolumn="accountType_id";
 
-
+    public function getLongName(){
+        if(this.hasLinkedAccount()){
+            return this.getLinkedAccount().getName() & ": " & this.getName();
+        }
+        return this.getName();
+    }
     public function hasSubAccount(){
         return Arraylen(this.getSubAccount());
     }

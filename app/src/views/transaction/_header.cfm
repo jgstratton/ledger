@@ -4,20 +4,19 @@
     <div id="#local.viewId#">
         <div class="row nav-2">
             <div class="col text-left">
-            <div class="dropdown">
-                <button type="button" class="btn btn-link  dropdown-toggle" data-toggle="dropdown">#rc.account.getName()#</button>
-                <div class="dropdown-menu bg-dark">
-                    <cfloop array="#rc.accounts#" index="local.account">
-                        <button type="button" class="dropdown-item text-light" data-change-account="#local.account.getid()#" #matchDisplay(local.account.getid(),rc.account.getid(),'disabled')#>
-                            #local.account.getLinkedAccount().getName()#
-                            <cfif local.account.getLinkedAccount().getName() neq local.account.getName()>
-                                : #local.account.getName()#
-                            </cfif>
-                        </button>
-                    </cfloop>
+                <div class="dropdown">
+                    <button type="button" class="btn btn-link  dropdown-toggle" data-toggle="dropdown">#rc.account.getLongName()#</button>
+                    <div class="dropdown-menu bg-dark">
+                        <cfloop from="1" to="#arraylen(rc.accounts)#" index="local.i">
+                            <cfset local.account = rc.accounts[local.i]>
+                            <button type="button" class="dropdown-item text-light" data-change-account="#local.account.getid()#" #matchDisplay(local.account.getid(),rc.account.getid(),'disabled')#>
+                                #local.account.getLongName()#
+                            </button>
+                        </cfloop>
+                    </div>
                 </div>
             </div>
-            </div>
+            
             <div class="col text-right">
                 <div>
                     Account Total - 

@@ -13,6 +13,9 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
     property name="created" ormtype="timestamp";
     property name="edited" ormtype="timestamp";
 
+    property name="linkedTo" fieldtype="many-to-one" cfc="transaction" fkcolumn="linkedTransId";
+    property name="linkedFrom" fieldtype="one-to-many" cfc="transaction" fkcolumn="linkedTransId" inverse="true";
+    
     public array function validate(){
        
         var errors = [];
@@ -47,4 +50,55 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
         return len(this.getVerifiedDate());
     }
 
+    public boolean function isTransfer(){
+        return(
+            (this.hasLinkedTo() and this.getCategory().getName() == 'Transfer From') ||
+            (this.hasLinkedFrom() and this.getCategory().getName() == 'Transfer Into') 
+        )
+    }
+
+    public any function hasLinkedTransaction(){
+        return(this.hasLinkedTo() || this.hasLinkedFrom());
+    }
+
+    public any function getLinkedTransaction(){
+        if(this.hasLinkedTo()){
+            return this.getLinkedTo();
+        } elseif ( this.hasLinkedFrom()) {
+            var linkedFromArray = this.getLinkedFrom();
+            return linkedFromArray[1];
+        }
+    }
+
+    public string function getTransferDescription(){
+        if(this.isTransfer()){
+            if(this.hasLinkedTo()){
+                return "Transferred to #this.getLinkedTo().getAccount().getName()#";
+            } elseif ( this.hasLinkedFrom()) {
+                return "Transferred from #this.getLinkedTransaction().getAccount().getName()#";
+            }
+        }
+        return '';
+    }
+/*
+    public boolean function getTransfer(){
+        return ORMExecuteQuery(
+            "from transfer 
+             where fromTransaction = :trans 
+             or toTransaction = :trans",
+             { trans: this}, true);
+    }
+
+    public boolean function isTransfer(){
+        var transfer = ORMExecuteQuery(
+            "from transfer 
+             where fromTransaction = :trans 
+             or toTransaction = :trans",
+             { trans: this});
+
+        return arraylen(transfer);
+        
+    }
+*/
 }
+

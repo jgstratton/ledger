@@ -10,9 +10,10 @@
         <div id="#local.viewId#">
 
             <table class="table">
-            
+                <col style="width:20px">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Date</th>
                         <th>Description</th>
                         <th class="d-none d-md-table-cell">Category</th>
@@ -41,6 +42,11 @@
                     </cfif>
                     
                     <tr class="#local.rowClass#" data-trn="#local.transaction.getid()#">
+                        <td>
+                            <cfif local.transaction.isTransfer()>
+                                <i class="fa fa-fw fa-exchange" title="#local.transaction.getTransferDescription()#"></i>
+                            </cfif>
+                        </td>
                         <td>#dayFormat(local.transaction.getTransactionDate())#</td>
                         <td>#local.transaction.getName()#</td>
                         <td class="d-none d-md-table-cell">

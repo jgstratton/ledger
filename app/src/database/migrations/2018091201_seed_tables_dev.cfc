@@ -9,7 +9,9 @@
                 { name: "Paycheck", datediff: "-30", amount="1723.42", note="", categoryid="14", verified="Y"},
                 { name: "Sheetz", datediff: "-29", amount="28.54", note="Gas", categoryid="3", verified="Y"},
                 { name: "Natual Gas Bill", datediff: "-28", amount="127.25", note="", categoryid="13", verified="N"},
-                { name: "Netflix", datediff: "-27", amount="12.00", note="", categoryid="20", verified="N"}
+                { name: "Netflix", datediff: "-27", amount="12.00", note="", categoryid="20", verified="N"},
+                { name: "Christmas Club", datediff: "-15", amount="250", note="", categoryid="22", verified="N", transfer="1"},
+                { name: "Credit Card Payment", datediff: "-9", amount="25", note="", categoryid="22", verified="N", transfer="2"}
             ]
         },
         {
@@ -22,7 +24,8 @@
             summary: "Y",
             transactions: [
                 { name: "Deposit", datediff: "-30", amount="425.00", note="", categoryid="15", verified="Y"},
-                { name: "Mortgage Payment", datediff: "-25", amount="650.00", note="", categoryid="2", verified="N"}
+                { name: "Mortgage Payment", datediff: "-25", amount="650.00", note="", categoryid="2", verified="N"},
+                { name: "Credit Card Payment", datediff: "-9", amount="25", note="", categoryid="23", verified="N", transfer="2"}
             ]
         },
         {   name: "Car Loan", 
@@ -42,7 +45,7 @@
             summary: "N",
             linkedAccount:1,
             transactions: [
-                { name: "Christmas", datediff: "-25", amount="200", note="", categoryid="22", verified="Y"}
+                { name: "Christmas Club", datediff: "-25", amount="200", note="", categoryid="23", verified="Y", transfer="1"}
             ]
         },
         {
@@ -66,7 +69,8 @@
 
             <cfset var account = {}>
             <cfset var transaction = {}>
-
+            <cfset var transfers = {}>
+            
             <!--- Add Default Test User using env variable --->
             <cfquery name="qryInsertUser">
                 Insert into users (username, email)
@@ -89,8 +93,8 @@
                 
                 <cfif StructKeyExists(account,"transactions")>
                     <cfloop from="1" to="#arraylen(account.transactions)#" index="local.j">
-                        <cfset transaction = account.transactions[local.j]>
-                        <cfquery>
+                        <cfset var transaction = account.transactions[local.j]>
+                        <cfquery result="last_transaction">
                             Insert into transactions (name, transactiondate, amount, note, account_id, category_id,verifiedDate)
                             values (
                                 '#transaction.name#', 
@@ -106,8 +110,29 @@
                                 </cfif>
                             )
                         </cfquery>
+                        <cfif transaction.keyExists("transfer")>
+                            <cfif not transfers.keyExists(transaction.transfer)>
+                                <cfset transfers[transaction.transfer] = StructNew()>
+                            </cfif>
+                            <cfif transaction.categoryid eq 22>
+                                <cfset transfers[transaction.transfer].fromTransaction = last_transaction.generatedKey>
+                            <cfelseif transaction.categoryid eq 23>
+                                <cfset transfers[transaction.transfer].toTransaction = last_transaction.generatedKey>
+                            <cfelse>
+                                <cfthrow message="Invalid transfer category type">
+                            </cfif>
+                        </cfif>
                     </cfloop>
                 </cfif>
+            </cfloop>
+
+            <!--- loop through the transactions and generate the records --->
+            <cfloop list="#structKeylist(transfers)#" index="i">
+                <cfquery>
+                    Update transactions
+                    set linkedTransId = #transfers[i].toTransaction#
+                    where id = #transfers[i].fromTransaction#
+                </cfquery>
             </cfloop>
 
     </cffunction>

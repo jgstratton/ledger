@@ -23,10 +23,12 @@ component output="false" {
 
     public any function getUserAccounts( user ) {
         return ormExecuteQuery("
-            FROM account as a
-            WHERE user = :user AND deleted IS NULL
-            ORDER BY a.linkedAccount.type.id,
-                     a.linkedAccount.name,
+            Select a
+            FROM account a
+            left join a.linkedAccount l
+            WHERE a.user = :user AND a.deleted IS NULL
+            ORDER BY coalesce(l.type.id,a.type.id),
+                     coalesce(l.name,a.name),
                      a.id", 
             {user: arguments.user});
     }

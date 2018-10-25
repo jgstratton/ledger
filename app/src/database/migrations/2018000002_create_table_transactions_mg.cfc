@@ -16,6 +16,7 @@
                 amount          decimal(10,2)   DEFAULT NULL,
                 note            varchar(200)    DEFAULT NULL,
                 verifiedDate    datetime        DEFAULT NULL,
+				linkedTransId	int(11)			DEFAULT NULL,
                 created         datetime        DEFAULT NULL,
                 edited          datetime        DEFAULT NULL,
                 deleted         datetime        DEFAULT NULL,

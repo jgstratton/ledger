@@ -92,6 +92,7 @@ component{
 					", {migration_number: migration_number});
 			} catch(any e) {
 				migration.migrate_down();
+				getLogger().error("Error running migration: #migration_number#");
 				rethrow;
 			}
 		}
@@ -108,6 +109,7 @@ component{
 				", { migration_number: migration_number} );
 			} catch( any e) {
 				migration.migrate_up();
+				getLogger().error("Error reverting migration: #migration_number#");
 				rethrow;
 			}
 		}

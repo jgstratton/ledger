@@ -11,9 +11,10 @@
         <h6 class="small text-muted">Recent Transactions</h6>
 
         <table class="table">
-        
+            <col style="width:20px">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Date</th>
                     <th>Description</th>
                     <th class="d-none d-md-table-cell">Category</th>
@@ -37,9 +38,15 @@
                 </cfif>
 
                 <tr class="#local.rowClass#">
+                    <td>
+                        <cfif local.transaction.isTransfer()>
+                            <i class="fa fa-fw fa-exchange" title="#local.transaction.getTransferDescription()#"></i>
+                        </cfif>
+                    </td>
                     <td>#dayFormat(local.transaction.getTransactionDate())#</td>
                     <td>#local.transaction.getName()#</td>
                     <td class="d-none d-md-table-cell">
+                        
                         <cfif local.transaction.hasCategory()>
                             #local.transaction.getCategory().getName()#
                         </cfif>
