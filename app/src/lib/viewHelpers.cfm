@@ -58,6 +58,13 @@
         return '';
     }
     
+    selectIf = function(condition){
+        if(condition){
+            return "selected";
+        }
+        return '';
+    }
+    
     moneyFormat = function(number){
         return numberformat(arguments.number, "$,0.00");
     }

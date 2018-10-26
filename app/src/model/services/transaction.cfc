@@ -8,7 +8,7 @@ component output="false" {
         return entityNew("transaction", {account: arguments.account} );
     }
     
-    public any function save(transaction){
+    public any function save( component transaction ){
         transaction{
             EntitySave(arguments.transaction);
         }

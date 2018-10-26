@@ -52,7 +52,7 @@
                             <a class="nav-link" href="#buildUrl('account.list')#">Accounts</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="TRN_400.php">Transfer</a>
+                            <a class="nav-link" href="#buildUrl('transfer.new')#">Transfer</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="TRN_250.php">Search</a>

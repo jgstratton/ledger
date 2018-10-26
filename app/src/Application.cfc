@@ -10,6 +10,7 @@ component extends="framework.one" output="false" {
 
 	this.mappings["/migrations"] = "/database/migrations";
 	this.mappings["/services"] = "/model/services";
+	this.mappings["/beans"] = "/model/beans";
 
 	// FW/1 settings
 	variables.framework = {
