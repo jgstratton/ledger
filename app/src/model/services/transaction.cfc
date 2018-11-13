@@ -8,7 +8,7 @@ component output="false" {
         return entityNew("transaction", {account: arguments.account} );
     }
     
-    public any function save( component transaction ){
+    public any function save( required component transaction ){
         transaction{
             EntitySave(arguments.transaction);
         }
@@ -34,7 +34,7 @@ component output="false" {
     public any function getVerifiedTransactions(account){
         return ORMExecuteQuery("
             FROM transaction t
-            WHERE account = :account
+            WHERE t.account = :account
             AND   t.verifiedDate is not null
             ORDER BY t.transactionDate desc
         ",{account:arguments.account});

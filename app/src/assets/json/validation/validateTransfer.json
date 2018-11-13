@@ -1,0 +1,32 @@
+{
+	"rules": {
+		"fromAccountId": {
+			"required": true,
+			"min": 1
+		},
+		"toAccountId": {
+			"required": true,
+			"min": 1
+		},
+		"amount": {
+			"required": true,
+			"number": true
+		},
+		"name": {
+			"required": true
+		},
+		"transferDate": {
+			"required": true,
+			"usDate": true
+		}
+
+	},
+
+	"labels": {
+		"fromAccountId": "From Account",
+		"toAccountId": "To Account",
+		"amount": "Amount",
+		"name": "Description",
+		"transferDate": "Transaction Date"
+	}
+}
