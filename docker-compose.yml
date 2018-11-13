@@ -33,7 +33,7 @@ services:
      - localnet
 
   lucee:
-    image: ortussolutions/commandbox:lucee5
+    image: ortussolutions/commandbox:lucee5-2.3.0
     container_name: "${CONTAINER_PREFIX}_lucee"
     restart: 'always'
     depends_on:

@@ -17,8 +17,6 @@ component extends="framework.one" output="false" {
 		action = 'action',
 		defaultSection = 'account',
 		defaultItem = 'list',
-		generateSES = true,
-		SESOmitIndex = true,
 		diEngine = "di1",
 		diComponent = "framework.ioc",
 		diLocations = "./model/services", // ColdFusion ORM handles Beans
@@ -66,15 +64,16 @@ component extends="framework.one" output="false" {
 
 	public void function setupApplication(){
 		
-		
 		lock scope="application" timeout="3"{
 			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#this.getEnvVar('LUCEE_PORT')#";
+			application.src_dir = "#expandPath(".")#";
 			application.version = "#this.version#";
 			application.facebook = createobject("component","model/services/facebook").init(
 				this.getEnvVar('FACEBOOK_APPID'),
 				this.getEnvVar('FACEBOOK_APPSECRET'),
 				"#application.root_path#/login?type=fb"
-			)
+			);
+			application.beanfactory = this.getBeanFactory();
 		}
 	}
 	public void function setupSession() {  
