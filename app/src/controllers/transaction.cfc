@@ -3,12 +3,13 @@ component name="account" output="false"  accessors=true {
     property accountService;
     property transactionService;
     property categoryService;
+    property transferService;
 
     public void function init(fw){
         variables.fw=arguments.fw;
     }
 
-    public void function editCreate( struct rc = {}){
+    private void function update( required struct rc ){
         var transaction = rc.transaction;
 
         if(StructKeyExists(rc,'submitTransaction')){
@@ -18,26 +19,23 @@ component name="account" output="false"  accessors=true {
             if(arrayLen(rc.errors) eq 0){
                 transactionService.save(transaction);
                 rc.lastTransactionid = transaction.getid();
-                variables.fw.redirect(action='transaction.#rc.returnpage#', append="lastTransactionid,accountid");
-            }
+                variables.fw.redirect(action='transaction.#rc.returnpage#', append="lastTransactionid,accountid");            }
         }
-        rc.categories = categoryService.getCategories();
-
     }
 
     public void function new( struct rc = {} ){
         rc.account = accountService.getAccountByID(rc.accountid);
         rc.transaction = transactionService.createTransaction(rc.account);
         rc.transactions = transactionService.getRecentTransactions(rc.account);
-        rc.returnPage = 'new';
-        variables.editCreate(rc);
+        rc.returnTo = 'transaction.new';
+        variables.update(rc);
     }
 
     public void function edit( struct rc = {} ){
+        rc.formAction = "transaction.edit";
         rc.transaction = transactionService.getTransactionById(rc.transactionid);
         rc.account = rc.transaction.getAccount();
-        rc.accountid = rc.accountid = rc.account.getid();
-        variables.editCreate(rc);
+        variables.update(rc);
     }
 
     public void function verify( struct rc = {} ){
@@ -78,5 +76,6 @@ component name="account" output="false"  accessors=true {
 
     public void function after( struct rc = {} ){
         rc.accounts = accountService.getUserAccounts(rc.user);
+        rc.categories = categoryService.getCategories();
     }
 }

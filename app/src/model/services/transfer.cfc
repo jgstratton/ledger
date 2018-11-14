@@ -1,13 +1,15 @@
-component output="false" {
+component output="false" accessors="true" {
     property transactionService;
 
-    public component function getTransferByTransactionId( int transactionId ){
-        var transaction = ORMexecuteQuery("
-            from transaction t
-            where t.linkedTo = :transactionId or t.linkedFrom = :transactionId",
-            { transactionId: arguments.transactionId }, true );
-           
-        var transfer = new beans.transfer( transaction.linkedFrom );
+    public component function getTransferByTransactionId( required any transactionId ){
+        var transaction = queryExecute("
+            SELECT  id
+            FROM    transactions
+            WHERE   linkedTransID = :transactionId or id = :transactionId",
+            { transactionId: arguments.transactionId });
+
+        var transfer = new beans.transfer();
+        transfer.populateFromTransaction( transactionService.getTransactionByid(transaction.id[1] ) );
         return transfer;
     }
 
@@ -20,7 +22,7 @@ component output="false" {
         if (arguments.transfer.getToAccount().getUser().getId() != arguments.user.getId()) {
             errors.append("#arguments.transfer.getFromAccount().getName()# is not a valid account for the logged in user");
         }
-        if (IsDefined(arguments.transfer.getFromTransaction()) && arguments.transfer.getFromTransaction().getAccount() != arguments.transfer.getFromAccount()){
+        if ( !IsNull(arguments.transfer.getFromTransaction())  && arguments.transfer.getFromTransaction().getAccount().getId() != arguments.transfer.getFromAccount().getId() ){
             errors.append("Transaction / Account mismatch");
         }
         return errors;

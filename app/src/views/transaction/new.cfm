@@ -1,7 +1,6 @@
 <cfoutput>
 
     #view("transaction/_tabs")#
-    #view("transaction/_errors")#
     #view("transaction/_form")#
 
     <cfset local.viewID = "view" & randrange(1,10000000)>
@@ -54,7 +53,7 @@
                     <td class="d-none d-md-table-cell">#local.transaction.getNote()#</td>
                     <td class="#local.transStyle#" align="right">#moneyFormat(abs(local.transaction.getSignedAmount()))#</td>
                     <td>
-                        <button type="submit" class="btn btn-link" data-edit-transaction="#local.transaction.getid()#">
+                        <button type="submit" class="btn btn-link" data-edit-transaction="#local.transaction.getid()#" data-is-transfer="#local.transaction.isTransfer()#">
                             <i class="fa fa-pencil"></i>
                         </button>
                     </td>
@@ -72,43 +71,20 @@
             $editBtn = $viewDiv.find("[data-edit-transaction]");
 
         $editBtn.click(function(){
-            post(root_path + 'transaction/edit', {
+            var $this = $(this),
+                postUrl = '#buildurl("transaction.edit")#';
+            
+            if ( $this.data('isTransfer') ){
+                postUrl = '#buildurl("transfer.edit")#';
+            }
+            post(postUrl, {
                 transactionid:$(this).data('editTransaction'),
-                returnPage: 'new'
+                returnTo: 'transaction.new',
+                accountid: '#rc.accountId#'
             });
         });
         
 
     });
 </script>
-
-<!---
-
-<?php require( 'includes/Site_Layout_End.php');?>
-    <script>
-        $("#Description").focus();      
-        
-        $("[data-btn-cancel]").click(function(){
-            post('TRN_100.php');
-        })
-        
-        $("[data-delete-trans]").click(function(){
-            var $deleteTRN = $(this).attr('data-delete-trans');
-            jConfirm('Are you sure you want to delete this entry?', function(){
-                post('TRN_105.php',{action: 'delete', deleteTRN: $deleteTRN});
-            });
-        })
-        Delete = function(frmID){
-                if(confirm("Are you sure you want to delete this transaction?")){
-                    $("#" + frmID).submit();
-                }
-        };
-  
-        
-        
-    </script>
-    
-
-
---->
 </cfoutput>

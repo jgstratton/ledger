@@ -117,7 +117,7 @@
                 $editBtn.click(function(){
                     post(root_path + 'transaction/edit', {
                         transactionid:$(this).data('editTransaction'),
-                        returnPage: 'verify'
+                        returnTo: 'transaction.verify'
                     });
                 });
 

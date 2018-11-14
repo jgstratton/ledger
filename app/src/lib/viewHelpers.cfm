@@ -80,4 +80,35 @@
         return '';
     }
 
+    /**
+     * Automatically create hidden form fields for existing rc keys
+     * */
+    public string function formPreserveKeys( required struct rc, required string keyList ) {
+        var keyArray = listToArray(keyList);
+        var formFieldsString = "";
+
+        for (keyName in keyArray){
+            if (rc.keyExists(keyName)) {
+                formFieldsString &= '<input type="hidden" name="#keyName#" value="#arguments.rc[keyname]#">';
+            }
+        }
+        return formFieldsString;
+    }
+
+    /**
+     * Generate a query string (struct) for the build URL
+     * If the listed keys exist in the request context, include them
+     **/
+     public struct function preserveKeysForBuildUrl( required struct rc, required string keyList ) {
+        var keyArray = listToArray(keyList);
+        var preserveKeys = {};
+
+        for (keyName in keyArray){
+            if (rc.keyExists(keyName)) {
+                preserveKeys[keyName] = rc[keyname];
+            }
+        }
+        return preserveKeys;
+    }
+
 </cfscript>

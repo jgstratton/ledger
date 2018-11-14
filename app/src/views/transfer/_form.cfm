@@ -1,16 +1,38 @@
 <cfoutput>
-    <form name="frmTransfer" method="post" action="#buildurl(rc.formAction)#">
-        <cfif rc.keyExists("transactionid")>
-            <input type="hidden" name="transactionid" value="#rc.transactionid#">
-        </cfif>
-        #view("transfer/_messages")#
+
+    <!--- Display any validation errors --->
+    <cfif StructKeyExists(rc,"errors") and ArrayLen(rc.errors) gt 0>
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            <div class="">
+                <i class="fa fa-exclamation-triangle"></i> Please correct the following errors and then try to save your transfer again.
+            </div>
+            <ul>
+                <cfloop array="#rc.errors#" item="error">
+                    <li>#error#</li>
+                </cfloop>
+            </ul>
+        </div>
+    </cfif>
+
+    <!--- Display success messages afer completion --->
+    <cfif StructKeyExists(rc,"success")>
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            <div class="">
+                <i class="fa fa-check"></i> #rc.success#
+            </div>
+        </div>
+    </cfif>
+
+    <form name="frmTransfer" method="post">
+        #formPreserveKeys(rc,"transactionId,returnTo,accountId")#
         <div class="row">
             <div class="col-md-6">
-                <p class="text-info">
-                    Transfer funds between accounts.  This can be used when making actual transfers, making credit card payments, or moving money
-                    into a sub account.
-                </p>
-                
                 <div class="row">
                     <label class="col-3 col-form-label">From Account:</label>
                     <div class="col-9">

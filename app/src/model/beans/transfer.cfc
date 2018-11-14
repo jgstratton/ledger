@@ -25,7 +25,7 @@ component accessors=true  {
 		setToAccount( arguments.fromTransaction.getLinkedTo().getAccount() );
 		setAmount( arguments.fromTransaction.getAmount() );
 		setName( arguments.fromTransaction.getName() );
-		setTransferDate( arguments.fromTransaction.getTransactionDate() );
+		setTransferDate( dateformat(arguments.fromTransaction.getTransactionDate(),"mm/dd/yyyy") );
 	}
 
 	public void function save(){

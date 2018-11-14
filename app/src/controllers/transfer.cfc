@@ -1,6 +1,8 @@
 component name="transfer" accessors=true {
     property transferService;
     property accountService;
+    property transactionService;
+    property categoryService;
 
     public component function init(required any fw) {
         variables.fw = arguments.fw;
@@ -9,7 +11,7 @@ component name="transfer" accessors=true {
     }
     
     public void function new( required struct rc ) {
-        rc.formAction = "transfer.new";
+        param name="rc.returnTo" default="transfer.new";
         rc.transfer = new beans.transfer();
         rc.accounts = accountService.getUserAccounts(rc.user);
         if (rc.keyExists('submit')){
@@ -19,8 +21,15 @@ component name="transfer" accessors=true {
     }
 
     public void function edit( required struct rc ) {
-        rc.formAction = "transfer.edit";
-        rc.transfer = transferService.getTransferByTransactionId(rc.transactionid);
+        param name="rc.returnTo" default="transfer.edit";
+        rc.transaction = transactionService.getTransactionById(rc.transactionid);
+        rc.transfer = transferService.getTransferByTransactionId( rc.transactionid );
+        
+        if (rc.keyExists('submit')){
+            update(rc);
+        }
+        rc.account = rc.transaction.getAccount();
+        variables.fw.setView('transaction.edit');
     }
 
     private void function update( required struct rc ) {
@@ -40,8 +49,13 @@ component name="transfer" accessors=true {
             if (!rc.errors.len()){
                 rc.transfer.save();
                 rc.success = "The transfer has been saved";
-                fw.redirect(action=rc.formAction, preserve="success");
+                fw.redirect(action=rc.returnTo, preserve="success,accountId");
             }
         }
+    }
+
+    public void function after( struct rc = {} ){
+        rc.accounts = accountService.getUserAccounts(rc.user);
+        rc.categories = categoryService.getCategories();
     }
 }

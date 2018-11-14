@@ -1,7 +1,10 @@
 <cfoutput>
 
     #view("transaction/_tabs")#
-    #view("transaction/_errors")#
-    #view("transaction/_form")#
+    <cfif rc.transaction.isTransfer()>
+        #view("transfer/_form")# 
+    <cfelse>
+        #view("transaction/_form")#   
+    </cfif>
     
 </cfoutput>

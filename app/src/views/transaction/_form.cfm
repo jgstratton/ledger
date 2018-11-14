@@ -1,9 +1,26 @@
 <cfoutput>
+    <!--- Display any form validation errors --->
+    <cfif StructKeyExists(rc,"errors") and ArrayLen(rc.errors) gt 0>
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="">
+                <i class="fa fa-exclamation-triangle"></i> Please correct the following errors and then try to save your transaction again.
+            </div>
+            <ul>
+                <cfloop array="#rc.errors#" item="error">
+                    <li>#error#</li>
+                </cfloop>
+            </ul>
+        </div>
+    </cfif>
+
     <form method="post" style="max-width:600px">
 
         <input type="hidden" name="account_id" value="#rc.account.getid()#">
         <input type="hidden" name="transactionid" value="#rc.transaction.getid()#">
-        <input type="hidden" name="returnPage" value="#rc.returnPage#">
+        <input type="hidden" name="returnTo" value="#rc.returnTo#">
 
         <div class="row">
             <label class="col-3 col-form-label">Account:</label>

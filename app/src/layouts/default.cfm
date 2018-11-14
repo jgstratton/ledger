@@ -74,8 +74,8 @@
     
                 <div class="title-bar">
                     <hr>
-                    
-                    <cfif request.section eq "transaction">
+ 
+                    <cfif request.section eq "transaction" or (request.section eq 'transfer' and request.item eq 'edit')>
                         #view('transaction/_header')#
                     </cfif>
 
