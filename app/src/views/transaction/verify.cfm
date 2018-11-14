@@ -57,7 +57,7 @@
                         <td class="d-none d-md-table-cell">#local.transaction.getNote()#</td>
                         <td class="#local.transStyle#" align="right">#moneyFormat(abs(local.transaction.getSignedAmount()))#</td>
                         <td>
-                            <button type="submit" class="btn btn-link" data-edit-transaction="#local.transaction.getid()#">
+                            <button type="submit" class="btn btn-link" data-edit-transaction="#local.transaction.getid()#" data-is-transfer="#local.transaction.isTransfer()#">
                                 <i class="fa fa-pencil"></i>
                             </button>
                         </td>              
@@ -115,9 +115,16 @@
                     };
 
                 $editBtn.click(function(){
-                    post(root_path + 'transaction/edit', {
+                    var $this = $(this),
+                        postUrl = '#buildurl("transaction.edit")#';
+                    
+                    if ( $this.data('isTransfer') ){
+                        postUrl = '#buildurl("transfer.edit")#';
+                    }
+                    post(postUrl, {
                         transactionid:$(this).data('editTransaction'),
-                        returnTo: 'transaction.verify'
+                        returnTo: 'transaction.verify',
+                        accountid: '#rc.accountId#'
                     });
                 });
 

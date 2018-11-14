@@ -44,7 +44,7 @@
                     var $btn = $(this),
                         accountid = $btn.data('changeAccount');
                     
-                    post('#buildurl('transaction.new')#', {
+                    post('#buildurl(rc.returnTo)#', {
                         accountid:accountid
                     });
                 });

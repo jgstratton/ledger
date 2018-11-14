@@ -9,6 +9,9 @@ component name="account" output="false"  accessors=true {
         variables.fw=arguments.fw;
     }
 
+    public void function before( required struct rc ){
+        param name="rc.returnTo" default="#variables.fw.getSectionAndItem()#";
+    }
     private void function update( required struct rc ){
         var transaction = rc.transaction;
 
@@ -27,7 +30,6 @@ component name="account" output="false"  accessors=true {
         rc.account = accountService.getAccountByID(rc.accountid);
         rc.transaction = transactionService.createTransaction(rc.account);
         rc.transactions = transactionService.getRecentTransactions(rc.account);
-        rc.returnTo = 'transaction.new';
         variables.update(rc);
     }
 
