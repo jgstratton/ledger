@@ -62,6 +62,22 @@ component extends="framework.one" output="false" {
 		return this.getEnvVar('TIER');
 	}
 
+	/**
+	 * Put any custom configuration that we don't want to get reloaded when the framework reloads, 
+	 * for example, if we have reloadApplicationOnEveryRequest set to true in dev, but want to have dev toggles that we don't want
+	 * to be cleared on every request, set those up here.
+	 */
+	public void function onApplicationStart(){
+		super.onApplicationStart();
+
+		application.devToggles = {
+			showTemplateWrappers: false
+		}
+	}
+
+	/**
+	 * The setupApplication function is called each time the framework is reloaded.
+	 */
 	public void function setupApplication(){
 		
 		lock scope="application" timeout="3"{
@@ -129,6 +145,31 @@ component extends="framework.one" output="false" {
 		return "Error 404 - Page not found.";
 	}
 
+	/**
+	 * Override the customTemplateEngine to provide view/layout wrapper
+	 */
+	public any function customTemplateEngine( string type, string path, struct args ) {
+		var response = '';
+
+		//create a view/layout id
+		var templateId = arguments.type & randrange(1,10000000); 
+
+		//populate the local struct needed for the view/layout
+		structAppend( local, arguments.args );
+
+		//Load the view/layout UI 
+		savecontent variable="response" {
+			include '#arguments.path#';
+		}
+
+		//Create a custom id and wrap all views and layouts
+		if (findnocase("default.cfm", arguments.path) eq 0) {
+			var response = '<div id="#templateId#" class="template-wrapper template-#type#-wrapper" data-template-type="#arguments.type#" data-template-path="#arguments.path#">#response#</div>';
+		}
+		return response;	
+
+	}
+	
 	public void function migrate(){
 		
 		if(this.getEnvironment() eq 'dev'){	

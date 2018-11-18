@@ -57,11 +57,16 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
                                 <div class="dropdown-menu">
-                                <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
-                                <a class="dropdown-item" href="TRN_500.php">Manage Categories</a>
-                                <a class="dropdown-item" href="TRN_700.php">Manage Bills</a>
+                                    <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
+                                    <a class="dropdown-item" href="TRN_500.php">Manage Categories</a>
+                                    <a class="dropdown-item" href="TRN_700.php">Manage Bills</a>
+                                    <cfif getEnvironment() eq "Dev">
+                                        <a class="dropdown-item" href="#buildUrl('admin.devToggles')#">Dev toggles</a>
+                                    </cfif>
+
                                 </div>
                             </li>
+                           
                             <li class="nav-item">
                                 <a class="nav-link" href="logout">Logout</a>
                             </li>
@@ -127,7 +132,11 @@
             var root_path = '#application.root_path#/';
             viewScripts.run();
         </script>	  
-			
+        
+        <!--- Show the layout/view wrappers if dev toggle is on --->
+        <cfif application.devToggles.showTemplateWrappers>
+            <script src="#application.root_path#/assets/js/templateViewer.js?v=#application.version#"></script>
+        </cfif>
 	</body>
 </html>
 
