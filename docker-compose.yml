@@ -55,6 +55,7 @@ services:
      - FACEBOOK_APPSECRET
      - DEFAULT_USER_EMAIL
      - cfconfigfile
+     - cfconfig_adminPassword
 
   cron:
     build: ./cron
