@@ -1,79 +1,84 @@
 <cfscript>
-
-    matchUtilValid = function(args){
-        if(StructKeyExists(args,'val1') and StructKeyExists(args,'val2')){
+       
+    private string function matchUtilValid(required struct args){
+        if (StructKeyExists(arguments.args,'val1') and StructKeyExists(arguments.args,'val2')) {
             return true;
         }
         return false;
     }
 
-    matchUtil = function(val1,val2,method,output){
-        switch(method){
+    private string function matchUtil(required string val1, required string val2, required string method, string output ='' ) {
+        switch(arguments.method){
             case "eq" :
-                if(val1 eq val2){
-                    return output;
+                if(arguments.val1 == arguments.val2){
+                    return arguments.output;
                 }
                 break;
             case "neq" :
-                if(val1 neq val2){
-                    return output;
+                if(arguments.val1 != arguments.val2){
+                    return arguments.output;
                 }
                 break;
         }
         return '';
     }
 
-    matchSelect = function(val1,val2){
-        if(matchUtilValid(arguments)){
-            return matchUtil(val1,val2,"eq","selected");
+    public string function matchSelect(required string val1, required string val2) {
+        if (matchUtilValid(arguments)) {
+            return matchUtil(arguments.val1,arguments.val2,"eq","selected");
         }
     }
 
-    matchCheck = function(val1,val2){
-      if(matchUtilValid(arguments)){
-            return matchUtil(val1,val2,"eq","checked");
+    public string function matchCheck(requires string val1, required string val2) {
+        if (matchUtilValid(arguments)) {
+            return matchUtil(arguments.val1,arguments.val2,"eq","checked");
         }
     }
 
-    matchHide = function(val1,val2,output){
-        if(val1 eq val2){
+    public string function matchHide(required string val1, required string val2, required string output) {
+        if (arguments.val1 == arguments.val2) {
             return '';
         }
-        return output;
+        return arguments.output;
     }
 
-    matchDisplay = function(val1,val2,output_true, output_false = ''){
-        if(val1 eq val2){
-            return output_true;
+    public string function matchDisplay(required string val1, required string val2, required string output_true, string output_false = ''){
+        if(arguments.val1 == arguments.val2){
+            return arguments.output_true;
         }
-        return output_false;
+        return arguments.output_false;
     }
 
-    displayIf = function(condition, value, default){
-        if(condition){
-            return value;
-        } elseif( arguments.keyExists('default') ){
-            return default;
-        }
-        return '';
+    public string function displayIf(required boolean condition, required string value, string default = ''){
+        if(arguments.condition){
+            return arguments.value;
+        } 
+        return arguments.default;
     }
     
-    selectIf = function(condition){
-        if(condition){
+    public string function selectIf(required boolean condition){
+        if(arguments.condition){
             return "selected";
         }
         return '';
     }
     
-    moneyFormat = function(number){
+    public string function checkIF(required boolean condition){
+        if(arguments.condition){
+            return "checked";
+        }
+        return '';
+    }
+
+    public string function moneyFormat(required numeric number) {
         return numberformat(arguments.number, "$,0.00");
     }
 
-    dayFormat = function(date){
+    public string function dayFormat(string date = '') {
         return dateformat(arguments.date,"mm/dd/yyyy");
     }
     
-   function lenShow( string checkLen, string output ){
+    public string function lenShow(required string checkLen, required string output) {
         if ( len( arguments.checkLen ) ){
             return arguments.output;
         }

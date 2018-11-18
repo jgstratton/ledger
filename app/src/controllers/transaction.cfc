@@ -26,7 +26,7 @@ component name="account" output="false"  accessors=true {
         }
     }
 
-    public void function new( struct rc = {} ){
+    public void function newTransaction( struct rc = {} ){
         rc.account = accountService.getAccountByID(rc.accountid);
         rc.transaction = transactionService.createTransaction(rc.account);
         rc.transactions = transactionService.getRecentTransactions(rc.account);

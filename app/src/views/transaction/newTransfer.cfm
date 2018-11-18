@@ -8,5 +8,5 @@
 			</p>
 		</div>
 	</div>
-	#view("transfer/_form")#
+	#view("transaction/_transferForm")#
 </cfoutput>

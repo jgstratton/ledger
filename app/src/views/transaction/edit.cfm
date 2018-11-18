@@ -2,9 +2,9 @@
 
     #view("transaction/_tabs")#
     <cfif rc.transaction.isTransfer()>
-        #view("transfer/_form")# 
+        #view("transaction/_transferForm")# 
     <cfelse>
-        #view("transaction/_form")#   
+        #view("transaction/_transactionForm")#   
     </cfif>
     
 </cfoutput>

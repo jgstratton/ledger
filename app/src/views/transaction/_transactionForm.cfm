@@ -18,7 +18,7 @@
 
     <form method="post" style="max-width:600px">
 
-        <input type="hidden" name="account_id" value="#rc.account.getid()#">
+        <input type="hidden" name="accountid" value="#rc.account.getid()#">
         <input type="hidden" name="transactionid" value="#rc.transaction.getid()#">
         <input type="hidden" name="returnTo" value="#rc.returnTo#">
 
@@ -80,12 +80,10 @@
                 <input type="text" name="Note" value="#rc.transaction.getNote()#" class="form-control form-control-sm">
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-9 offset-3">
-                <button type="submit" name="submitTransaction" class="btn btn-primary btn-sm">Submit Entry</button>
-            </div>
-        </div>
-
+        
+        #view('transaction/_formButtons', {
+            type = 'transaction',
+            mode = request.item eq 'edit' ? 'edit' : 'new'
+        })#
     </form>
 </cfoutput>

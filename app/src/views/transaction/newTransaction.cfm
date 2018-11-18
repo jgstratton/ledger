@@ -1,7 +1,7 @@
 <cfoutput>
 
     #view("transaction/_tabs")#
-    #view("transaction/_form")#
+    #view("transaction/_transactionForm")#
 
     <cfset local.viewID = "view" & randrange(1,10000000)>
 
@@ -79,7 +79,7 @@
             }
             post(postUrl, {
                 transactionid:$(this).data('editTransaction'),
-                returnTo: 'transaction.new',
+                returnTo: 'transaction.newTransaction',
                 accountid: '#rc.accountId#'
             });
         });
