@@ -17,7 +17,7 @@ component name="transfer" accessors=true {
         if (rc.keyExists('submit')){
             update(rc);
         }
-        
+        variables.fw.setView('transaction.newTransfer');
     }
 
     public void function edit( required struct rc ) {
@@ -58,4 +58,5 @@ component name="transfer" accessors=true {
         rc.accounts = accountService.getUserAccounts(rc.user);
         rc.categories = categoryService.getCategories();
     }
+    
 }

@@ -1,4 +1,5 @@
 <cfoutput>
+    <cfset local.mode = request.item eq 'edit' ? 'edit' : 'new'>
 
     <!--- Display any validation errors --->
     <cfif StructKeyExists(rc,"errors") and ArrayLen(rc.errors) gt 0>
@@ -31,15 +32,18 @@
 
     <form name="frmTransfer" method="post">
         #formPreserveKeys(rc,"transactionId,returnTo,accountId")#
-        <div class="row">
-            <div class="col-md-6">
-                <i class="fa fa-exchange"></i> Edit Transfer
-                <button type="button" class="btn btn btn-outline-danger btn-sm pull-right" data-delete-btn>
-                    <i class="fa fa-trash"></i> Delete Transfer
-                </button>   
-                <hr>
+        <cfif local.mode eq "edit">
+            <div class="row">
+                <div class="col-md-6">
+                    <i class="fa fa-exchange"></i> Edit Transfer
+                    
+                    <button type="button" class="btn btn btn-outline-danger btn-sm pull-right" data-delete-btn>
+                        <i class="fa fa-trash"></i> Delete Transfer
+                    </button>   
+                    <hr>
+                </div>
             </div>
-        </div>
+        </cfif>
         <div class="row">
             <div class="col-md-6">
                 <div class="row">
@@ -98,7 +102,7 @@
 
                 #view('transaction/_formButtons', {
                     type = 'transfer',
-                    mode = request.item eq 'edit' ? 'edit' : 'new'
+                    mode = local.mode
                 })#
 
             </div>
@@ -118,7 +122,7 @@
                     post('#buildurl('transaction.deleteTransaction')#',{
                         transactionId: transactionId,
                         returnTo: '#rc.returnTo#',
-                        accountID: '#rc.accountId#'
+                        accountID: '#(rc.keyExists('accountId') ? rc.accountId : 0)#'
                     });
                 });
             });

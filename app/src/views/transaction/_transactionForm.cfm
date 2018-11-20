@@ -1,4 +1,6 @@
 <cfoutput>
+    <cfset local.mode = request.item eq 'edit' ? 'edit' : 'new'>
+
     <!--- Display any form validation errors --->
     <cfif StructKeyExists(rc,"errors") and ArrayLen(rc.errors) gt 0>
         <div class="alert alert-danger">
@@ -24,9 +26,11 @@
                 <span class="input-static">
                     #rc.account.getName()#
                 </span>
-                <button type="button" class="btn btn btn-outline-danger btn-sm pull-right" data-delete-btn>
-                    <i class="fa fa-trash"></i> Delete Entry
-                </button>  
+                <cfif local.mode eq "edit">
+                    <button type="button" class="btn btn btn-outline-danger btn-sm pull-right" data-delete-btn>
+                        <i class="fa fa-trash"></i> Delete Entry
+                    </button> 
+                </cfif> 
             </div>
         </div>
         <hr>
@@ -82,7 +86,7 @@
         
         #view('transaction/_formButtons', {
             type = 'transaction',
-            mode = request.item eq 'edit' ? 'edit' : 'new'
+            mode = local.mode
         })#
     </form>
 
