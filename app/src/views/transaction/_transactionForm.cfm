@@ -17,17 +17,16 @@
     </cfif>
 
     <form method="post" style="max-width:600px">
-
-        <input type="hidden" name="accountid" value="#rc.account.getid()#">
-        <input type="hidden" name="transactionid" value="#rc.transaction.getid()#">
-        <input type="hidden" name="returnTo" value="#rc.returnTo#">
-
+        #formPreserveKeys(rc,"transactionId,returnTo,accountId")#
         <div class="row">
             <label class="col-3 col-form-label">Account:</label>
             <div class="col-9">
                 <span class="input-static">
                     #rc.account.getName()#
                 </span>
+                <button type="button" class="btn btn btn-outline-danger btn-sm pull-right" data-delete-btn>
+                    <i class="fa fa-trash"></i> Delete Entry
+                </button>  
             </div>
         </div>
         <hr>
@@ -86,4 +85,27 @@
             mode = request.item eq 'edit' ? 'edit' : 'new'
         })#
     </form>
+
+    <script>
+        viewScripts.add(function(){
+            var $view = $("###local.templateid#"),
+                $form = $view.find("form"),
+                transactionId = $form.find("[name='transactionId']").val();
+
+
+            $view.find("[data-delete-btn]").click(function(){
+                
+                jConfirm("Are you sure you want to delete this transaction?",function(){
+                    post('#buildurl('transaction.deleteTransaction')#',{
+                        transactionId: transactionId,
+                        returnTo: '#rc.returnTo#',
+                        accountID: '#rc.accountId#'
+                    });
+                });
+            });
+            $view.find("[datepicker]").datepicker();
+            
+        });
+    </script>
+
 </cfoutput>

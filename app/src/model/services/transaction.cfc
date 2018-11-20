@@ -9,9 +9,13 @@ component output="false" {
     }
     
     public void function deleteTransaction(required transaction transaction) {
-        if (transaction.isTransfer()){
-
+        transaction{
+            if (transaction.isTransfer()){
+                EntityDelete(transaction.getLinkedTransaction());
+            }
+            EntityDelete(transaction);
         }
+
     }
 
     public void function save( required transaction transaction ){

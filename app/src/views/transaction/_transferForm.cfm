@@ -33,13 +33,22 @@
         #formPreserveKeys(rc,"transactionId,returnTo,accountId")#
         <div class="row">
             <div class="col-md-6">
+                <i class="fa fa-exchange"></i> Edit Transfer
+                <button type="button" class="btn btn btn-outline-danger btn-sm pull-right" data-delete-btn>
+                    <i class="fa fa-trash"></i> Delete Transfer
+                </button>   
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 <div class="row">
                     <label class="col-3 col-form-label">From Account:</label>
                     <div class="col-9">
                         <select name="fromAccountId" class="form-control form-control-sm" >
                             <cfloop array="#rc.accounts#" index="local.account">
                                 <option value="#local.account.getId()#" #selectIf(local.account.getId() eq rc.transfer.getfromAccountId())#>
-                                    #local.account.getName()# #rc.transfer.getfromAccountId()#
+                                    #local.account.getName()#
                                 </option>
                             </cfloop>
                         </select>
@@ -53,7 +62,7 @@
                         <select name="toAccountId" class="form-control form-control-sm" >
                             <cfloop array="#rc.accounts#" index="local.account">
                                 <option value="#local.account.getId()#" #selectIf(local.account.getId() eq rc.transfer.getToaccountId())#>
-                                    #local.account.getName()# #rc.transfer.getToaccountId()#
+                                    #local.account.getName()#
                                 </option>
                             </cfloop>
                         </select>
@@ -87,18 +96,35 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <label class="col-3 col-form-label"></label>
-                    <div class="col-9">
-                        <button type="submit" class="btn btn-primary" name="submit">
-                            Submit Transfer
-                        </button>
-                    </div>
-                </div>
+                #view('transaction/_formButtons', {
+                    type = 'transfer',
+                    mode = request.item eq 'edit' ? 'edit' : 'new'
+                })#
+
             </div>
         </div>
     </form>
+
+    <script>
+        viewScripts.add(function(){
+            var $view = $("###local.templateid#"),
+                $form = $view.find("form"),
+                transactionId = $form.find("[name='transactionId']").val();
+
+
+            $view.find("[data-delete-btn]").click(function(){
+                
+                jConfirm("Are you sure you want to delete this transfer?",function(){
+                    post('#buildurl('transaction.deleteTransaction')#',{
+                        transactionId: transactionId,
+                        returnTo: '#rc.returnTo#',
+                        accountID: '#rc.accountId#'
+                    });
+                });
+            });
+            $view.find("[datepicker]").datepicker();
+            
+        });
+    </script>
+
 </cfoutput>
-<script>
-    $("[data-datepicker]").datepicker();
-</script>
