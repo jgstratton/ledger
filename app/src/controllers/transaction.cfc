@@ -22,7 +22,8 @@ component name="account" output="false"  accessors=true {
             if(arrayLen(rc.errors) eq 0){
                 transactionService.save(transaction);
                 rc.lastTransactionid = transaction.getid();
-                variables.fw.redirect(action='transaction.#rc.returnpage#', append="lastTransactionid,accountid");            }
+                variables.fw.redirect(action='transaction.#rc.returnpage#', append="lastTransactionid,accountid");
+            }
         }
     }
 
@@ -45,6 +46,14 @@ component name="account" output="false"  accessors=true {
         rc.unverifiedTransactions = transactionService.getUnverifiedTransactions(rc.account);
         rc.verifiedTransactions = transactionService.getVerifiedTransactions(rc.account);
         rc.lastVerifiedId = transactionService.getLastVerifiedID(rc.account);
+    }
+
+    public void function deleteTransaction(required struct rc){
+        var transaction = transactionService.getTransactionById(rc.transactionId);
+        //verify that transaction belongs to logged in user 
+        if (transaction.getAccount().getUser() != rc.user) {
+            rc.errors = ["You do not have access to delete this transaction"];
+        }
     }
 
     public void function clearOrUndo( struct rc = {}){

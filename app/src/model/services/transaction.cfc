@@ -1,20 +1,26 @@
 component output="false" {
 
-    public any function getTransactionByid(id){
+    public component function getTransactionByid(required numeric id){
         return entityLoadByPk( "transaction", arguments.id);
     }
 
-    public any function createTransaction(account){
+    public component function createTransaction(required account account){
         return entityNew("transaction", {account: arguments.account} );
     }
     
-    public any function save( required component transaction ){
+    public void function deleteTransaction(required transaction transaction) {
+        if (transaction.isTransfer()){
+
+        }
+    }
+
+    public void function save( required transaction transaction ){
         transaction{
             EntitySave(arguments.transaction);
         }
     }
 
-    public any function getRecentTransactions(account){
+    public array function getRecentTransactions(required account account){
         return ORMExecuteQuery("
             FROM transaction t
             WHERE account = :account
@@ -22,7 +28,7 @@ component output="false" {
         ",{account:arguments.account, maxresults: 50});
     }
 
-    public any function getUnverifiedTransactions(account){
+    public array function getUnverifiedTransactions(required account account){
         return ORMExecuteQuery("
             FROM transaction t
             WHERE account = :account
@@ -31,7 +37,7 @@ component output="false" {
         ",{account:arguments.account});
     }
 
-    public any function getVerifiedTransactions(account){
+    public array function getVerifiedTransactions(required account account){
         return ORMExecuteQuery("
             FROM transaction t
             WHERE t.account = :account
@@ -40,7 +46,7 @@ component output="false" {
         ",{account:arguments.account});
     }
 
-    public any function getLastVerifiedID(account){
+    public numeric function getLastVerifiedID(required account account){
         var qryLastVerifiedId = queryExecute("
             Select  coalesce(max(ID),0) as lastId
             From    transactions
@@ -55,7 +61,7 @@ component output="false" {
         return qryLastVerifiedId.lastId;
     }
 
-    public void function verifyTransaction(transaction){
+    public void function verifyTransaction(required transaction transaction){
         transaction{ 
             if( not len(transaction.getVerifiedDate()) ){
                 transaction.setVerifiedDate(now());
@@ -63,7 +69,7 @@ component output="false" {
         }
     }
 
-    public void function unverifyTransaction(transaction){
+    public void function unverifyTransaction(required transaction transaction){
         transaction{ 
             transaction.setVerifiedDate(javaCast("null",""));
         }

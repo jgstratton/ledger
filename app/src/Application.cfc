@@ -17,14 +17,19 @@ component extends="framework.one" output="false" {
 		action = 'action',
 		defaultSection = 'account',
 		defaultItem = 'list',
-		diEngine = "di1",
-		diComponent = "framework.ioc",
-		diLocations = "./model/services", // ColdFusion ORM handles Beans
-        diConfig = { },
+		diEngine = "aop1",
+		diComponent = "framework.aop",
+		diLocations = "./model/services,./model/interceptors",
+        diConfig = {
+			interceptors = [
+				{beanName = "transactionService", interceptorName = "authorize"}
+			]
+		 },
         routes = [
 			{ "/login" = "/auth/login"},
 			{ "/logout" = "/auth/logout"}
-		 ]
+		]
+		
 	};
 
 	variables.framework.environments = {
