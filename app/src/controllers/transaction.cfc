@@ -54,33 +54,28 @@ component name="account" output="false"  accessors=true {
         variables.fw.redirect(action='transaction.#rc.returnTo#', append="accountid");
     }
 
-    public void function clearOrUndo( struct rc = {}){
-        
+    public void function clear( struct rc = {} ){
         var transaction = transactionService.getTransactionById(rc.transactionId);
         var account = transaction.getAccount();
 
-        switch (listGetAt(rc.action,2,".")){
-            case 'clear' :
-                transactionService.verifyTransaction(transaction);
-                break;
-            case 'undo' :
-                transactionService.unverifyTransaction(transaction);
-                break;
-        }
-        
+        transactionService.verifyTransaction(transaction);
+
         rc.jsonResponse.verifiedLinkedBalance = account.getVerifiedLinkedBalance();
         rc.jsonResponse.lastVerifiedId = transactionService.getLastVerifiedID(account);
-        
-        variables.fw.setView('main.jsonresponse');
-        
-    }
 
-    public void function clear( struct rc = {} ){
-        variables.clearOrUndo(rc);
+        variables.fw.setView('main.jsonresponse');
     }
 
     public void function undo( struct rc = {} ){
-        variables.clearOrUndo(rc);
+        var transaction = transactionService.getTransactionById(rc.transactionId);
+        var account = transaction.getAccount();
+        
+        transactionService.unverifyTransaction(transaction);
+
+        rc.jsonResponse.verifiedLinkedBalance = account.getVerifiedLinkedBalance();
+        rc.jsonResponse.lastVerifiedId = transactionService.getLastVerifiedID(account);
+
+        variables.fw.setView('main.jsonresponse');
     }
 
     public void function after( struct rc = {} ){

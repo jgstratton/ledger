@@ -115,29 +115,39 @@ component persistent="true" table="accounts" accessors="true" {
         calculate the account balance by verified/all and includeLinked
     */
     private numeric function calculateBalance(boolean verifiedOnly = false, boolean includeLinked = false){
-        var condition1 = 'a = :thisAccount';
+        var condition1 = 'a.id = :id';
         var condition2 = '1=1';
 
         if(includeLinked){
-            condition1 = "a.linkedAccount = :linkedAccount";
+            condition1 = "coalesce(a.linkedAccount,0) = :linkedAccount or a.id = :id";
         }
 
         if(verifiedOnly){
             condition2 = "trn.verifiedDate is not null";
         }
 
-        local.hql = "
-            SELECT  coalesce(sum(trn.amount * catType.multiplier),0)
-            FROM    account a
-            JOIN    a.transactions trn
-            JOIN    trn.category cat
-            JOIN    cat.type catType
-            
+        local.sql = "
+            SELECT  coalesce(sum(trn.amount * catType.multiplier),0) as calcBalance
+            FROM    accounts a
+            INNER JOIN transactions trn
+                ON a.id = trn.account_id
+            INNER JOIN categories c 
+                ON trn.category_id = c.id
+            INNER JOIN categoryTypes catType
+                ON c.categoryType_id = catType.id            
             WHERE (#condition1#) AND (#condition2#) and a.deleted is null
         ";
-        
-        return ORMExecuteQuery(local.hql ,{ thisAccount: this, linkedAccount: this.getLinkedAccount() }, true);
-        
+
+        var qryResult = queryExecute(local.sql,{ id: this.getId(), linkedAccount: this.getLinkedAccount() });
+        return qryResult.calcBalance;
+    }
+
+    private component function getBeanFactory(){
+        return application.beanfactory;
+    }
+
+    private component function getLogger(){
+        return getBeanFactory().getBean("loggerService");
     }
 
     /*
