@@ -168,7 +168,7 @@ component extends="framework.one" output="false" {
 		}
 
 		//Create a custom id and wrap all views and layouts
-		if (findnocase("default.cfm", arguments.path) eq 0) {
+		if (findnocase("default.cfm", arguments.path) == 0 && not local.keyExists('noHtml') ) {
 			var response = '<div id="#templateId#" class="template-wrapper template-#type#-wrapper" data-template-type="#arguments.type#" data-template-path="#arguments.path#">#response#</div>';
 		}
 		return response;	
