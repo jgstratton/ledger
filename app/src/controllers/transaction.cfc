@@ -4,7 +4,8 @@ component name="account" output="false"  accessors=true {
     property transactionService;
     property categoryService;
     property transferService;
-
+    property alertService;
+    
     public void function init(fw){
         variables.fw=arguments.fw;
     }
@@ -12,14 +13,20 @@ component name="account" output="false"  accessors=true {
     public void function before( required struct rc ){
         param name="rc.returnTo" default="#variables.fw.getSectionAndItem()#";
     }
+
     private void function update( required struct rc ){
         var transaction = rc.transaction;
+        var errors = [];
 
-        if(StructKeyExists(rc,'submitTransaction')){
+        if (StructKeyExists(rc,'submitTransaction')){
             variables.fw.populate(transaction);
             transaction.setCategory(categoryService.getCategoryById(rc.category));
-            rc.errors = transaction.validate();
-            if(arrayLen(rc.errors) eq 0){
+            errors = transaction.validate();
+
+            if (arrayLen(errors)){
+                alertService.setTitle("danger","Please correct the follow errors:");
+                alertService.addMultiple("danger",errors);
+            } else {
                 transactionService.save(transaction);
                 rc.lastTransactionid = transaction.getid();
                 variables.fw.redirect(action='transaction.#rc.returnTo#', append="lastTransactionid,accountid");

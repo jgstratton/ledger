@@ -1,9 +1,9 @@
 component name="account" output="false"  accessors=true {
 
-    property greetingService;
     property userService;
     property accountService;
-    
+    property alertService;
+
     public void function init(fw){
         variables.fw=arguments.fw;
     }
@@ -21,12 +21,10 @@ component name="account" output="false"  accessors=true {
     private void function createEdit (struct rc = {}, account){
         var account = arguments.account;
         var accountService = variables.accountService;
+        var errors = [];
 
         cfparam( name="rc.accountTypeId", default="");
         cfparam( name="rc.summary", default="N");
-
-        rc.errors = [];
-        rc.errorMsg = "Correct the following items and try saving your account again.";
 
         /* If the account was submitted, run the validation */
         if(StructKeyExists(rc,"submitAccount")){
@@ -40,13 +38,16 @@ component name="account" output="false"  accessors=true {
                 account.setLinkedAccount(javacast("null",""));
             }
 
-            rc.errors = account.validate();
+            errors = account.validate();
             
             /* All validation passed, add the account */
-            if(arraylen(rc.errors) eq 0){
+            if(arraylen(errors) eq 0){
                 accountService.save(account);
                 variables.fw.redirect("account.list");
             }
+
+            alertService.setTitle("danger","Correct the following items and try saving your account again.");
+            alertService.addMultiple("danger",errors);
         }
 
         //get the select list items

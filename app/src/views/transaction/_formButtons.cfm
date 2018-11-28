@@ -19,7 +19,7 @@
     <cfelse>
         <div class="row">
             <div class="col-9 offset-3">
-                <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-floppy-o"></i> Save Changes</button>
+                <button type="submit" name="submitTransaction" class="btn btn-primary btn-sm"><i class="fa fa-floppy-o"></i> Save Changes</button>
                 <a href="#buildurl(rc.returnTo & '?accountID=#rc.accountid#')#" class="btn btn  btn-outline-secondary btn-sm pull-right">
                     <i class="fa fa-times"></i> cancel changes
                 </a>                

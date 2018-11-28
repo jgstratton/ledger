@@ -42,9 +42,9 @@ component output="false" {
     }
 
     public any function save(account){
-        //by default, link an accoun to iteself
-        if(not arguments.account.hasLinkedAccount()){
-            arguments.account.setLinkedAccount(arguments.account);
+        //do not let account link to itself
+        if (account.hasLinkedAccount() && account.getLinkedAccountId() == account.getId()) {
+            account.removeLinkedAccount();
         }
         EntitySave(arguments.account);
         ormflush();

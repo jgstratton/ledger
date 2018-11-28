@@ -1,4 +1,5 @@
 <cfoutput>
+	
 	<h3><i class="fa fa-exchange"></i> Transfer Between accounts</h3>
 	<div class="row">
 		<div class="col-md-6">
@@ -9,4 +10,5 @@
 		</div>
 	</div>
 	#view("transaction/_transferForm")#
+	
 </cfoutput>

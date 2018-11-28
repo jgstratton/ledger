@@ -73,7 +73,7 @@ component persistent="true" table="accounts" accessors="true" {
         if(this.hasLinkedAccount()){
             return this.getLinkedAccount().getId();
         }
-        return;
+        return 0;
     }
     
     public string function getIcon(){
@@ -100,15 +100,15 @@ component persistent="true" table="accounts" accessors="true" {
     }
 
     public numeric function getVerifiedBalance(){
-        return variables.calculateBalance(verifiedOnly:true);
+        return variables.calculateBalance(verifiedOnly=true);
     }
 
     public numeric function getLinkedBalance(){
-        return variables.calculateBalance(includeLinked:true);
+        return variables.calculateBalance(includeLinked=true);
     }
 
     public numeric function getVerifiedLinkedBalance(){
-        return variables.calculateBalance(verifiedOnly:true,includeLinked:true);
+        return variables.calculateBalance(verifiedOnly=true, includeLinked=true);
     }
 
     /*
@@ -117,9 +117,11 @@ component persistent="true" table="accounts" accessors="true" {
     private numeric function calculateBalance(boolean verifiedOnly = false, boolean includeLinked = false){
         var condition1 = 'a.id = :id';
         var condition2 = '1=1';
+        var params = { id: this.getid() };
 
         if(includeLinked){
             condition1 = "coalesce(a.linkedAccount,0) = :linkedAccount or a.id = :id";
+            params.linkedAccount = this.getLinkedAccountId();
         }
 
         if(verifiedOnly){
@@ -138,7 +140,7 @@ component persistent="true" table="accounts" accessors="true" {
             WHERE (#condition1#) AND (#condition2#) and a.deleted is null
         ";
 
-        var qryResult = queryExecute(local.sql,{ id: this.getId(), linkedAccount: this.getLinkedAccount() });
+        var qryResult = queryExecute(local.sql, params);
         return qryResult.calcBalance;
     }
 

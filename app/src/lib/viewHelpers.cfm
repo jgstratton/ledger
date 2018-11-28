@@ -29,7 +29,7 @@
         }
     }
 
-    public string function matchCheck(requires string val1, required string val2) {
+    public string function matchCheck(string val1, string val2) {
         if (matchUtilValid(arguments)) {
             return matchUtil(arguments.val1,arguments.val2,"eq","checked");
         }

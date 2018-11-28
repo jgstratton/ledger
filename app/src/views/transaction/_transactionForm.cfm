@@ -1,22 +1,7 @@
 <cfoutput>
     <cfset local.mode = request.item eq 'edit' ? 'edit' : 'new'>
 
-    <!--- Display any form validation errors --->
-    <cfif StructKeyExists(rc,"errors") and ArrayLen(rc.errors) gt 0>
-        <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="">
-                <i class="fa fa-exclamation-triangle"></i> Please correct the following errors and then try to save your transaction again.
-            </div>
-            <ul>
-                <cfloop array="#rc.errors#" item="error">
-                    <li>#error#</li>
-                </cfloop>
-            </ul>
-        </div>
-    </cfif>
+    #view("includes/alerts")#
 
     <form method="post" style="max-width:600px">
         #formPreserveKeys(rc,"transactionId,returnTo,accountId")#

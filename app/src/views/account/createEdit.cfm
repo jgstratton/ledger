@@ -1,12 +1,12 @@
 <cfoutput>
-
+    
     <cfif rc.mode eq "create">
         <h4>Create a New Account</h4>
     <cfelse>
         <h4>Edit Account: #rc.account.getName()# ... #dollarFormat(rc.account.getBalance())#</h4>
     </cfif>
 
-    #view("includes/errors")#
+    #view("includes/alerts")#
 
     <form name="frmAccount" method="post" class="form-horizontal" autocomplete="off">
         
