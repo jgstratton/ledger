@@ -10,14 +10,30 @@ services:
      - ./data/mysql:/var/lib/mysql
      - ./data/init:/docker-entrypoint-initdb.d
     environment:
-     - MYSQL_RANDOM_ROOT_PASSWORD=yes
      - MYSQL_DATABASE
+     - MYSQL_ROOT_PASSWORD
      - MYSQL_USER
-     - MYSQL_PASSWORD
+     - MYSQL_PASSWORD 
      - TZ
     networks:
      - localnet
-  
+
+  db_tests:
+    build: ./data
+    container_name: "${CONTAINER_PREFIX}_db_tests"
+    restart: 'always'
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;'
+    ports:
+     - "3307:3306"
+    environment:
+     - MYSQL_DATABASE=tests
+     - MYSQL_ROOT_PASSWORD
+     - MYSQL_USER
+     - MYSQL_PASSWORD 
+     - TZ
+    networks:
+     - localnet
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:4.8.2
     container_name: "${CONTAINER_PREFIX}_phpmyadmin"
@@ -26,14 +42,14 @@ services:
     ports:
      - "${PHPMYADMIN_PORT}:80"
     environment:
-     - MYSQL_DATABASE
+     - MYSQL_ROOT_PASSWORD
      - MYSQL_USER
      - MYSQL_PASSWORD
     networks:
      - localnet
 
   lucee:
-    image: ortussolutions/commandbox:lucee5-2.3.0
+    build: ./lucee
     container_name: "${CONTAINER_PREFIX}_lucee"
     restart: 'always'
     depends_on:
@@ -43,7 +59,8 @@ services:
     networks:
      - localnet
     volumes:
-     - ./app:/app
+     - ./app/src:/app/src
+     - ./app/tests:/app/tests
      - ./logs/lucee/:/var/log
     environment:
      - MYSQL_DATABASE

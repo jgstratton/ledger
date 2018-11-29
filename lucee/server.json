@@ -1,0 +1,6 @@
+{
+    "web": {
+        "host": "localhost",
+        "webroot": "/app"
+    }
+}
