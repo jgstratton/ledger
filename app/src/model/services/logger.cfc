@@ -3,10 +3,10 @@ component{
     public function init(){
         
         CreateObject("java", "org.apache.log4j.PropertyConfigurator").configure(
-            expandPath("/log4j.properties")
+			"/app/src/log4j.properties"
         );
-
-        variables.logger = CreateObject("java", "org.apache.log4j.Logger").getInstance('app');
+		
+		variables.logger = CreateObject("java", "org.apache.log4j.Logger").getInstance('app');
     }
 
 	public any function trace(required string message) {

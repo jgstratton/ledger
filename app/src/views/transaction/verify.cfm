@@ -79,8 +79,8 @@
                     $editBtn = $viewDiv.find("[data-edit-transaction]"),
                     $transactionRows = $viewDiv.find("tr[data-trn]"),
                     $clearBtn = $transactionRows.find("button.btn-primary"),
-                    $undoBtn = $transactionRows.find("button.btn-danger"),
-                    
+                    $undoBtn = $transactionRows.find("button.btn-danger");
+
                     getRow = function($rowElement){
                         return $rowElement.closest("tr");
                     },
@@ -91,7 +91,7 @@
                         $tr.removeClass('default');
                         $tr.find("button").removeClass('d-none');
                         $tr.find("button.btn-primary").addClass('d-none');
-                        updateSummary('clear',transactionId);
+                        updateSummary('#buildUrl('transaction.clear')#', transactionId);
                     },
                 
                     undo = function($tr){
@@ -100,11 +100,11 @@
                         $tr.removeClass('verified');
                         $tr.find("button").removeClass('d-none');
                         $tr.find("button.btn-danger").addClass('d-none');
-                        updateSummary('undo',transactionId);
+                        updateSummary('#buildUrl('transaction.undo')#', transactionId);
                     },
                     
-                    updateSummary = function(action,trnID){
-                        postJSON( root_path + 'transaction/' + action, {
+                    updateSummary = function(actionUrl,trnID){
+                        postJSON( actionUrl, {
                             transactionId: trnID
                         }, function(data){
                             console.log(data);

@@ -8,6 +8,7 @@ component extends="framework.one" output="false" {
 	this.sessionManagement = true;
 	this.sessionTimeout = createTimeSpan(0, 0, 30, 0);
 
+	this.mappings["/framework"] = "/framework";
 	this.mappings["/migrations"] = "/database/migrations";
 	this.mappings["/services"] = "/model/services";
 	this.mappings["/beans"] = "/model/beans";
@@ -15,6 +16,7 @@ component extends="framework.one" output="false" {
 	// FW/1 settings
 	variables.framework = {
 		action = 'action',
+		baseURL = "useRequestURI",
 		defaultSection = 'account',
 		defaultItem = 'list',
 		diEngine = "aop1",
@@ -24,11 +26,7 @@ component extends="framework.one" output="false" {
 			interceptors = [
 				{beanName = "transactionService", interceptorName = "authorize"}
 			]
-		 },
-        routes = [
-			{ "/login" = "/auth/login"},
-			{ "/logout" = "/auth/logout"}
-		]
+		 }
 		
 	};
 
@@ -86,13 +84,13 @@ component extends="framework.one" output="false" {
 	public void function setupApplication(){
 		
 		lock scope="application" timeout="3"{
-			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#this.getEnvVar('LUCEE_PORT')#";
+			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#this.getEnvVar('LUCEE_PORT')#/src";
 			application.src_dir = "#expandPath(".")#";
 			application.version = "#this.version#";
 			application.facebook = createobject("component","model/services/facebook").init(
 				this.getEnvVar('FACEBOOK_APPID'),
 				this.getEnvVar('FACEBOOK_APPSECRET'),
-				"#application.root_path#/login?type=fb"
+				"#application.root_path#/"
 			);
 			application.beanfactory = this.getBeanFactory();
 		}
@@ -125,11 +123,6 @@ component extends="framework.one" output="false" {
 			StructClear(Session);
 			setupSession();
 		}
-
-
-		if(not session.loggedin and listlast(cgi.path_info,"/") neq "login"){
-			location("#application.root_path#/login",false);
-		}
 	
 	}
 
@@ -141,6 +134,8 @@ component extends="framework.one" output="false" {
 		//user is used in most controllers and views
 		if(session.loggedin){
 			rc.user = this.getBeanFactory().getBean("userService").getUserByid(session.userid);
+		} else if (getSection() != 'auth') {
+			redirect("auth.login","all");
 		}
 	}
 
