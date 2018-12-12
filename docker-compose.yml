@@ -60,7 +60,7 @@ services:
      - localnet
     volumes:
      - ./app/src:/app/src
-     - ./app/tests:/app/tests
+     - ./app/testbox/tests:/app/testbox/tests
      - ./logs/lucee/:/var/log
     environment:
      - MYSQL_DATABASE

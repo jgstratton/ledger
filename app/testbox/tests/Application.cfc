@@ -1,4 +1,5 @@
 
+
 component {
     this.name = "TestBox" & hash( CreateUUID());
     this.sessionManagement  = true;
@@ -8,10 +9,17 @@ component {
 
 	this.datasource="tests";
 
+	// any mappings go here, we create one that points to the root called test.
+	this.mappings[ "/tests" ] = getDirectoryFromPath( getCurrentTemplatePath() );
 
+	// Map back to its root
+	rootPath = REReplaceNoCase( this.mappings[ "/tests" ], "tests(\\|/)$", "" );
+	this.mappings[ "/testbox" ] = rootPath;
+
+	// Map resources
+	this.mappings[ "/coldbox" ] = this.mappings[ "/tests" ] & "resources/coldbox";
+	
     testsPath = getDirectoryFromPath( getCurrentTemplatePath() );
-    this.mappings[ "/tests" ] = testsPath;
-    rootPath = REReplaceNoCase( this.mappings[ "/tests" ], "tests(\\|/)", "" );
 
 
 	this.mappings["/model"] = rootPath & "/src/models";
@@ -26,7 +34,8 @@ component {
 	this.ormSettings.flushatrequestend = false;
 
 
-	ormreload();
-
-} 
-
+	
+	public void function onRequestStart() {
+		ormreload();
+	}
+}
