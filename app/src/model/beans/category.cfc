@@ -10,5 +10,7 @@ component persistent="true" table="categories" accessors="true" {
     property name="transactions" fieldtype="one-to-many" cfc="transaction" fkcolumn="id";
     property name="type" fieldtype="many-to-one" cfc="categoryType" fkcolumn="categoryType_id";
 
-
+    public void function save(){
+        EntitySave(this);
+    }
 }

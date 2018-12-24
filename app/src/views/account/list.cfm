@@ -81,7 +81,7 @@
             <!--- List any sub accounts--->
             <cfif thisAccount.hasSubAccount()>
                 
-                <cfloop array="#thisAccount.getSubAccount()#" index="subAccount">
+                <cfloop array="#thisAccount.getSubAccounts()#" index="subAccount">
 
                     <cfset local.editUrl = buildURL('account.edit?accountid=' & subAccount.getId())>
                     <cfset local.openUrl = buildURL('transaction.newTransaction?accountid=' & subAccount.getId())>

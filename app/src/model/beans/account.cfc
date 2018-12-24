@@ -4,7 +4,7 @@ component persistent="true" table="accounts" accessors="true" {
     property name="user" fieldtype="many-to-one" cfc="user" fkcolumn="user_id";
     property name="name" ormtype="string" length="100";
 
-    property name="linkedAccount" fieldtype="many-to-one" cfc="account" fkcolumn="linkedAccount";
+    property name="linkedAccount" fieldtype="many-to-one" cfc="account" fkcolumn="linkedAccount"; //parent account
     property name="subAccount" fieldtype="one-to-many" type="array" cfc="account" fkcolumn="linkedAccount" inverse="true";
 
     property name="summary" ormType="string" length="1";
@@ -22,11 +22,15 @@ component persistent="true" table="accounts" accessors="true" {
         }
         return this.getName();
     }
+
+    public void function save(){
+        EntitySave(this);
+    }
     public function hasSubAccount(){
-        return Arraylen(this.getSubAccount());
+        return Arraylen(this.getSubAccounts());
     }
 
-    public function getSubAccount(){
+    public function getSubAccounts(){
         return ORMExecuteQuery("
             from account a 
             where a.linkedAccount = :account
@@ -117,11 +121,13 @@ component persistent="true" table="accounts" accessors="true" {
     private numeric function calculateBalance(boolean verifiedOnly = false, boolean includeLinked = false){
         var condition1 = 'a.id = :id';
         var condition2 = '1=1';
-        var params = { id: this.getid() };
+        var params = { id: this.getId() };
 
         if(includeLinked){
-            condition1 = "coalesce(a.linkedAccount,0) = :linkedAccount or a.id = :id";
-            params.linkedAccount = this.getLinkedAccountId();
+            condition1 = "a.id = :id or a in (
+                SELECT parentAccount 
+                FROM account parentAccount 
+                WHERE linkedAccount.id = :id)";
         }
 
         if(verifiedOnly){
@@ -129,18 +135,15 @@ component persistent="true" table="accounts" accessors="true" {
         }
 
         local.sql = "
-            SELECT  coalesce(sum(trn.amount * catType.multiplier),0) as calcBalance
-            FROM    accounts a
-            INNER JOIN transactions trn
-                ON a.id = trn.account_id
-            INNER JOIN categories c 
-                ON trn.category_id = c.id
-            INNER JOIN categoryTypes catType
-                ON c.categoryType_id = catType.id            
+            SELECT  new map (coalesce(sum(trn.amount * catType.multiplier),0) as calcBalance)
+            FROM    account a
+            JOIN a.transactions trn
+            JOIN trn.category c 
+            JOIN c.type catType          
             WHERE (#condition1#) AND (#condition2#) and a.deleted is null
         ";
-
-        var qryResult = queryExecute(local.sql, params);
+    
+        var qryResult = ormExecuteQuery(local.sql, params,true);
         return qryResult.calcBalance;
     }
 
@@ -151,17 +154,5 @@ component persistent="true" table="accounts" accessors="true" {
     private component function getLogger(){
         return getBeanFactory().getBean("loggerService");
     }
-
-    /*
-    public any function getLinkedAccounts(){
-        return ormExecuteQuery("
-            FROM account a
-            WHERE linkedAccount = :thisAccount 
-            AND deleted IS NULL
-            AND a.isVirtual = 1
-            ORDER BY a.name",
-            {thisAccount: this});
-    }
-*/
 
 }

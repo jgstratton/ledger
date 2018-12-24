@@ -16,6 +16,9 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
     property name="linkedTo" fieldtype="many-to-one" cfc="transaction" fkcolumn="linkedTransId";
     property name="linkedFrom" fieldtype="one-to-many" cfc="transaction" fkcolumn="linkedTransId" inverse="true";
     
+    public void function save() {
+        EntitySave(this);
+    }
     public array function validate(){
        
         var errors = [];

@@ -15,7 +15,6 @@ component persistent="true" table="users" accessors="true" {
     }
 
     public function save(){
-        EntityMerge(this);
         EntitySave(this);
     }  
     
