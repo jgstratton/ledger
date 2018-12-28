@@ -5,8 +5,9 @@ component accessors=true  {
      * use the target bean name to find the appropriate private function to handle *before* authorizations
      */
     public void function before(required component targetBean, required string methodName, required array args) {
+        
         var beanMetaData = getMetaData(arguments.targetBean);
-        var namedArgs = translateArgs(arguments.targetBean, arguments.methodName, arguments.args);
+        var namedArgs = _translateArgs(arguments.targetBean, arguments.methodName, arguments.args);
         
         switch (beanMetaData.name){
             case "services.Transaction" :
@@ -23,7 +24,7 @@ component accessors=true  {
      */
     public void function after(required component targetBean, required string methodName, required array args, result) {
         var beanMetaData = getMetaData(arguments.targetBean);
-        var namedArgs = translateArgs(arguments.targetBean, arguments.methodName, arguments.args);
+        var namedArgs = _translateArgs(arguments.targetBean, arguments.methodName, arguments.args);
 
         if (arguments.keyExists('result')){
             switch (beanMetaData.name){
@@ -81,6 +82,24 @@ component accessors=true  {
         } 
     }
 
+    /** Local version of translateArgs that accomidates optional arguments */
+    private any function _translateArgs(required any targetBean, required string methodName, required struct args) {
+		var argumentInfo = arguments.targetBean.$getArgumentInfo(arguments.methodName);
+		var resultArgs = {};
+
+		if (structIsEmpty(arguments.args) || !structKeyExists(arguments.args, "1")){
+			return arguments.args;
+		}
+
+		for (var i = 1; i <= arrayLen(argumentInfo); i++){
+            if (structKeyExists(arguments.args, i)) {
+                resultArgs[argumentInfo[i].name] = arguments.args[i];
+            }
+		}
+
+		return resultArgs;
+    }
+    
     private component function getLoggedInUser() {
         return request.context.user;
     }

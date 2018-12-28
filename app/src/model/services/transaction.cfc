@@ -32,20 +32,32 @@ component output="false" {
         ",{account:arguments.account, maxresults: 50});
     }
 
-    public array function getUnverifiedTransactions(required account account){
-        return ORMExecuteQuery("
-            FROM transaction t
-            WHERE account = :account
-            AND   t.verifiedDate is null
-            ORDER BY t.transactionDate desc
-        ",{account:arguments.account});
+    public array function getUnverifiedTransactions(required account account, boolean includeSubAccounts = false){
+        return getTransactions(arguments.account, false, arguments.includeSubAccounts);
     }
 
-    public array function getVerifiedTransactions(required account account){
+    public array function getVerifiedTransactions(required account account, boolean includeSubAccounts = false){
+        return getTransactions(arguments.account, true, arguments.includeSubAccounts);
+    }
+
+    private array function getTransactions(required account account, required boolean verified, required boolean includeSubAccounts) {
+        var includeSubAccountsClause = "";
+        var verifiedCondition = "is null";
+
+        if (arguments.includeSubAccounts) {
+            includeSubAccountsClause = " OR a.id in (SELECT id from account sub where sub.linkedAccount = :account)";
+        }
+        
+        if (arguments.verified) {
+            verifiedCondition = "is not null";
+        }
+
         return ORMExecuteQuery("
+            SELECT t
             FROM transaction t
-            WHERE t.account = :account
-            AND   t.verifiedDate is not null
+            JOIN t.account a
+            WHERE (a = :account #includeSubAccountsClause#)
+            AND   t.verifiedDate #verifiedCondition#
             ORDER BY t.transactionDate desc
         ",{account:arguments.account});
     }

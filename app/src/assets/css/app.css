@@ -126,7 +126,10 @@ select.form-control:not([size]):not([multiple]) {
 .margin-l-20{
     padding-left:20px;
 }
-
+.pad-v-10{
+    padding-top:10px;
+    padding-bottom:10px;
+}
 hr.sm{
     margin-top:5px;
     margin-bottom:5px;
