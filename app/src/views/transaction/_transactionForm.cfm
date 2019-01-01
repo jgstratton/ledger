@@ -7,15 +7,27 @@
         #formPreserveKeys(rc,"transactionId,returnTo,accountId")#
         <div class="row">
             <label class="col-3 col-form-label">Account:</label>
-            <div class="col-9">
-                <span class="input-static">
-                    #rc.account.getName()#
-                </span>
+            <div class="col-6">
+                <cfif local.mode eq 'edit'>
+                    <select name="newAccountId" class="form-control form-control-sm">
+                        <cfloop array="#rc.accounts#" item="local.account">
+                            <option value="#local.account.getId()#" #matchSelect(local.account.getId(), rc.account.getId())#>
+                                #local.account.getLongName()#
+                            </option>
+                        </cfloop>
+                    </select>
+                <cfelse>
+                    <span class="input-static">
+                        #rc.account.getName()#
+                    </span>
+                </cfif>
+            </div>
+            <div class="col-3">
                 <cfif local.mode eq "edit">
                     <button type="button" class="btn btn btn-outline-danger btn-sm pull-right" data-delete-btn>
                         <i class="fa fa-trash"></i> Delete Entry
                     </button> 
-                </cfif> 
+                </cfif>         
             </div>
         </div>
         <hr>

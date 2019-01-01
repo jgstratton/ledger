@@ -21,6 +21,9 @@ component name="account" output="false"  accessors=true {
         if (StructKeyExists(rc,'submitTransaction')){
             variables.fw.populate(transaction);
             transaction.setCategory(categoryService.getCategoryById(rc.category));
+            if (rc.keyExists('newAccountId')) {
+                transaction.setAccount(accountService.getAccountById(rc.newAccountId));
+            }
             errors = transaction.validate();
 
             if (arrayLen(errors)){
