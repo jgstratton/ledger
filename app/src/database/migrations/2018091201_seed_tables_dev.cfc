@@ -40,6 +40,13 @@
             ]
         },
         {
+            name: "Spare Change", 
+            accountType: 6, 
+            summary: "N",
+            linkedAccount:1,
+            userRoundAccount:true
+        },
+        {
             name: "Christmas Club", 
             accountType: 6, 
             summary: "N",
@@ -91,6 +98,14 @@
                     ) 
                 </cfquery>
                 
+                <cfif StructKeyExists(account,'userRoundAccount')>
+                    <cfquery>
+                        Update users 
+                        Set roundingAccount_id = #local.i#,
+                            roundingModular = 5
+                        Where id = 1 
+                    </cfquery>
+                </cfif>
                 <cfif StructKeyExists(account,"transactions")>
                     <cfloop from="1" to="#arraylen(account.transactions)#" index="local.j">
                         <cfset var transaction = account.transactions[local.j]>

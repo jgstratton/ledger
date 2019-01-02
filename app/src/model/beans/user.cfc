@@ -1,17 +1,18 @@
 component persistent="true" table="users" accessors="true" {
-
     property name="id" generator="native" ormtype="integer" fieldtype="id";
     property name="username" ormtype="string" length="50";
     property name="email" ormtype="string" length="255";
-
     property name="created" ormtype="timestamp";
     property name="edited" ormtype="timestamp";
-
     property name="accounts" fieldtype="one-to-many" cfc="account" fkcolumn="user_id";
+    property name="roundingAccount" fieldtype="many-to-one" cfc="account" fkcolumn="roundingAccount_id";
+    property name="roundingModular" ormtype="integer";
 
     public function init(){
-        //location to stored cached queries
-        this.cached = structnew();
+        //setup private properties
+        variables.cached = structnew();
+        variables.beanFactory = application.beanFactory;
+		variables.checkbookSummaryService = beanFactory.getBean("checkbookSummaryService");
     }
 
     public function save(){
@@ -30,21 +31,8 @@ component persistent="true" table="users" accessors="true" {
     }
 
     public numeric function getSummaryBalance(){
-        
-        if(not StructKeyExists(this.cached,'SummaryBalance')){
-            //writelog('summary calculated');
-            this.cached.SummaryBalance = queryExecute("
-                SELECT coalesce(sum(trn.amount*ctype.multiplier),0) as Balance
-                FROM transactions trn
-                INNER JOIN categories cat on trn.category_id = cat.id
-                INNER JOIN categoryTypes ctype on cat.categoryType_id = ctype.id
-                INNER JOIN accounts on accounts.id = trn.account_id
-                WHERE accounts.user_id = :user_id
-                AND accounts.summary = 'Y'
-                AND accounts.deleted is null",
-            {user_id: this.getid()});
-        }
-        return this.cached.SummaryBalance.Balance;
+        return checkbookSummaryService.getSummaryBalance(this);
     }
+
 }
 

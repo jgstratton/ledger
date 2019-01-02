@@ -1,12 +1,17 @@
 component user{
-
+    
     public component function init(){
-        var user = EntityLoad("user",{username: "testUser"},true);
-        if (isNull(user)) {
-            user = EntityNew("user",{username:"testUser"});
-            user.save();
-        }
-		return user;
+        variables.mockBox = new testbox.system.MockBox();
+        return this;
+    }
+
+    public component function generate(){
+        mockedUser = mockBox.createMock( "beans.user" );
+        mockedUser.$property(propertyName="checkbookSummaryService", mock = new services.checkbookSummary());
+        mockedUser.$property(propertyName="cached", mock = structNew());
+        mockedUser.setUsername("testUser");
+        mockedUser.save();
+		return mockedUser;
     }
 
     

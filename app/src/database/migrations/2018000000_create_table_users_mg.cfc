@@ -14,6 +14,8 @@
 				email 			varchar(255) 	DEFAULT NULL,
 				created 		datetime 		DEFAULT NULL,
 				edited 			datetime 		DEFAULT NULL,
+				roundingAccount_id	int(11)			DEFAULT NULL,
+				roundingModular	decimal(18,2)	DEFAULT 0,
 
 				PRIMARY KEY (id)
 			);

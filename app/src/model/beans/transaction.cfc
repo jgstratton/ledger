@@ -6,7 +6,7 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
 
     property name="name" ormtype="string" length="100";
     property name="transactionDate" ormtype="date";
-    property name="amount" ormtype="big_decimal" precision="10" scale="2";
+    property name="amount" default="0" ormtype="big_decimal" precision="10" scale="2";
     property name="note" ormtype="string" length="200";
     property name="verifiedDate" ormtype="timestamp";
 

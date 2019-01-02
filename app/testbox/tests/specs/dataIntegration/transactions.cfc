@@ -6,14 +6,15 @@ component displayName="Transaction Integration Tests" extends="testbox.system.Ba
     function afterTests() {}
 
     private component function setupTestTransactionsAndGetAccount() {
+        var transactionGenerator = new generators.transaction(); 
         var parentAccount = new generators.account();
         var subAccount = new generators.account({linkedAccount: parentAccount});
-        parentAccount.addTransactions( new generators.transaction( {verifiedDate:'2000-01-01' } ));
-        parentAccount.addTransactions( new generators.transaction( {verifiedDate:'2000-01-01' } ));
-        parentAccount.addTransactions( new generators.transaction());
-        subAccount.addTransactions( new generators.transaction( {verifiedDate:'2000-01-01' } ));
-        subAccount.addTransactions( new generators.transaction( {verifiedDate:'2000-01-01' } ));
-        subAccount.addTransactions( new generators.transaction());
+        parentAccount.addTransactions( transactionGenerator.generateTransaction( {verifiedDate:'2000-01-01' } ));
+        parentAccount.addTransactions( transactionGenerator.generateTransaction( {verifiedDate:'2000-01-01' } ));
+        parentAccount.addTransactions( transactionGenerator.generateTransaction());
+        subAccount.addTransactions( transactionGenerator.generateTransaction( {verifiedDate:'2000-01-01' } ));
+        subAccount.addTransactions( transactionGenerator.generateTransaction( {verifiedDate:'2000-01-01' } ));
+        subAccount.addTransactions( transactionGenerator.generateTransaction());
         ormFlush();
         return parentAccount;
     }

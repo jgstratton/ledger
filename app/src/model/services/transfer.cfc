@@ -8,7 +8,7 @@ component output="false" accessors="true" {
             WHERE   linkedTransID = :transactionId or id = :transactionId",
             { transactionId: arguments.transactionId });
 
-        var transfer = new beans.transfer();
+        var transfer = variables.getNewTransferBean();
         transfer.populateFromTransaction( transactionService.getTransactionByid(transaction.id[1] ) );
         return transfer;
     }
@@ -26,5 +26,17 @@ component output="false" accessors="true" {
             errors.append("Transaction / Account mismatch");
         }
         return errors;
+    }
+
+    public component function createTransfer(struct properties) {
+        var newTransfer = variables.getNewTransferBean();
+        for (var property in properties) {
+            cfinvoke(component=newTransfer, method="set#property#", value=arguments.properties[property]);
+        }
+        return newTransfer;
+    }
+
+    private component function getNewTransferBean(){
+        return new beans.transfer();
     }
 }

@@ -123,6 +123,10 @@ component extends="framework.one" output="false" {
 			StructClear(Session);
 			setupSession();
 		}
+
+		if(session.loggedin){
+			request.user = this.getBeanFactory().getBean("userService").getUserByid(session.userid);
+		}
 	
 	}
 
@@ -133,7 +137,7 @@ component extends="framework.one" output="false" {
 	public void function before(struct rc){
 		//user is used in most controllers and views
 		if(session.loggedin){
-			rc.user = this.getBeanFactory().getBean("userService").getUserByid(session.userid);
+			rc.user = request.user;
 		} else if (getSection() != 'auth') {
 			redirect("auth.login","all");
 		}
