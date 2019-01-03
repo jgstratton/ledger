@@ -196,20 +196,21 @@ component {
 
 
     // return the requested bean, fully populated
-    public any function getBean( string beanName, struct constructorArgs = { } ) {
+    public any function getBean( string beanName, struct constructorArgs = { }, skipInterceptors=false ) {
         discoverBeans();
         if ( structKeyExists( variables.beanInfo, beanName ) ) {
             if ( structKeyExists( variables.getBeanCache, beanName ) ) {
                 return variables.getBeanCache[ beanName ];
             }
-            var bean = resolveBean( beanName, constructorArgs );
+            var bean = resolveBean( beanName, constructorArgs, skipInterceptors );
+            
             if ( isSingleton( beanName ) ) variables.getBeanCache[ beanName ] = bean;
             return bean;
         } else if ( hasParent() ) {
             // ideally throw an exception for non-DI/1 parent when args passed
             // WireBox adapter can do that since we control it but we can't do
             // anything for other bean factories - will revisit before release
-            return variables.parent.getBean( beanName, constructorArgs );
+            return variables.parent.getBean( beanName, constructorArgs, skipInterceptors );
         } else {
             return missingBean( beanName = beanName, dependency = false );
         }
@@ -295,7 +296,7 @@ component {
     // setters with the specified property values
     public any function injectProperties( any bean, struct properties ) {
         if ( isSimpleValue( bean ) ) {
-            if ( containsBean( bean ) ) bean = getBean( bean );
+            if ( containsBean( bean ) ) bean = getBean( bean, {}, skipInterceptors );
             else bean = construct( bean );
         }
         for ( var property in properties ) {
@@ -325,7 +326,7 @@ component {
             if ( !structKeyExists( variables.beanInfo[ key ], "isSingleton" ) )
                 throw "internal error: bean #key# has no isSingleton flag!";
             if ( variables.beanInfo[ key ].isSingleton ) {
-                getBean( key );
+                getBean( key, {}, skipInterceptors );
             }
         }
         return this;
@@ -359,7 +360,8 @@ component {
     }
 
 
-    private any function cachable( string beanName) {
+    private any function cachable( string beanName, skipInterceptors = false) {
+        //writedump("*** *** *** *** *** cachable(#beanName#)");
         var newObject = false;
         var info = variables.beanInfo[ beanName ];
         if ( info.isSingleton ) {
@@ -369,7 +371,7 @@ component {
                 qualifiedName = info.name & info.qualifier;
             }
             if ( !structKeyExists( variables.beanCache, qualifiedName ) ) {
-                variables.beanCache[ qualifiedName ] = construct( info.cfc );
+                variables.beanCache[ qualifiedName ] = construct( info.cfc, skipInterceptors );
                 newObject = true;
             }
             return { bean = variables.beanCache[ qualifiedName ], newObject = newObject };
@@ -712,7 +714,7 @@ component {
     }
 
 
-    private any function resolveBean( string beanName, struct constructorArgs = { } ) {
+    private any function resolveBean( string beanName, struct constructorArgs = { }, skipInterceptors= false ) {
         // do enough resolution to create and initialization this bean
         // returns a struct of the bean and a struct of beans and setters still to run
         // construction phase:
@@ -725,7 +727,7 @@ component {
         }
         // all dependencies can be cached in variables scope
         accumulator.dependencies = variables.accumulatorCache[ beanName ].dependencies;
-        var partialBean = resolveBeanCreate( beanName, accumulator, constructorArgs );
+        var partialBean = resolveBeanCreate( beanName, accumulator, constructorArgs, skipInterceptors );
         if ( structKeyExists( variables.resolutionCache, beanName ) &&
              variables.resolutionCache[ beanName ] ) {
             // fully resolved, no action needed this time
@@ -755,7 +757,7 @@ component {
                     } else if ( structKeyExists( partialBean.injection, property ) ) {
                         args[ property ] = partialBean.injection[ property ].bean;
                     } else if ( hasParent() && variables.parent.containsBean( property ) ) {
-                        args[ property ] = variables.parent.getBean( property );
+                        args[ property ] = variables.parent.getBean( property, {}, skipInterceptors );
                     } else {
                         // allow for possible convention-based bean factory
                         args[ property ] = missingBean( property, beanName );
@@ -809,14 +811,14 @@ component {
     }
 
 
-    private struct function resolveBeanCreate( string beanName, struct accumulator, struct constructorArgs = { } ) {
+    private struct function resolveBeanCreate( string beanName, struct accumulator, struct constructorArgs = { }, skipInterceptors = false ) {
         var bean = 0;
         if ( structKeyExists( variables.beanInfo, beanName ) ) {
             var info = variables.beanInfo[ beanName ];
             if ( !structKeyExists( accumulator.dependencies, beanName ) ) accumulator.dependencies[ beanName ] = { };
             if ( structKeyExists( info, 'cfc' ) ) {
 /*******************************************************/
-                var metaBean = cachable( beanName );
+                var metaBean = cachable( beanName, skipInterceptors );
                 var overrides = { };
                 // be careful not to modify overrides metadata:
                 if ( structCount( constructorArgs ) ) {
@@ -829,6 +831,7 @@ component {
                         overrides = info.overrides;
                     }
                 }
+                
                 bean = metaBean.bean;
                 if ( metaBean.newObject ) {
                     if ( structKeyExists( info.metadata, 'constructor' ) ) {
@@ -843,7 +846,7 @@ component {
                                     args[ arg ] = overrides[ arg ];
                                     beanMissing = false;
                                 } else if ( containsBean( arg ) ) {
-                                    argBean = resolveBeanCreate( arg, accumulator );
+                                    argBean = resolveBeanCreate( arg, accumulator, {}, skipInterceptors );
                                     if ( structKeyExists( argBean, 'bean' ) ) {
                                         args[ arg ] = argBean.bean;
                                         beanMissing = false;
@@ -857,7 +860,7 @@ component {
                                     args[ arg ] = overrides[ arg ];
                                 } else if ( containsBean( arg ) ) {
                                     // optional but present
-                                    argBean = resolveBeanCreate( arg, accumulator );
+                                    argBean = resolveBeanCreate( arg, accumulator, {}, skipInterceptors );
                                     if ( structKeyExists( argBean, 'bean' ) ) {
                                         args[ arg ] = argBean.bean;
                                     }
@@ -893,7 +896,7 @@ component {
                         if ( structKeyExists( overrides, property ) ) {
                             // skip resolution because we'll inject override
                         } else {
-                            resolveBeanCreate( property, accumulator );
+                            resolveBeanCreate( property, accumulator, {}, skipInterceptors );
                         }
                     }
                 }
@@ -901,7 +904,7 @@ component {
                 bean = info.value;
                 accumulator.injection[ beanName ] = { bean = info.value, setters = { } };
             } else if ( structKeyExists( info, 'factory' ) ) {
-                var fmBean = isSimpleValue( info.factory ) ? this.getBean( info.factory ) : info.factory;
+                var fmBean = isSimpleValue( info.factory ) ? this.getBean( info.factory, {}, skipInterceptors ) : info.factory;
                 var nArgs = arrayLen( info.args );
                 var argStruct = { };
                 for ( var i = 1; i <= nArgs; ++i ) {
@@ -909,7 +912,7 @@ component {
                     if ( structKeyExists( info.overrides, argName ) ) {
                         argStruct[ i ] = info.overrides[ argName ];
                     } else {
-                        argStruct[ i ] = this.getBean( argName );
+                        argStruct[ i ] = this.getBean( argName, {}, skipInterceptors );
                     }
                 }
                 if ( isCustomFunction( fmBean ) || isClosure( fmBean ) ) {
@@ -923,7 +926,7 @@ component {
             }
         } else {
             if ( hasParent() && variables.parent.containsBean( beanName ) ) {
-                bean = variables.parent.getBean( beanName );
+                bean = variables.parent.getBean( beanName, {}, skipInterceptors );
             } else {
                 bean = missingBean( beanName = beanName, dependency = true );
             }

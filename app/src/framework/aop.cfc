@@ -95,27 +95,30 @@ component extends="framework.ioc" {
 	// --------------- //
 
 	/** Hook point to wrap bean with proxy. */
-	private any function construct(string dottedPath)
+	private any function construct(string dottedPath, skipInterceptors = false)
 	{
 		var bean = super.construct(arguments.dottedPath);
 		var beanProxy = "";
-
+		
 		// if it doesn't have a dotted path for us to create a new instance
 		// or it has no interceptors, we have to leave it alone
 		if (!hasInterceptors(arguments.dottedPath))
-		{
+		{	
 			return bean;
 		}
-
+		//hacky fix for circular logic issue
+		if (skipInterceptors) {
+			return bean;
+		}
 		// Create and return a proxy wrapping the bean.
-		beanProxy = new framework.beanProxy(bean, getInterceptorsForBean(arguments.dottedPath), variables.config);
-
+		beanProxy = new framework.beanProxy(bean, getInterceptorsForBean(arguments.dottedPath, true), variables.config);
+		
 		return beanProxy;
 	}
 
 
 	/** Gets the associated interceptor definitions for a specific bean. */
-	private array function getInterceptorsForBean(string dottedPath)
+	private array function getInterceptorsForBean(string dottedPath, skipInterceptors=false)
 	{
 		// build the interceptor array:
 		var beanName = listLast(arguments.dottedPath, ".");
@@ -137,7 +140,7 @@ component extends="framework.ioc" {
 			{
 				for (interceptDefinition in variables.interceptorCache.name[interceptedBeanName])
 				{
-					arrayAppend(interceptors, {bean = getBean(interceptDefinition.name), methods = interceptDefinition.methods});
+					arrayAppend(interceptors, {bean = getBean(interceptDefinition.name, {}, skipInterceptors), methods = interceptDefinition.methods});
 				}
 			}
 		}
