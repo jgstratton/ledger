@@ -34,5 +34,15 @@ component persistent="true" table="users" accessors="true" {
         return checkbookSummaryService.getSummaryBalance(this);
     }
 
+    public numeric function getRoundingAccountId(){
+        if (!isNull(getRoundingAccount())) {
+            return getRoundingAccount().getId();
+        }
+        return 0;
+    }
+
+    public void function removeRoundingAccount(){
+        setRoundingAccount(javaCast('null', ''));
+    }
 }
 

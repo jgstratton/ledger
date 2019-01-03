@@ -57,6 +57,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
                                 <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#buildUrl('user.checkbookRounding')#">Add Auto Rounding</a>
                                     <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
                                     <a class="dropdown-item" href="TRN_500.php">Manage Categories</a>
                                     <a class="dropdown-item" href="TRN_700.php">Manage Bills</a>

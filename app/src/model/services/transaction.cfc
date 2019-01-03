@@ -1,4 +1,4 @@
-component output="false" {
+component output="false" accessors="true" {
 
     public component function getTransactionByid(required numeric id){
         return entityLoadByPk( "transaction", arguments.id);

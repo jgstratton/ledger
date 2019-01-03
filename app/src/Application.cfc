@@ -21,13 +21,13 @@ component extends="framework.one" output="false" {
 		defaultItem = 'list',
 		diEngine = "aop1",
 		diComponent = "framework.aop",
-		diLocations = "./model/services,./model/interceptors",
+		diLocations = "./model/beans,./model/services,./model/interceptors",
         diConfig = {
 			interceptors = [
-				{beanName = "transactionService", interceptorName = "authorize"}
+				{beanName = "transactionService", interceptorName = "authorize"},
+				{beanName = "transactionService", interceptorName = "summaryRounding", methods="deleteTransaction,save"}
 			]
 		 }
-		
 	};
 
 	variables.framework.environments = {

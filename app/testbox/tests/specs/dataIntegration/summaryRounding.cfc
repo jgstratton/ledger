@@ -13,6 +13,10 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
         mockedTransferService.$("getNewTransferBean", mockedTransferBean );
 
         variables.user = userGenerator.generate();
+    }
+
+    function _setupModular(){
+        _setup();
         variables.parentAccount = new generators.account({user: user, Summary: 'Y'});
         variables.subAccount = new generators.account({user: user, Summary: 'N', linkedAccount: parentAccount});
         user.setRoundingAccount(subAccount);
@@ -20,7 +24,7 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
 
     function roundingModular1Test() {
         transaction {
-            _setup();
+            _setupModular();
             user.setRoundingModular(1);
             parentAccount.addTransactions( transactionGenerator.generateCreditTransaction({amount: 100}));
             parentAccount.addTransactions( transactionGenerator.generateExpenseTransaction({amount: 0.01}));
@@ -34,7 +38,7 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
 
     function roundingModular5Test() {
         transaction {
-            _setup();
+            _setupModular();
             user.setRoundingModular(5);
             parentAccount.addTransactions( transactionGenerator.generateCreditTransaction({amount: 100}));
             parentAccount.addTransactions( transactionGenerator.generateExpenseTransaction({amount: 0.01}));
@@ -48,7 +52,7 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
 
     function roundingModular10Test() {
         transaction {
-            _setup();
+            _setupModular();
             user.setRoundingModular(10);
             parentAccount.addTransactions( transactionGenerator.generateCreditTransaction({amount: 100}));
             parentAccount.addTransactions( transactionGenerator.generateExpenseTransaction({amount: 0.01}));
@@ -60,4 +64,46 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
         }
     }
 
+    function childAccountInsummaryCannotBeUsedForRoundingTest() {
+        transaction {
+            _setup();
+            variables.parentAccount = new generators.account({user: user, Summary: 'Y'});
+            variables.subAccount_canBeUsed = new generators.account({user: user, Summary: 'N', linkedAccount: parentAccount});
+            variables.subAccount_canNotBeUsed1 = new generators.account({user: user, Summary: 'Y', linkedAccount: parentAccount});
+            ormFlush();
+
+            var numberOfEligibleSubAccounts = mockedCheckbookSummaryService.getAccountsEligibleForRounding(user).len();
+            $assert.isEqual(1,numberOfEligibleSubAccounts);
+            transaction action="rollback";
+        }
+    }
+
+    function parentAccountNotInsummaryCannotBeUsedForRoundingTest() {
+        transaction {
+            _setup();
+            variables.parentAccount = new generators.account({user: user, Summary: 'N'});
+            variables.subAccount_canBeUsed = new generators.account({user: user, Summary: 'N', linkedAccount: parentAccount});
+            variables.subAccount_canNotBeUsed1 = new generators.account({user: user, Summary: 'Y', linkedAccount: parentAccount});
+            ormFlush();
+
+            var numberOfEligibleSubAccounts = mockedCheckbookSummaryService.getAccountsEligibleForRounding(user).len();
+            $assert.isEqual(0,numberOfEligibleSubAccounts);
+            transaction action="rollback";
+        }
+    }
+
+    function multipleChildAccountsForRoundingTest() {
+        transaction {
+            _setup();
+            variables.parentAccount = new generators.account({user: user, Summary: 'Y'});
+            variables.parentAccount2 = new generators.account({user: user, Summary: 'Y'});
+            variables.subAccount_canBeUsed = new generators.account({user: user, Summary: 'N', linkedAccount: parentAccount});
+            variables.subAccount_canBeUsed2 = new generators.account({user: user, Summary: 'N', linkedAccount: parentAccount2});
+            ormFlush();
+
+            var numberOfEligibleSubAccounts = mockedCheckbookSummaryService.getAccountsEligibleForRounding(user).len();
+            $assert.isEqual(2,numberOfEligibleSubAccounts);
+            transaction action="rollback";
+        }
+    }
 }

@@ -1,4 +1,4 @@
-component output="false" {
+component output="false" accessors=true {
     property transferService;
 
     public numeric function getSummaryBalance(required component user) {
@@ -12,6 +12,21 @@ component output="false" {
             AND act.summary = 'Y'
             AND act.deleted is null",
         {user: user},true);
+    }
+
+    public array function getAccountsEligibleForRounding(required component user) {
+        return ormExecuteQuery("
+            Select a
+            FROM account a
+            JOIN a.linkedAccount l
+            WHERE a.user = :user 
+            AND a.deleted IS NULL
+            AND l.summary = 'Y'
+            AND a.summary = 'N'
+            ORDER BY coalesce(l.type.id,a.type.id),
+                        coalesce(l.name,a.name),
+                        a.id", 
+            {user: arguments.user});
     }
 
     public void function transferSummaryRounding(required component user) {
@@ -40,5 +55,13 @@ component output="false" {
             return getSummaryBalance(arguments.user) % roundingModular; 
         }
         return 0;
+    }
+
+    public array function getRoundingModularOptions(){
+        return [
+            {roundingModular: 1, description: "Round to nearest $1.00"},
+            {roundingModular: 5, description: "Round to nearest $5.00"},
+            {roundingModular: 10, description: "Round to nearest $10.00"}
+        ];
     }
 }
