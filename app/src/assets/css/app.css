@@ -157,7 +157,10 @@ body.show-template-wrappers .template-wrapper > .template-label{
     h3{
         font-size:1.4rem; 
     }
-    
+    .sm-pad{
+        padding-left:10px;
+        padding-right:10px;
+    }
     .inner-content > div:not(.modal),
     .inner-content > ul > li.list-group-item,
     .inner-content > ul.nav-tabs{
