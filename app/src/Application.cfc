@@ -24,8 +24,8 @@ component extends="framework.one" output="false" {
 		diLocations = "./model/beans,./model/services,./model/interceptors",
         diConfig = {
 			interceptors = [
-				{beanName = "transactionService", interceptorName = "authorize"},
-				{beanName = "transactionService", interceptorName = "summaryRounding", methods="deleteTransaction,save"}
+				{beanName = "transaction", interceptorName = "authorize"},
+				{beanName = "transaction", interceptorName = "summaryRounding", methods="deleteTransaction,save"}
 			]
 		 }
 	};
