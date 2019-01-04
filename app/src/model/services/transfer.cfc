@@ -36,6 +36,10 @@ component output="false" accessors="true" {
         return newTransfer;
     }
 
+    public void function hideFromTransaction(required component transfer) {
+        arguments.transfer.getFromTransaction().hide();
+    }
+
     private component function getNewTransferBean(){
         return new beans.transfer();
     }

@@ -36,7 +36,8 @@ component accessors=true  {
 			var toTransaction = new beans.transaction();
 			var fromTransaction = new beans.transaction();
 		}
-
+		this.setFromTransaction(fromTransaction);
+		
 		fromTransaction.setAccount( getFromAccount() );
 		toTransaction.setAccount( getToAccount() );
 		fromTransaction.setAmount( getAmount() );
@@ -82,7 +83,7 @@ component accessors=true  {
 	}
 
 	private boolean function isPersisted() {
-		if ( isDefined('variables.fromTransaction') ){
+		if ( !isNull(getFromTransaction())) {
 			return true;
 		}
 		return false;

@@ -30,13 +30,15 @@ component output="false" accessors=true {
     }
 
     public void function transferSummaryRounding(required component user) {
-        //if rounding account is not set up, exit
-        if (!isNull(roundingAccount)) {
-            return;
-        }
 
         var transferAmount = getTransferSummaryAmount(arguments.user);  
         var roundingAccount =  arguments.user.getRoundingAccount(); 
+
+        //if rounding account is not set up, exit
+        if (isNull(roundingAccount)) {
+            return;
+        }
+
         if (transferAmount) {
             roundingTransfer = transferService.createTransfer({
                 fromAccount = roundingAccount.getLinkedAccount(),
@@ -46,6 +48,8 @@ component output="false" accessors=true {
                 transferDate = now()
             });
             roundingTransfer.save();
+            transferService.hideFromTransaction(roundingTransfer);
+            ormFlush();
         }
     }
 

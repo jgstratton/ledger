@@ -13,7 +13,7 @@ component accessors=true extends="_base" {
                 switch (arguments.methodName){
                     case "deleteTransaction" :
                     case "save" :
-                        checkbookSummaryService.transferSummaryRounding(request.user);
+                        transferSummaryRoundingAndLog(beanMetaData.name,arguments.methodName);
                         return;
                     default: 
                         return;
@@ -23,5 +23,10 @@ component accessors=true extends="_base" {
                 loggerService.error('Bean was configued for authorize interceptor, but ot match was found for "#beanMetaData.name#"');
         } 
 
+    }
+
+    private void function transferSummaryRoundingAndLog(required string beanName, required string methodName){
+        checkbookSummaryService.transferSummaryRounding(request.user);
+        loggerService.debug("auto rounding called from summaryRounding intercepter.  Bean name: #arguments.beanName#. Method name: #arguments.methodName#");
     }
 }

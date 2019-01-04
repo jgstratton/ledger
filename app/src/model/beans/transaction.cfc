@@ -15,6 +15,7 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
 
     property name="linkedTo" fieldtype="many-to-one" cfc="transaction" fkcolumn="linkedTransId";
     property name="linkedFrom" fieldtype="one-to-many" cfc="transaction" fkcolumn="linkedTransId" inverse="true";
+    property name="isHidden" default="0";
     
     public void function save() {
         EntitySave(this);
@@ -83,25 +84,13 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
         }
         return '';
     }
-/*
-    public boolean function getTransfer(){
-        return ORMExecuteQuery(
-            "from transfer 
-             where fromTransaction = :trans 
-             or toTransaction = :trans",
-             { trans: this}, true);
+
+    public void function hide(){
+        setIsHidden(1);
+    }
+    public boolean function isHidden(){
+        return getisHidden();
     }
 
-    public boolean function isTransfer(){
-        var transfer = ORMExecuteQuery(
-            "from transfer 
-             where fromTransaction = :trans 
-             or toTransaction = :trans",
-             { trans: this});
-
-        return arraylen(transfer);
-        
-    }
-*/
 }
 

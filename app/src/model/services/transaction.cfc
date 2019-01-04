@@ -28,6 +28,7 @@ component output="false" accessors="true" {
         return ORMExecuteQuery("
             FROM transaction t
             WHERE account = :account
+            and isHidden = 0
             ORDER BY t.transactionDate desc
         ",{account:arguments.account, maxresults: 50});
     }
@@ -58,6 +59,7 @@ component output="false" accessors="true" {
             JOIN t.account a
             WHERE (a = :account #includeSubAccountsClause#)
             AND   t.verifiedDate #verifiedCondition#
+            and   isHidden = 0
             ORDER BY t.transactionDate desc
         ",{account:arguments.account});
     }
