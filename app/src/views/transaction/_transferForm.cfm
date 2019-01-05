@@ -26,7 +26,7 @@
                             <select name="fromAccountId" class="form-control form-control-sm" >
                                 <cfloop array="#rc.accounts#" index="local.account">
                                     <option value="#local.account.getId()#" #selectIf(local.account.getId() eq rc.transfer.getfromAccountId())#>
-                                        #local.account.getName()#
+                                        #local.account.getName()# ... $#local.account.getBalance()#
                                     </option>
                                 </cfloop>
                             </select>
@@ -40,7 +40,7 @@
                             <select name="toAccountId" class="form-control form-control-sm" >
                                 <cfloop array="#rc.accounts#" index="local.account">
                                     <option value="#local.account.getId()#" #selectIf(local.account.getId() eq rc.transfer.getToaccountId())#>
-                                        #local.account.getName()#
+                                        #local.account.getName()# ... $#local.account.getBalance()#
                                     </option>
                                 </cfloop>
                             </select>

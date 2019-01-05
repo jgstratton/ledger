@@ -23,6 +23,7 @@
 
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/transactions.css?v=#application.version#" />
+        <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/classes.css?v=#application.version#" />
         <script src="#application.root_path#/assets/js/viewScripts.js?v=#application.version#"></script>
 
 

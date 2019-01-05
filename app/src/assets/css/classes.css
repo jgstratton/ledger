@@ -1,0 +1,11 @@
+.dollar-negative {
+    color: #dc3545;
+}
+
+.dollar-negative:after {
+    content: ")"
+}
+
+.dollar-negative:before{
+    content: "("
+}
