@@ -59,6 +59,7 @@ component accessors=true extends="_base" {
                 }
             }
         }
+        loggerService.debug("Authorize Interceptor Logger - beforeTransactionService has been called");
     }
 
     private void function afterTransactionService(required result){
@@ -80,6 +81,7 @@ component accessors=true extends="_base" {
                 }
                 break;
         } 
+        loggerService.debug("Authorize Interceptor Logger - afterTransactionService has been called");
     }
     
     private component function getLoggedInUser() {
