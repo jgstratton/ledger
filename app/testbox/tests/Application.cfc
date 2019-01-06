@@ -24,6 +24,7 @@ component {
 	this.mappings[ "/testbox" ] =  this.rootPath & "testbox";
 	this.mappings[ "/coldbox" ] = this.rootPath & "testbox/tests/resources/coldbox";
 	this.mappings[ "/generators" ] = this.rootPath & "testbox/tests/resources/generators";
+	this.mappings[ "/mocks" ] = this.rootPath & "testbox/tests/resources/mocks";
 
 	this.mappings[ "/beans" ] = this.rootPath & "src/model/beans";
 	this.mappings[ "/controllers" ] = this.rootPath & "src/controllers";
@@ -36,7 +37,14 @@ component {
 	this.ormSettings.dialect = "MicrosoftSQLServer";
 	this.ormSettings.flushatrequestend = false;
 
+	public void function onApplicationStart(){
+		application.beanFactory = new mocks.beanFactory();
+	}
 	public void function onRequestStart() {
+
+		if (structKeyExists(url,"init")){
+			this.onApplicationStart();
+		}
 		local.migrate = new migrations.migrate();
 		if (structKeyExists(url,'reload')) {
 			local.migrate.refresh_migrations();
