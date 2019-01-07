@@ -77,13 +77,21 @@ component extends="framework.one" output="false" {
 			showTemplateWrappers: false
 		}
 	}
-
+	/**
+	 * There is an issue where the onRequestStart runs twice for one request,  creating the log entry makes the problem
+	 * go away, I have no idea why.
+	 */
+	public void function onRequestStart( string targetPath ) {
+		logger = new services.logger();
+		logger.debug("(Request started)");
+		super.onRequestStart(arguments.targetPath);
+	}
 	/**
 	 * The setupApplication function is called each time the framework is reloaded.
 	 */
 	public void function setupApplication(){
 		
-		lock scope="application" timeout="3"{
+		lock scope="application" timeout="300" {
 			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#this.getEnvVar('LUCEE_PORT')#/src";
 			application.src_dir = "#expandPath(".")#";
 			application.version = "#this.version#";
@@ -103,7 +111,6 @@ component extends="framework.one" output="false" {
 	}
 
 	public void function setupRequest() {  
-	
 		if(structKeyExists(url, "init")) { // use index.cfm?init to reload ORM
 			setupApplication();
 			StructClear(Session);
@@ -175,14 +182,14 @@ component extends="framework.one" output="false" {
 	}
 	
 	public void function migrate(){
-		
-		if(this.getEnvironment() eq 'dev'){	
-			local.migrate = new migrations.migrate("_mg,_dev");	
-			local.migrate.refresh_migrations();
-		} else {
-			local.migrate = new migrations.migrate();
-			local.migrate.run_migrations(this.dbmigration);
+		lock scope="application" timeout="300"{
+			if(this.getEnvironment() eq 'dev'){	
+				local.migrate = new migrations.migrate("_mg,_dev");	
+				local.migrate.refresh_migrations();
+			} else {
+				local.migrate = new migrations.migrate();
+				local.migrate.run_migrations(this.dbmigration);
+			}
 		}
-		
 	}
 }
