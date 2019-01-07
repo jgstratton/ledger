@@ -1,25 +1,19 @@
 component accessors="true" {
 
-    public component function createEventGenerator(required struct parameters){
-        var newEventGenerator =  EntityNew("eventGenerator", addUserToParameters(arguments.parameters) );
-        EntitySave(newEventGenerator);
-        return newEventGenerator;
+    public component function createEventGenerator(struct parameters = {}){
+        return EntityNew("eventGenerator", addUserToParameters(arguments.parameters) );
     }
 
     public array function getEventGenerators(){
         return EntityLoad("eventGenerator", {user: request.user} );
     }
 
-    public component function createTransactionGenerator(required struct parameters) {
-        var newtransactionGenerator =  EntityNew("transactionGenerator", addUserToParameters(arguments.parameters) );
-        EntitySave(newtransactionGenerator);
-        return newtransactionGenerator;
+    public component function createTransactionGenerator(struct parameters = {}) {
+        return EntityNew("transactionGenerator", addUserToParameters(arguments.parameters) );
     }
 
-    public component function createTransferGenerator(required struct parameters) {
-        var newtransferGenerator =  EntityNew("transferGenerator", addUserToParameters(arguments.parameters) );
-        EntitySave(newtransferGenerator);
-        return newtransferGenerator;
+    public component function createTransferGenerator(struct parameters = {}) {
+        return EntityNew("transferGenerator", addUserToParameters(arguments.parameters) );
     }
 
     private struct function addUserToParameters(required struct parameters) {
@@ -27,4 +21,5 @@ component accessors="true" {
         newParameters.user = request.user;
         return newParameters;
     }
+
 }

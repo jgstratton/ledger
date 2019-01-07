@@ -10,7 +10,7 @@
 				toAccount_id		int(11) 	 NOT NULL,
 				amount          	decimal(10,2)   DEFAULT NULL,
 				name            	varchar(100)    DEFAULT NULL,
-
+				deferDate			int(11)			DEFAULT NULL,
 				PRIMARY KEY (id)
 			)
 		</cfquery>

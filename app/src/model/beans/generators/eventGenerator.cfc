@@ -6,8 +6,8 @@
 component persistent="true" table="eventGenerators" accessors="true" {
     property name="id" generator="native" ormtype="integer" fieldtype="id";
     property name="user" fieldtype="many-to-one" cfc="user" fkcolumn="user_id";
+    property name="schedular" fieldtype="one-to-many" cfc="schedular" fkcolumn="schedular_id";
     property name="eventName";
-    property name="eventDescription";
     property name="created" ormtype="timestamp";
     property name="edited" ormtype="timestamp";
 }

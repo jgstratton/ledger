@@ -7,7 +7,6 @@
 				id   				int(11)		 NOT NULL AUTO_INCREMENT,
 				user_id				int(11)		 NOT NULL,
 				eventName			varchar(50)  DEFAULT '',
-				eventDescription	varchar(500) DEFAULT '',
 				created         	datetime     DEFAULT NULL,
                 edited         		datetime     DEFAULT NULL,
 

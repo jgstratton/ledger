@@ -11,7 +11,7 @@
 				name            	varchar(100)    DEFAULT NULL,
 				amount          	decimal(10,2)   DEFAULT NULL,
 				note            	varchar(200)    DEFAULT NULL,
-				autoVerified		tinyint		DEFAULT NULL,
+				deferDate			int(11)			DEFAULT NULL,
 				PRIMARY KEY (id)
 			)
 		</cfquery>

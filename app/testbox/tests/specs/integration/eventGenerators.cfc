@@ -7,10 +7,11 @@ component displayName="Event Generator Tests" extends="testbox.system.BaseSpec" 
 
     function createEventGeneratorTest(){
         transaction{
-            eventGeneratorService.createEventGenerator({
+            var newEventGenerator = eventGeneratorService.createEventGenerator({
                 eventName: "New Event Generator",
                 eventDescription: "New Event Description"
             });
+            EntitySave(newEventGenerator);
             ormFlush();
             var eventGeneratorCount = EntityLoad("eventGenerator", {user:request.user}).len();
             $assert.isEqual(1,eventGeneratorCount);
@@ -20,11 +21,11 @@ component displayName="Event Generator Tests" extends="testbox.system.BaseSpec" 
 
     function createTransactionGeneratorTest(){
         transaction{
-            eventGeneratorService.createTransactionGenerator({
-                eventName: "New Event Generator",
-                eventDescription: "New Event Description"
+            var newEventGenerator = eventGeneratorService.createTransactionGenerator({
+                eventName: "New Event Generator"
             });
-            ormFlush();
+            EntitySave(newEventGenerator);
+            ormFlush();    
             var eventGeneratorCount = EntityLoad("transactionGenerator", {user:request.user}).len();
             $assert.isEqual(1,eventGeneratorCount);
             transaction action="rollback";
@@ -38,12 +39,12 @@ component displayName="Event Generator Tests" extends="testbox.system.BaseSpec" 
             fromAccount.$property(propertyname="id", mock="1");
             toAccount.$property(propertyname="id", mock="2");
 
-            eventGeneratorService.createTransferGenerator({
-                eventName: "New Event Generator",
-                eventDescription: "New Event Description",
+            var newEventGenerator = eventGeneratorService.createTransferGenerator({
+                eventName: "New Event Generator"
                 fromAccount: fromAccount,
                 toAccount: toAccount
             });
+            EntitySave(newEventGenerator);
             ormFlush();
             var eventGeneratorCount = EntityLoad("transferGenerator", {user:request.user}).len();
             $assert.isEqual(1,eventGeneratorCount);
