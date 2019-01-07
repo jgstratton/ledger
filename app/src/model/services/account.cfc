@@ -21,7 +21,7 @@ component output="false" {
     
     }
 
-    public any function getUserAccounts( user ) {
+    public any function getAccounts() {
         return ormExecuteQuery("
             Select a
             FROM account a
@@ -30,7 +30,7 @@ component output="false" {
             ORDER BY coalesce(l.type.id,a.type.id),
                      coalesce(l.name,a.name),
                      a.id", 
-            {user: arguments.user});
+            {user: request.user});
     }
 
     public any function getAccountTypeById(id){
@@ -52,5 +52,16 @@ component output="false" {
 
     public any function getTypes(){
         return EntityLoad("accountType");
+    }
+
+    public boolean function hasCommonParent(required component account1, required component account2) {
+        if (account1.getId() == account2.getId()) {
+            return true;
+        } else if (account1.getLinkedAccountId() == account2.getId()) {
+            return true;
+        } else if (account2.getLinkedAccountId() == account1.getId()) {
+            return true;
+        }
+        return false;
     }
 }

@@ -14,7 +14,7 @@ component name="transfer" accessors=true {
     public void function new( required struct rc ) {
         param name="rc.returnTo" default="transfer.new";
         rc.transfer = new beans.transfer();
-        rc.accounts = accountService.getUserAccounts(rc.user);
+        rc.accounts = accountService.getAccounts();
         if (rc.keyExists('submitTransaction')){
             update(rc);
         }
@@ -64,7 +64,7 @@ component name="transfer" accessors=true {
     }
 
     public void function after( struct rc = {} ){
-        rc.accounts = accountService.getUserAccounts(rc.user);
+        rc.accounts = accountService.getAccounts();
         rc.categories = categoryService.getCategories();
     }
     

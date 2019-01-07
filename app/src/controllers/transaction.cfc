@@ -90,7 +90,7 @@ component name="account" output="false"  accessors=true {
     }
 
     public void function after( struct rc = {} ){
-        rc.accounts = accountService.getUserAccounts(rc.user);
+        rc.accounts = accountService.getAccounts();
         rc.categories = categoryService.getCategories();
     }
 }

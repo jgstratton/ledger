@@ -29,30 +29,10 @@ component accessors=true  {
 	}
 
 	public void function save(){
-		if ( isPersisted() ) {
-			var toTransaction = getFromTransaction().getLinkedTo();
-			var fromTransaction = getFromTransaction();
-		} else {
-			var toTransaction = new beans.transaction();
-			var fromTransaction = new beans.transaction();
-		}
-		this.setFromTransaction(fromTransaction);
-		
-		fromTransaction.setAccount( getFromAccount() );
-		toTransaction.setAccount( getToAccount() );
-		fromTransaction.setAmount( getAmount() );
-		toTransaction.setAmount( getAmount() );
-		fromTransaction.setName( getName() );
-		toTransaction.setName( getName() );
-		fromTransaction.setTransactionDate( getTransferDate() );
-		toTransaction.setTransactionDate( getTransferDate() );
-		fromTransaction.setCategory( categoryService.getCategoryByName('Transfer From') );
-		toTransaction.setCategory( categoryService.getCategoryByName('Transfer Into') );
-
+		prepareSave();
 		transaction{
 			transactionService.save(fromTransaction);
 			transactionService.save(toTransaction);
-			fromTransaction.setLinkedTo(toTransaction);
 		}
 	}
 
@@ -87,6 +67,35 @@ component accessors=true  {
 			return true;
 		}
 		return false;
+	}
+
+	private void function prepareSave(){
+		if ( isPersisted() ) {
+			var toTransaction = getFromTransaction().getLinkedTo();
+			var fromTransaction = getFromTransaction();
+		} else {
+			var toTransaction = new beans.transaction();
+			var fromTransaction = new beans.transaction();
+		}
+		this.setFromTransaction(fromTransaction);
+		
+		fromTransaction.setAccount( getFromAccount() );
+		toTransaction.setAccount( getToAccount() );
+		fromTransaction.setAmount( getAmount() );
+		toTransaction.setAmount( getAmount() );
+		fromTransaction.setName( getName() );
+		toTransaction.setName( getName() );
+		fromTransaction.setTransactionDate( getTransferDate() );
+		toTransaction.setTransactionDate( getTransferDate() );
+		fromTransaction.setCategory( categoryService.getCategoryByName('Transfer From') );
+		toTransaction.setCategory( categoryService.getCategoryByName('Transfer Into') );
+		fromTransaction.setLinkedTo(toTransaction);
+
+		if (accountService.hasCommonParent(fromAccount,toAccount)) {
+			fromTransaction.setVerifiedDate(now());
+			toTransaction.setVerifiedDate(now());
+		}
+
 	}
 
 }
