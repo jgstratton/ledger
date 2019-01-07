@@ -20,7 +20,6 @@
             integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
             crossorigin="anonymous">
 
-
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/transactions.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/classes.css?v=#application.version#" />
@@ -42,7 +41,7 @@
                         </span>
                     </div>
                     <div class="text-right flex-nowrap d-flex d-md-none text-secondary">
-                        Summary - <span class="badge badge-primary text-nowrap"></span>
+                        Summary - <span class="badge badge-primary text-nowrap">#moneyFormat(rc.user.getSummaryBalance())#</span>
                     </div>
                     <div class="navbar-collapse collapse" id="navbar">
                         <ul class="navbar-nav mr-auto">
@@ -58,6 +57,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
                                 <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#buildUrl('schedular.autoPaymentList')#">Automatic Payments</a>
                                     <a class="dropdown-item" href="#buildUrl('user.checkbookRounding')#">Add Auto Rounding</a>
                                     <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
                                     <a class="dropdown-item" href="TRN_500.php">Manage Categories</a>
@@ -100,20 +100,10 @@
         </main>
 
         <!--- Scripts needed for bootstrap 4 --->
-        <script
-            src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
-        <script 
-            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" 
-            integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" 
-            crossorigin="anonymous"></script>
-
-        <script 
-            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" 
-            integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" 
-            crossorigin="anonymous"></script>
         
         <!--- Scripts for UI and validate--->
         <script
