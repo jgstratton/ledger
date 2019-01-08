@@ -9,13 +9,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-danger d-none" data-submit-errors></div>
+                    <div data-submit-errors></div>
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="##tabPayment" role="tab" data-tab="transaction">New Automatic Transaction</a>
+                            <a class="nav-link active" data-toggle="tab" href="##tabPayment" role="tab" data-tab="transaction">
+                                New <span class="d-none d-sm-inline"> Automatic</span> Transaction
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="##tabTransfer" role="tab" data-tab="transfer">New Automatic Transfer</a>
+                            <a class="nav-link" data-toggle="tab" href="##tabTransfer" role="tab" data-tab="transfer">
+                                New <span class="d-none d-sm-inline"> Automatic</span> Transfer
+                            </a>
                         </li>
                     </ul> 
                     <div class="tab-content" id="myTabContent">
@@ -48,25 +52,42 @@
                 setActiveForm = function($tab){     
                     var target = $tab.attr('href');
                     $targetForm = $tabPanes.filter(target).find("form");
+                },
+
+                disableButtons = function(){
+                    $closeBtn.prop('disabled',true);
+                    $saveBtn.prop('disabled',true);
+                    addSpinner($saveBtn);
+                },
+                
+                enableButtons = function(){
+                    $closeBtn.prop('disabled',false);
+                    $saveBtn.prop('disabled',false);
+                    removeSpinner($saveBtn);
                 };
+
             
-            $saveBtn.click(function(){               
+            $saveBtn.click(function(){    
+                disableButtons();        
                 $.post({
                     type:'POST',
                     url: $targetForm.attr("data-validate-url"),
                     data: $targetForm.serialize()
                 })
                 .done(function(data) {
-                    console.log(data);
-                    if (data.errors.length == 0){
-                        $errorDiv.html(data).show();
-                    } else {
-                        //submit the form for real.
+                    if (data.errors){
+                        if (data.errors.length > 0){
+                            $errorDiv.html(createAlert('danger','Please correct the following errors:',data.errors)).show();
+                            enableButtons();
+                        } else {
+                            $targetForm.submit();
+                        }
                     }
-                })
-                .fail(function() {
-                    console.log(data).show();
-                    $errorDiv.html(data);
+                    else {
+                        $errorDiv.html(createAlert('danger','Please correct the following errors:',[data])).show();
+                        enableButtons();
+                    }
+                    
                 });
                 
             });

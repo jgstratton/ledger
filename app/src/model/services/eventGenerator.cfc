@@ -7,6 +7,12 @@ component accessors="true" {
     public array function getEventGenerators(){
         return EntityLoad("eventGenerator", {user: request.user} );
     }
+    
+    public void function saveEventGenerator(required component eventGenerator) {
+        transaction{
+            return EntitySave(arguments.eventGenerator);
+        }
+    }
 
     public component function createTransactionGenerator(struct parameters = {}) {
         return EntityNew("transactionGenerator", addUserToParameters(arguments.parameters) );

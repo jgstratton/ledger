@@ -1,7 +1,10 @@
 component output="false" {
     
     public any function getAccountByid(id){
-        return entityLoadByPk( "account", arguments.id);
+        return entityLoad( "account", {
+            id:arguments.id,
+            user:request.user
+        },true);
     }
 
     /* 
@@ -11,7 +14,7 @@ component output="false" {
     public any function deleteAccountByid(id){
     
         transaction{
-            var account = EntityLoadByPk("account",arguments.id);
+            var account = getAccountByid(arguments.id);
             if(account.hasTransactions()){
                 account.setDeleted(now());
             } else {

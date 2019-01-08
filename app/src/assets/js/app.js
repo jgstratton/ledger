@@ -42,9 +42,56 @@ jConfirm = function(confirmMessage, fncOk, fncCancel){
 
 }
 
+function getAlertIconHtml(alertType) {
+    switch (alertType) {
+        case "danger":
+            return "fa fa-exclamation-triangle";
+        case "warning":
+            return "fa fa-exclamation-circle";
+        case "success":
+            return "fa fa-check";
+        default:
+            return "";
+    }
+}
+
+function getAlertHtml(alertType, alertTitle) {
+    return  `
+        <div>
+            <i class="` + getAlertIconHtml(alertType) + `"></i> 
+            ` + alertTitle + `
+        </div>`;
+}
+
+function getAlertErrorListHtml(alertErrors) {
+    var errorListString = '<ul>';
+    for (var i=0; i < alertErrors.length; i++){
+        errorListString  = errorListString + '<li>' + alertErrors[i] + '</li>';
+    }
+    errorListString = errorListString + '</ul>';
+    return errorListString;
+}
+
+function createAlert(alertType, alertTitle, alertErrors) {
+    return `
+        <div class="alert alert-` + alertType + `">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            ` + getAlertHtml(alertType,alertTitle) + getAlertErrorListHtml(alertErrors) + `
+        </div>`;
+}
+
+function addSpinner($btn){
+    $btn.html($btn.html() + "<i class='fa fa-spinner fa-spin'></i>");
+}
+
+function removeSpinner($btn){
+    $btn.find(".fa-spinner").remove();
+}
+
 //format dollar amounts 
 function htmlFormatMoney(n) {
-    console.log(n);
     var c = 2,
         dollarClass = n < 0 ? "dollar-negative" : "",
         i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
