@@ -8,10 +8,8 @@
 				schedularType_id   	int(11)		NOT NULL,
 				eventGenerator_id	int(11)		NOT NULL,
 				startDate			date		NOT NULL,
-				endDate				date		DEFAULT NULL,
 				monthsOfYear		varchar(20) DEFAULT NULL,
 				daysOfMonth			varchar(50) DEFAULT NULL,
-				daysOfWeek			varchar(20) DEFAULT NULL,
 				dayInterval 		int(11) DEFAULT NULL,
 				status 				varchar(20) DEFAULT NULL,
 

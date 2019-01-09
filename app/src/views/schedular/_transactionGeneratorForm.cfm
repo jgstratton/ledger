@@ -6,7 +6,7 @@
                 <input type="text" name="eventName" value="#rc.transactionGenerator.getEventName()#" class="form-control form-control-sm">
             </div>
         </div>
-        <h6 class="small text-muted mt-3">Transaction Details</h6>
+        <h6 class="small text-muted mt-3"><i class="fa #rc.transactionGenerator.getGeneratorIcon()#"></i> Transaction Details</h6>
         <hr class="sm">
         <div class="row">
             <label class="col-3 col-form-label">Account:</label>
@@ -73,7 +73,8 @@
                 <input type="text" name="Note" value="#rc.transactionGenerator.getNote()#" class="form-control form-control-sm">
             </div>
         </div>
-        <h6 class="small text-muted mt-3">Schedule</h6>
+        <h6 class="small text-muted mt-4"><i class="fa fa-calendar"></i> Schedule</h6>
         <hr class="sm">
+        #view("schedular/_scheduleSubForm")#
     </form>
 </cfoutput>

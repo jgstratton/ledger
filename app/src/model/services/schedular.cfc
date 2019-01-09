@@ -5,6 +5,9 @@ component accessors="true" {
         schedular.save();
     }
 
+    public array function getSchedularTypes(){
+        return entityLoad("schedularType");
+    }
     public void function saveSchedular(required component schedular) {
         EntitySave(schedular);
     }

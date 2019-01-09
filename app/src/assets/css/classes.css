@@ -9,3 +9,11 @@
 .dollar-negative:before{
     content: "("
 }
+
+.form-control-ms{
+    padding:0;
+}
+
+.ms-choice{
+    border:none;
+}

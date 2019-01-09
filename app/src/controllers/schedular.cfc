@@ -3,6 +3,7 @@ component name="schedular" output="false" accessors=true {
     property accountService;
     property categoryService;
     property alertService;
+    property schedularService;
 
     public void function init(fw){
         variables.fw = arguments.fw;
@@ -14,6 +15,7 @@ component name="schedular" output="false" accessors=true {
         rc.categories = categoryService.getCategories();
         rc.transactionGenerator = eventGeneratorService.createTransactionGenerator();
         rc.transferGenerator = eventGeneratorService.createTransferGenerator();
+        rc.schedularTypes = schedularService.getSchedularTypes;
     }
 
     public void function validateTransactionGeneratorForm(required struct rc){

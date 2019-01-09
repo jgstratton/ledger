@@ -7,7 +7,7 @@
             </div>
         </div>
         
-        <h6 class="small text-muted mt-3">Transfer Details</h6>
+        <h6 class="small text-muted mt-3"><i class="fa #rc.transferGenerator.getGeneratorIcon()#"></i> Transfer Details</h6>
         <hr class="sm">
         <div class="row">
             <label class="col-3 col-form-label">From<span class="d-none d-lg-inline"> Account</span>:</label>
@@ -62,7 +62,8 @@
                 </div>
             </div>
         </div> 
-        <h6 class="small text-muted mt-3">Schedule</h6>
-        <hr class="sm">       
+        <h6 class="small text-muted mt-4"><i class="fa fa-calendar"></i> Schedule</h6>
+        <hr class="sm">     
+        #view("schedular/_scheduleSubForm")#  
     </form>
 </cfoutput>

@@ -6,9 +6,8 @@
 		<cfquery>
 			Insert Into schedularTypes (name, allowedParameters)
 			values 
-				('Weekly','daysOfWeek'),
-				('Monthly','monthsOfYear,daysOfMonth'),
-				('Biweekly','dayInterval')
+				('Date','monthsOfYear,daysOfMonth'),
+				('Interval','startDate,dayInterval')
 		</cfquery>
 
 	</cffunction>

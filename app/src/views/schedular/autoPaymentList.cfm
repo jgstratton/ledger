@@ -3,18 +3,18 @@
         #view("schedular/_newAutoPaymentModal")#
     </div>
 
-    #view("includes/alerts")#
-
-    <h3 class="pull-left sm-pad">
-        <i class="fa fa-repeat"></i> Payment Schedular
-    </h3>
-    <div class="text-right sm-pad">
-        <button type="button "class="btn btn-sm btn-primary" data-new>
-            <i class="fa fa-plus"></i> Add New
-        </button>
+    <div class="sm-pad">
+        #view("includes/alerts")#
+        <div class="text-right">
+            <h3 class="pull-left">Payment Schedular</h3>
+            <button type="button "class="btn btn-sm btn-primary" data-new>
+                <i class="fa fa-plus"></i> Add New
+            </button>
+        </div>
     </div>
+
     <cfif rc.generators.len() eq 0>
-        <p class="text-info">
+        <p class="text-info text-left pt-3 sm-pad">
             You do not have any automatic payments or transfers scheduled.
         </p>
     <cfelse>

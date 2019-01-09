@@ -20,11 +20,14 @@
             integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
             crossorigin="anonymous">
 
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/multiple-select/1.2.2/multiple-select.min.css">
+
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/transactions.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/classes.css?v=#application.version#" />
+       
         <script src="#application.root_path#/assets/js/viewScripts.js?v=#application.version#"></script>
-
+        
 
 	</head>
 
@@ -121,7 +124,16 @@
             integrity="sha256-0Yg/eibVdKyxkuVo1Qwh0DspoUCHvSbm/oOoYVz32BQ=" 
             crossorigin="anonymous"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/1.0.5/jquery.mobile-events.js"></script>
+        <script 
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/1.0.5/jquery.mobile-events.js" 
+            integrity="sha384-PH9iS/KgZGPhP/z3Er7jDrTMgCNk3wS+MMT/u4fBbhryGQJPwDvbltI6Z2LECqCQ" 
+            crossorigin="anonymous"></script>
+            
+        <script 
+            src="https://cdnjs.cloudflare.com/ajax/libs/multiple-select/1.2.2/multiple-select.min.js" 
+            integrity="sha384-0oWzNuQzyCYxinHFCTnivO8O/5tM8VHyCy/wzssUzMM8dJzW41ZlnP4ud+hX2FYJ" 
+            crossorigin="anonymous"></script>
+
         <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
 
         <!--- add global js variables --->

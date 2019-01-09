@@ -8,10 +8,8 @@ component persistent="true" table="schedular" accessors="true" {
     property name="schedularType" fieldtype="many-to-one" cfc="schedularType" fkcolumn="schedularType_id";
     property name="eventGenerator" fieldtype="many-to-one" cfc="eventGenerator" fkcolumn="eventGenerator_id";
     property name="startDate" ormtype="timestamp";
-    property name="endDate" ormtype="timestamp";
     property name="monthsOfYear";
     property name="daysOfMonth";
-    property name="daysOfWeek";
     property name="dayInterval";
     property name="status";
 
