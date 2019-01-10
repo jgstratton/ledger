@@ -49,6 +49,12 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <label class="col-3 col-form-label">Active:</label>
+        <div class="col-9">
+            <input type="checkbox" name="scheduleActive" value="1">
+        </div>
+    </div>
 
     <script>
         viewScripts.add( function(){

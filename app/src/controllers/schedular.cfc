@@ -4,6 +4,7 @@ component name="schedular" output="false" accessors=true {
     property categoryService;
     property alertService;
     property schedularService;
+    property validatorService;
 
     public void function init(fw){
         variables.fw = arguments.fw;
@@ -19,17 +20,21 @@ component name="schedular" output="false" accessors=true {
     }
 
     public void function validateTransactionGeneratorForm(required struct rc){
-        var response = getValidateTransactionGeneratorResponse(arguments.rc);
+        var validators = ["ValidateTransactionGeneratorResponse", "ValidateGeneratorSchedularResponse"];
+        var response = validatorService.runValidators(validators, arguments.rc);
         variables.fw.renderData().data( response ).type( 'json' );
     }
 
     public void function validateTransferGeneratorForm(required struct rc){
-        var response = getValidateTransferGeneratorResponse(arguments.rc);
+        var validators = ["ValidateTransferGeneratorResponse", "ValidateGeneratorSchedularResponse"];
+        var response = validatorService.runValidators(validators, arguments.rc);
         variables.fw.renderData().data( response ).type( 'json' );
     }
 
     public void function saveTransactionGeneratorForm(required struct rc) {
-        var validateResponse = getValidateTransactionGeneratorResponse(arguments.rc);
+        var validators = ["ValidateTransactionGeneratorResponse", "ValidateGeneratorSchedularResponse"];
+        var validateResponse = validatorService.runValidators(validators, arguments.rc);
+
         abortSaveGeneratorOnFailedResponse(validateResponse);
 
         //save the transaction generator
@@ -45,7 +50,9 @@ component name="schedular" output="false" accessors=true {
     }
 
     public void function saveTransferGeneratorForm(required struct rc) {
-        var validateResponse = getValidateTransferGeneratorResponse(arguments.rc);
+        var validators = ["ValidateTransferGeneratorResponse", "ValidateGeneratorSchedularResponse"];
+        var validateResponse = validatorService.runValidators(validators, arguments.rc);
+      
         abortSaveGeneratorOnFailedResponse(validateResponse);
 
         //save the transaction generator
@@ -68,20 +75,5 @@ component name="schedular" output="false" accessors=true {
             variables.fw.abortController();
         }
     }
-
-    private component function getValidateTransactionGeneratorResponse(required struct rc){
-        var response = new beans.response();
-        if (!len(rc.eventName)) {
-            response.addError("Please provide a name for this automatic transaction");
-        }
-        return response;
-    }
-
-    private component function getValidateTransferGeneratorResponse(required struct rc){
-        var response = new beans.response();
-        if (!len(rc.eventName)) {
-            response.addError("Please provide a name for this automatic transaction");
-        }
-        return response;
-    }
+   
 }
