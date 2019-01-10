@@ -9,6 +9,7 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
 
         mockedTransferBean.$property(propertyName="categoryService", mock = new services.category());
         mockedTransferBean.$property(propertyName="transactionService", mock = new services.transaction());
+        mockedTransferBean.$property(propertyName="accountService", mock = new services.account());
         mockedCheckbookSummaryService.$property(propertyName="transferService", mock = mockedTransferService);
         mockedTransferService.$("getNewTransferBean", mockedTransferBean );
 
@@ -103,6 +104,20 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
 
             var numberOfEligibleSubAccounts = mockedCheckbookSummaryService.getAccountsEligibleForRounding(user).len();
             $assert.isEqual(2,numberOfEligibleSubAccounts);
+            transaction action="rollback";
+        }
+    }
+
+    function generatedFromTransactionIsHidden_Test(){
+        transaction {
+            _setupModular();
+            user.setRoundingModular(10);
+            parentAccount.addTransactions( transactionGenerator.generateCreditTransaction({amount: 100}));
+            parentAccount.addTransactions( transactionGenerator.generateExpenseTransaction({amount: 0.01}));
+            ormFlush();
+            mockedCheckbookSummaryService.transferSummaryRounding(user);
+            var sourceTransaction = EntityLoad("transaction", {account:parentAccount},"id desc");
+            $assert.isTrue(sourceTransaction[1].isHidden());
             transaction action="rollback";
         }
     }

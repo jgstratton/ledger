@@ -48,7 +48,7 @@ component output="false" accessors=true {
                 transferDate = now()
             });
             roundingTransfer.save();
-            transferService.hideFromTransaction(roundingTransfer);
+            transferService.hideFromTransaction(roundingTransfer);            
             ormFlush();
         }
     }

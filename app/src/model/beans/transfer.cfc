@@ -10,7 +10,7 @@ component accessors=true  {
     property name="name";
 	property name="transferDate";
 	property name="fromTransaction" type="component";
-
+	property name="toTransaction" type="component";
 	
 	public any function init() {
 		variables.beanFactory = application.beanFactory;
@@ -31,8 +31,8 @@ component accessors=true  {
 	public void function save(){
 		prepareSave();
 		transaction{
-			transactionService.save(fromTransaction);
-			transactionService.save(toTransaction);
+			transactionService.save(getFromTransaction());
+			transactionService.save(getToTransaction());
 		}
 	}
 
@@ -78,6 +78,7 @@ component accessors=true  {
 			var fromTransaction = new beans.transaction();
 		}
 		this.setFromTransaction(fromTransaction);
+		this.setToTransaction(toTransaction);
 		
 		fromTransaction.setAccount( getFromAccount() );
 		toTransaction.setAccount( getToAccount() );

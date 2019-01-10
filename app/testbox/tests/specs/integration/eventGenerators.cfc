@@ -8,8 +8,7 @@ component displayName="Event Generator Tests" extends="testbox.system.BaseSpec" 
     function createEventGeneratorTest(){
         transaction{
             var newEventGenerator = eventGeneratorService.createEventGenerator({
-                eventName: "New Event Generator",
-                eventDescription: "New Event Description"
+                eventName: "New Event Generator"
             });
             EntitySave(newEventGenerator);
             ormFlush();
@@ -40,7 +39,7 @@ component displayName="Event Generator Tests" extends="testbox.system.BaseSpec" 
             toAccount.$property(propertyname="id", mock="2");
 
             var newEventGenerator = eventGeneratorService.createTransferGenerator({
-                eventName: "New Event Generator"
+                eventName: "New Event Generator",
                 fromAccount: fromAccount,
                 toAccount: toAccount
             });

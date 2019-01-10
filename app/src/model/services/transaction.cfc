@@ -29,7 +29,7 @@ component output="false" accessors="true" {
             FROM transaction t
             WHERE account = :account
             and isHidden = 0
-            ORDER BY t.transactionDate desc
+            ORDER BY t.transactionDate desc, t.id desc
         ",{account:arguments.account, maxresults: 50});
     }
 

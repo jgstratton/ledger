@@ -6,7 +6,7 @@ component extends="framework.one" output="false" {
 	this.applicationTimeout = createTimeSpan(0, 2, 0, 0);
 	this.setClientCookies = true;
 	this.sessionManagement = true;
-	this.sessionTimeout = createTimeSpan(0, 0, 30, 0);
+	this.sessionTimeout = createTimeSpan(0, 4, 0, 0);
 
 	this.mappings["/framework"] = "/framework";
 	this.mappings["/migrations"] = "/database/migrations";
