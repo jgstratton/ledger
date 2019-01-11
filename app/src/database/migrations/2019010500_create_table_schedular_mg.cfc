@@ -7,7 +7,7 @@
 				id   				int(11)		NOT NULL AUTO_INCREMENT,
 				schedularType_id   	int(11)		NOT NULL,
 				eventGenerator_id	int(11)		NOT NULL,
-				startDate			date		NOT NULL,
+				startDate			date		DEFAULT NULL,
 				monthsOfYear		varchar(20) DEFAULT NULL,
 				daysOfMonth			varchar(50) DEFAULT NULL,
 				dayInterval 		int(11) DEFAULT NULL,

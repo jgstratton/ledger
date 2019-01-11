@@ -13,23 +13,23 @@ component displayName="Validator Tests" extends="testbox.system.BaseSpec" {
         makePublic(validatorService,'structKeyIsSet');
     }
 
-    public void function getValidateGeneratorSchedularResponse_AllParamatersMissing_Test(){
+    public void function getValidateGeneratorSchedular_AllParamatersMissing_Test(){
         var rc = {
             schedularTypeId:1,
             scheduleActive: 1
         }
-        var errorCount = validatorService.getValidateGeneratorSchedularResponse(rc).getErrors().len();
+        var errorCount = validatorService.getValidateGeneratorSchedular(rc).getErrors().len();
         $assert.isEqual(2,errorCount);
     }
 
-    public void function getValidateGeneratorSchedularResponse_OneParameterMissing_test() {
+    public void function getValidateGeneratorSchedular_OneParameterMissing_test() {
         var rc = {
             schedularTypeId:1,
             scheduleActive:1,
             monthsOfYear:"",
             daysOfMonth:"value"
         }
-        var errors = validatorService.getValidateGeneratorSchedularResponse(rc).getErrors();
+        var errors = validatorService.getValidateGeneratorSchedular(rc).getErrors();
         $assert.isEqual(1,errors.len());
     }
 

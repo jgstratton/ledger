@@ -15,10 +15,24 @@ component persistent="true" table="schedular" accessors="true" {
 
     public void function init(){
         variables.beanFactory = application.beanFactory;
-		variables.schedularService = beanFactory.getBean("schedularService");
+        variables.schedularService = beanFactory.getBean("schedularService");
     }
 
     public void function save(){
         schedularService.saveSchedular(this);
+    }
+
+    public void function setSchedularTypeID(required numeric schedularTypeId) {
+        setSchedularType(schedularService.getSchedularTypeById(arguments.schedularTypeId));
+    }
+
+    public void function setStartDate(required string startDate) {
+        if (len(arguments.startDate)){
+            this.startDate = arguments.startDate;
+        }
+    }
+
+    public void function setScheduleStatus(required boolean scheduleStatus) {
+        setStatus(arguments.scheduleStatus);
     }
 }

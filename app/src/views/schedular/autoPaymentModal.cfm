@@ -10,32 +10,57 @@
                 </div>
                 <div class="modal-body">
                     <div data-submit-errors></div>
+                    <!--- when editing, add the delete button--->
+                    <cfif rc.keyExists('eventGenerator')>
+                        <div class="text-right" style="position:relative;height:0;">
+                            <button type="button" class="btn btn btn-outline-danger btn-sm" style="position:relative" data-delete-btn="">
+                                <i class="fa fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </cfif>
+                    <!--- Display the tabs --->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="##tabPayment" role="tab" data-tab="transaction">
-                                New <span class="d-none d-sm-inline"> Automatic</span> Transaction
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="##tabTransfer" role="tab" data-tab="transfer">
-                                New <span class="d-none d-sm-inline"> Automatic</span> Transfer
-                            </a>
-                        </li>
-                    </ul> 
+                        <cfif rc.keyExists('transactionGenerator')>
+                            <li class="nav-item">
+                                <a class="nav-link #displayIf(rc.activeTab eq 'transaction', 'active')#" data-toggle="tab" href="##tabTransaction" role="tab" data-tab="transaction">
+                                    New <span class="d-none d-sm-inline"> Automatic</span> Transaction
+                                </a>
+                            </li>
+                        </cfif>
+                        <cfif rc.keyExists('transferGenerator')>
+                            <li class="nav-item">
+                                <a class="nav-link #displayIf(rc.activeTab eq 'transfer', 'active')#" data-toggle="tab" href="##tabTransfer" role="tab" data-tab="transfer">
+                                    New <span class="d-none d-sm-inline"> Automatic</span> Transfer
+                                </a>
+                            </li>
+                        </cfif>
+                    </ul>
+
+                    <!--- Display the tab content panels --->
                     <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="tabPayment" role="tabpanel">
-                            #view("schedular/_transactionGeneratorForm")#
-                        </div>
-                        <div class="tab-pane fade" id="tabTransfer" role="tabpanel">
-                            #view("schedular/_transferGeneratorForm")#
-                        </div>
+                        <cfif rc.keyExists('transactionGenerator')>
+                            <div class="tab-pane fade #displayIf(rc.activeTab eq 'transaction', 'show active')#" id="tabTransaction" role="tabpanel">
+                                #view("schedular/_transactionGeneratorForm")#
+                            </div>
+                        </cfif>
+                        <cfif rc.keyExists('transferGenerator')>
+                            <div class="tab-pane fade #displayIf(rc.activeTab eq 'transfer', 'active')#" id="tabTransfer" role="tabpanel">
+                                #view("schedular/_transferGeneratorForm")#
+                            </div>
+                        </cfif>
                     </div>
+
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" data-save>Save</button>
-                    <button type="button" class="btn btn-secondary btn-sm" data-close>Close</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-save>
+                        <i class="fa fa-floppy-o"></i> Save
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-close>
+                        <i class="fa fa-times"></i> Close
+                    </button>
                 </div>
+
             </div>
         </div>
     </div>

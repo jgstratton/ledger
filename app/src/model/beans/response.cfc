@@ -9,8 +9,8 @@ component accessors="true" {
         return this;
     }
 
-    private void function getStatus(){
-        if (getErrors.len()) {
+    private string function getStatus(){
+        if (getErrors().len()) {
             return 'fail';
         }
         return 'success'

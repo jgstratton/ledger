@@ -15,5 +15,6 @@ component persistent="true" table="eventGenerators" accessors="true" {
     public boolean function isScheduled(){
         return hasSchedular();
     }
+
 }
 

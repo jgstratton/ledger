@@ -5,6 +5,10 @@ component accessors="true" {
         schedular.save();
     }
 
+    public component function createSchedular(){
+        return EntityNew("schedular");
+    }
+
     public array function getSchedularTypes(){
         return entityLoad("schedularType");
     }

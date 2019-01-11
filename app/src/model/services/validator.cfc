@@ -10,7 +10,7 @@ component accessors="true" {
         return compositeResponse;
     }
 
-    public beans.response function getValidateTransactionGeneratorResponse(required struct rc){
+    public beans.response function getValidateTransactionGenerator(required struct rc){
         var response = new beans.response();
         if (!len(rc.eventName)) {
             response.addError("Please provide a name for this automatic transaction");
@@ -18,7 +18,7 @@ component accessors="true" {
         return response;
     }
 
-    public component function getValidateTransferGeneratorResponse(required struct rc){
+    public component function getValidateTransferGenerator(required struct rc){
         var response = new beans.response();
         if (!len(rc.eventName)) {
             response.addError("Please provide a name for this automatic transaction");
@@ -26,7 +26,7 @@ component accessors="true" {
         return response;
     }
 
-    public beans.response function getValidateGeneratorSchedularResponse(required struct rc){
+    public beans.response function getValidateGeneratorSchedular(required struct rc){
         param name="rc.scheduleActive" default="0";
         var response = new beans.response();
         var schedularType = schedularService.getSchedularTypeById(rc.schedularTypeId);

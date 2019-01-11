@@ -17,3 +17,8 @@
 .ms-choice{
     border:none;
 }
+
+.text-disabled {
+    color: #96a5b3!important;
+    font-style: italic;
+}

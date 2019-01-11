@@ -3,7 +3,6 @@
         <label class="col-3 col-form-label">Type:</label>
         <div class="col-9">
             <select name="schedularTypeId" class="form-control form-control-sm" data-type-control>
-                <option value="0" data-controls="">(not scheduled)</option>
                 <cfloop array="#rc.schedularTypes()#" item="local.schedularType">
                     <option value="#local.schedularType.getId()#" data-controls="#local.schedularType.getAllowedParameters()#">#local.schedularType.getName()#</option>
                 </cfloop>
@@ -52,7 +51,7 @@
     <div class="row">
         <label class="col-3 col-form-label">Active:</label>
         <div class="col-9">
-            <input type="checkbox" name="scheduleActive" value="1">
+            <input type="checkbox" name="scheduleStatus" value="1">
         </div>
     </div>
 
@@ -70,7 +69,6 @@
                     $controlRows.addClass('d-none');
                     for (var i = 0; i < options.length; i++) {
                         $controls.filter('[name="' + options[i] + '"]').closest('.row').removeClass('d-none');
-                        console.log(options[i], $controls.filter('[name="' + options[i] + '"]').length);
                     }
                 };
 

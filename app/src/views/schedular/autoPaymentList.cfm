@@ -1,7 +1,5 @@
 <cfoutput>
-    <div data-new-payment-modal>
-        #view("schedular/_newAutoPaymentModal")#
-    </div>
+    <div data-auto-payment-modal></div>
 
     <div class="sm-pad">
         #view("includes/alerts")#
@@ -21,12 +19,12 @@
         <table class="table table-striped">
             <tbody>
                 <cfloop array="#rc.generators#" item="local.eventGenerator">
-                    <tr>
+                    <tr class="#displayIf(!local.eventGenerator.isScheduled(),'text-disabled')#">
                         <td>
                             <cfif local.eventGenerator.isScheduled()>
                                 <i class="fa fa-calendar-check-o text-primary"></i>
                             <cfelse>
-                                <i class="fa fa-calendar-times-o text-muted"></i>
+                                <i class="fa fa-calendar-o"></i>
                             </cfif>
                         </td>
                         <td>
@@ -42,7 +40,7 @@
                         
                         <td class="text-right">#dollarformat(local.eventGenerator.getAmount())#</td>
                         <td class="text-right">
-                            <a class="btn btn-link btn-sm">
+                            <a class="btn btn-link btn-sm text-primary" data-edit data-id="#local.eventGenerator.getId()#">
                                 <i class="fa fa-pencil"></i> edit
                             </a>
                         </td>
@@ -52,15 +50,35 @@
         </table>
  
     </cfif>
+
     <script>
         viewScripts.add( function(){
             var viewId = '#local.templateid#',
                 $viewDiv = $("##" + viewId),
                 $newBtn = $viewDiv.find("[data-new]");
-                $newAutoPayModal = $viewDiv.find("[data-new-payment-modal] .modal");
+                $editBtn = $viewDiv.find("[data-edit]"),
+                $autoPayModalWrapper = $viewDiv.find("[data-auto-payment-modal]"),
+                $editAutoPayModal = $viewDiv.find("[data-new-payment-modal]"),
+            
+            populateAndShowModal = function(html){
+                $autoPayModalWrapper.html(html);
+                var $modal = $autoPayModalWrapper.find(".modal");
+                $modal.modal('show');
+            };
 
             $newBtn.click(function(){
-                $newAutoPayModal.modal('show');
+                $.get("#buildurl('schedular.autoPaymentNewModal')#", function(responseHtml) {
+                    populateAndShowModal(responseHtml);
+                });
+            });
+
+            $editBtn.click(function(){
+                var data = {
+                    eventGeneratorId: $(this).data('id')
+                };
+                $.get("#buildurl('schedular.autoPaymentEditModal')#", data, function(responseHtml) {
+                    populateAndShowModal(responseHtml);
+                });
             });
         
         });

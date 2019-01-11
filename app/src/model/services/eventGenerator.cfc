@@ -7,6 +7,10 @@ component accessors="true" {
     public array function getEventGenerators(){
         return EntityLoad("eventGenerator", {user: request.user} );
     }
+
+    public component function getEventGeneratorByPk(required numeric id) {
+        return EntityLoadByPk("eventGenerator", arguments.id);
+    }
     
     public void function saveEventGenerator(required component eventGenerator) {
         transaction{
