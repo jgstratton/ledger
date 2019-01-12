@@ -44,7 +44,7 @@
                             </div>
                         </cfif>
                         <cfif rc.keyExists('transferGenerator')>
-                            <div class="tab-pane fade #displayIf(rc.activeTab eq 'transfer', 'active')#" id="tabTransfer" role="tabpanel">
+                            <div class="tab-pane fade #displayIf(rc.activeTab eq 'transfer', 'show active')#" id="tabTransfer" role="tabpanel">
                                 #view("schedular/_transferGeneratorForm")#
                             </div>
                         </cfif>

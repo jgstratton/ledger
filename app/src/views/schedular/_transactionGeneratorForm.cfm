@@ -1,5 +1,7 @@
 <cfoutput>
-    <form method="post" action="#buildurl('schedular.saveTransactionGeneratorForm')#" data-validate-url="#buildurl('schedular.validateTransferGeneratorForm')#">
+    <form method="post" action="#buildurl('schedular.saveGeneratorForm')#" data-validate-url="#buildurl('schedular.validateTransferGeneratorForm')#">
+        <input type="hidden" name="eventGeneratorId" value="#rc.transactionGenerator.getEventGeneratorId()#">
+        <input type="hidden" name="generatorType" value="transaction">
         <div class="row">
             <label class="col-3 col-form-label">Name:</label>
             <div class="col-9">
@@ -75,6 +77,6 @@
         </div>
         <h6 class="small text-muted mt-4"><i class="fa fa-calendar"></i> Schedule</h6>
         <hr class="sm">
-        #view("schedular/_scheduleSubForm")#
+        #view("schedular/_scheduleSubForm", {schedular: rc.transactionGenerator.getSchedular()})#
     </form>
 </cfoutput>

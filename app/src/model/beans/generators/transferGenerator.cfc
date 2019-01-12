@@ -49,5 +49,4 @@ component persistent="true" table="transferGenerators" accessors="true" extends=
       return getFromAccount();
    }
 
-
 }

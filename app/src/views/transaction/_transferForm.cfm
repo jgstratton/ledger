@@ -1,6 +1,5 @@
 <cfoutput>
     <cfset local.mode = request.item eq 'edit' ? 'edit' : 'new'>
-    
     <div class="sm-pad">
         #view("includes/alerts")#
         
@@ -66,7 +65,7 @@
                         <label class="col-3 col-form-label">Date:</label>
                         <div class="col-9">
                             <div class="input-group">
-                                <input type="text" name="transferDate" value="#rc.transfer.getTransferDate()#" class="form-control form-control-sm" data-datepicker readonly>
+                                <input type="text" name="transferDate" value="#rc.transfer.getTransferDate()#" class="form-control form-control-sm" data-datepicker readonly >
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                 </div>

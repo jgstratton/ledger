@@ -12,7 +12,7 @@ component accessors="true" {
 
     public beans.response function getValidateTransactionGenerator(required struct rc){
         var response = new beans.response();
-        if (!len(rc.eventName)) {
+        if (parameterIsMissing(rc, 'eventName')) {
             response.addError("Please provide a name for this automatic transaction");
         }
         return response;
@@ -20,8 +20,8 @@ component accessors="true" {
 
     public component function getValidateTransferGenerator(required struct rc){
         var response = new beans.response();
-        if (!len(rc.eventName)) {
-            response.addError("Please provide a name for this automatic transaction");
+        if (parameterIsMissing(arguments.rc, 'eventName')) {
+            response.addError("Please provide a name for this automatic transfer");
         }
         return response;
     }
@@ -59,14 +59,14 @@ component accessors="true" {
         if (!schedularService.schedularParameterValidForType(arguments.parameterName, arguments.schedularType)) {
             return false;
         }
-        if (structKeyIsSet(arguments.rc, arguments.parameterName)) {
+        if (!parameterIsMissing(arguments.rc, arguments.parameterName)) {
             return false;
         }
         return true;
     }
 
-    private boolean function structKeyIsSet(required struct struct, required string key) {
-        if (!arguments.struct.keyExists(arguments.key) || !len(arguments.struct[arguments.key])) {
+    private boolean function parameterIsMissing(required struct rc, required string key) {
+        if (arguments.rc.keyExists(arguments.key) && len(arguments.rc[arguments.key])) {
             return false;
         }
         return true;

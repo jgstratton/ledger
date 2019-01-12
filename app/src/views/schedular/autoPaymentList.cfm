@@ -40,8 +40,9 @@
                         
                         <td class="text-right">#dollarformat(local.eventGenerator.getAmount())#</td>
                         <td class="text-right">
-                            <a class="btn btn-link btn-sm text-primary" data-edit data-id="#local.eventGenerator.getId()#">
-                                <i class="fa fa-pencil"></i> edit
+                            <a class="btn btn-link btn-sm text-primary" data-edit data-id="#local.eventGenerator.getEventGeneratorId()#">
+                                <i class="fa fa-pencil"></i> edit #local.eventGenerator.getEventGeneratorId()#
+                                
                             </a>
                         </td>
                     </tr>
@@ -73,6 +74,7 @@
             });
 
             $editBtn.click(function(){
+                console.log($(this).data('id'));
                 var data = {
                     eventGeneratorId: $(this).data('id')
                 };

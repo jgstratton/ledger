@@ -4,11 +4,15 @@ component accessors="true" {
         return EntityNew("eventGenerator", addUserToParameters(arguments.parameters) );
     }
 
+    public component function createGeneratorByType(required string eventGeneratorType, struct parameters = {}) {
+        return invoke(this,"create#eventGeneratorType#Generator",arguments.parameters);
+    }
+
     public array function getEventGenerators(){
         return EntityLoad("eventGenerator", {user: request.user} );
     }
 
-    public component function getEventGeneratorByPk(required numeric id) {
+    public component function getEventGeneratorById(required numeric id) {
         return EntityLoadByPk("eventGenerator", arguments.id);
     }
     

@@ -6,12 +6,12 @@
 component persistent="true" table="schedular" accessors="true" {
     property name="id" generator="native" ormtype="integer" fieldtype="id";
     property name="schedularType" fieldtype="many-to-one" cfc="schedularType" fkcolumn="schedularType_id";
-    property name="eventGenerator" fieldtype="many-to-one" cfc="eventGenerator" fkcolumn="eventGenerator_id";
+    property name="eventGenerator" fieldtype="one-to-one" cfc="eventGenerator" fkcolumn="eventGenerator_id";
     property name="startDate" ormtype="timestamp";
-    property name="monthsOfYear";
-    property name="daysOfMonth";
-    property name="dayInterval";
-    property name="status";
+    property name="monthsOfYear" default="";
+    property name="daysOfMonth" default="";
+    property name="dayInterval" default="";
+    property name="status" default="0";
 
     public void function init(){
         variables.beanFactory = application.beanFactory;
@@ -32,7 +32,7 @@ component persistent="true" table="schedular" accessors="true" {
         }
     }
 
-    public void function setScheduleStatus(required boolean scheduleStatus) {
-        setStatus(arguments.scheduleStatus);
+    public void function setschedularStatus(required boolean schedularStatus) {
+        setStatus(arguments.schedularStatus);
     }
 }

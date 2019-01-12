@@ -4,7 +4,9 @@
         <div class="col-9">
             <select name="schedularTypeId" class="form-control form-control-sm" data-type-control>
                 <cfloop array="#rc.schedularTypes()#" item="local.schedularType">
-                    <option value="#local.schedularType.getId()#" data-controls="#local.schedularType.getAllowedParameters()#">#local.schedularType.getName()#</option>
+                    <option value="#local.schedularType.getId()#" data-controls="#local.schedularType.getAllowedParameters()#" #selectIf( local.schedular.getSchedularType().getId() eq local.schedularType.getId() )#>
+                        #local.schedularType.getName()#
+                    </option>
                 </cfloop>
             </select>
         </div>
@@ -16,7 +18,9 @@
             <div class="col-9">
                 <select name="monthsOfYear" multiple="multiple" class="form-control form-control-sm form-control-ms" data-multiselect>
                     <cfloop from="1" to="12" index="local.i">
-                        <option value="#local.i#">#monthAsString(i)#</option>
+                        <option value="#local.i#" #selectIf( listFindNocase(local.schedular.getMonthsOfYear(), local.i) )# >
+                            #monthAsString(i)#
+                        </option>
                     </cfloop>
                 </select>
             </div>
@@ -26,7 +30,9 @@
             <div class="col-9">
                 <select name="daysOfMonth" multiple="multiple" class="form-control form-control-sm form-control-ms" data-multiselect>
                     <cfloop from="1" to="31" index="local.i">
-                        <option value="#local.i#">#local.i#</option>
+                        <option value="#local.i#" #selectIf( listFindNocase(local.schedular.getDaysOfMonth(), local.i) )#>
+                            #local.i#
+                        </option>
                     </cfloop>
                 </select>
             </div>
@@ -34,7 +40,7 @@
         <div class="row d-none">
             <label class="col-3 col-form-label">Start Date:</label>
             <div class="col-9">
-                <input type="text" name="startDate" class="form-control form-control-sm" data-datepicker>
+                <input type="text" name="startDate" class="form-control form-control-sm" value="#local.schedular.getStartDate()#" data-datepicker readonly>
             </div>
         </div>
         <div class="row d-none">
@@ -42,7 +48,9 @@
             <div class="col-9">
                 <select name="dayInterval" class="form-control form-control-sm">
                     <cfloop from="1" to="28" index="local.i">
-                        <option value="#local.i#">#local.i#</option>
+                        <option value="#local.i#" #selectIf( listFindNocase(local.schedular.getDayInterval(), local.i) )#>
+                            #local.i#
+                        </option>
                     </cfloop>
                 </select>
             </div>
@@ -51,7 +59,7 @@
     <div class="row">
         <label class="col-3 col-form-label">Active:</label>
         <div class="col-9">
-            <input type="checkbox" name="scheduleStatus" value="1">
+            <input type="checkbox" name="schedularStatus" value="1" #checkif(local.schedular.getStatus())# >
         </div>
     </div>
 
@@ -79,6 +87,8 @@
             });
 
             showControls();
+
+            console.log($datePicker.length);
         });
     </script>
 </cfoutput>
