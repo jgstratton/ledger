@@ -10,7 +10,6 @@ component displayName="Validator Tests" extends="testbox.system.BaseSpec" {
         schedularService.$("getSchedularTypeById",schedularType);
 
         makePublic(validatorService,'schedularParameterIsMissing');
-        makePublic(validatorService,'structKeyIsSet');
     }
 
     public void function getValidateGeneratorSchedular_AllParamatersMissing_Test(){

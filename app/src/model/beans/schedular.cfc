@@ -10,7 +10,7 @@ component persistent="true" table="schedular" accessors="true" {
     property name="startDate" ormtype="timestamp";
     property name="monthsOfYear" default="";
     property name="daysOfMonth" default="";
-    property name="dayInterval" default="";
+    property name="dayInterval" default="1";
     property name="status" default="0";
 
     public void function init(){
@@ -35,4 +35,5 @@ component persistent="true" table="schedular" accessors="true" {
     public void function setschedularStatus(required boolean schedularStatus) {
         setStatus(arguments.schedularStatus);
     }
+    
 }
