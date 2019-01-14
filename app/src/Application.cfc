@@ -133,8 +133,8 @@ component extends="framework.one" output="false" {
 
 		if(session.loggedin){
 			request.user = this.getBeanFactory().getBean("userService").getUserByid(session.userid);
+			this.getBeanFactory().getBean('schedularService').runSchedule();
 		}
-	
 	}
 
 	public void function setupView( struct rc) {  

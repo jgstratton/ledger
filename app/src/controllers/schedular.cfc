@@ -19,7 +19,7 @@ component name="schedular" output="false" accessors=true {
         rc.categories = categoryService.getCategories();
         rc.transactionGenerator = eventGeneratorService.createTransactionGenerator();
         rc.transferGenerator = eventGeneratorService.createTransferGenerator();
-        rc.schedularTypes = schedularService.getSchedularTypes;
+        rc.schedularTypes = schedularService.getSchedularTypes();
         rc.activeTab = 'transaction';
 
         variables.fw.setLayout("ajax");
@@ -29,7 +29,7 @@ component name="schedular" output="false" accessors=true {
     public void function autoPaymentEditModal(required struct rc) {
         rc.accounts = accountService.getAccounts();
         rc.categories = categoryService.getCategories();
-        rc.schedularTypes = schedularService.getSchedularTypes;
+        rc.schedularTypes = schedularService.getSchedularTypes();
         rc.eventGenerator = eventGeneratorService.getEventGeneratorById(rc.eventGeneratorId);
         rc['#rc.eventGenerator.getGeneratorType()#Generator'] = rc.eventGenerator;
         rc.activeTab = rc.eventGenerator.getGeneratorType();
@@ -60,20 +60,22 @@ component name="schedular" output="false" accessors=true {
         abortSaveGeneratorOnFailedResponse(validateResponse);
 
         //save the transaction generator
-        var generator = eventGeneratorService.createGeneratorByType(rc.generatorType);
-        var schedular = schedularService.createSchedular();
-        if (rc.eventGeneratorId) {
-            generator = eventGeneratorService.getEventGeneratorById(rc.eventGeneratorId);
-            schedular = generator.getSchedular();
-        }
-        variables.fw.populate(generator);
-        variables.fw.populate(schedular);
-        schedular.setEventGenerator(generator);
-
         transaction{
-            eventGeneratorService.saveEventGenerator(generator);
+
+            if (len(rc.eventGeneratorId)) {
+                var generator = eventGeneratorService.getEventGeneratorById(rc.eventGeneratorId);
+            } else {
+                var generator = eventGeneratorService.createGeneratorByType(rc.generatorType);   
+            }
+
+            var schedular = generator.getSchedular();
+            schedular.setEventGenerator(generator);
+            variables.fw.populate(generator);
+            variables.fw.populate(schedular);
             schedularService.saveSchedular(schedular);
+            eventGeneratorService.saveEventGenerator(generator);  
         }
+
         alertService.add('success','Your auto payment "#rc.eventName#" has been saved.');
 
         //redirect back to list

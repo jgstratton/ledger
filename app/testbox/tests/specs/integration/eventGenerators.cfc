@@ -2,7 +2,8 @@ component displayName="Event Generator Tests" extends="testbox.system.BaseSpec" 
 
     function setup(){
         request.user = new generators.user().generate();
-        eventGeneratorService = new services.eventGenerator();
+        eventGeneratorService = createMock("services.eventGenerator");
+        eventGeneratorService.$property(propertyName="schedularService", mock= new services.schedular());
     }
 
     function createEventGeneratorTest(){
@@ -55,4 +56,53 @@ component displayName="Event Generator Tests" extends="testbox.system.BaseSpec" 
         var schedularTypesCount  = EntityLoad("schedularType").len();
         $assert.isNotEqual(0,schedularTypesCount);
     }
+
+    public void function runTransferGenerator_transferGetsCreated_Test(){ 
+        transaction{
+            var generatorService = new services.eventGenerator();
+            var account1 = EntityNew("account");
+            var account2 = Entitynew("account");
+            EntitySave(account1);
+            EntitySave(account2);
+            var schedular = createMock("beans.schedular");
+            schedular.$("getNextRunDate",now());
+            var transferGenerator = Entitynew("transferGenerator", {
+                amount: 10.00,
+                fromAccount:account1,
+                toAccount: account2,
+                deferDate:1,
+                schedular: schedular
+            });
+            $assert.isEqual(0,EntityLoad("transaction").len());
+            generatorService.runEventGenerator(transferGenerator);
+            ormFlush();
+            $assert.isEqual(2,EntityLoad("transaction").len());
+            transaction action="rollback";
+        }
+    }
+
+    public void function runTransactionGenerator_TransactionGetsCreated_Test(){ 
+        transaction{
+            var generatorService = new services.eventGenerator();
+            var account = EntityNew("account");
+            var category = EntityNew("category");
+            EntitySave(account);
+            EntitySave(category);
+            var schedular = createMock("beans.schedular");
+            schedular.$("getNextRunDate",now());
+            var transactionGenerator = Entitynew("transactionGenerator", {
+                account: account,
+                category: category,
+                amount: 10.00,
+                name: 'Test transaction',
+                schedular: schedular
+            });
+            $assert.isEqual(0,EntityLoad("transaction").len());
+            generatorService.runEventGenerator(transactionGenerator);
+            ormFlush();
+            $assert.isEqual(1,EntityLoad("transaction").len());
+            transaction action="rollback";
+        }
+    }
+
 }

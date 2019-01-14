@@ -15,5 +15,8 @@ component{
         return local.user;
     }
 
+    public component function getCurrentUser(){
+        return request.user;
+    }
     
 }

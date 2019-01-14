@@ -1,5 +1,6 @@
 component accessors="true" {
-
+    property schedularService;
+    
     public component function createEventGenerator(struct parameters = {}){
         return EntityNew("eventGenerator", addUserToParameters(arguments.parameters) );
     }
@@ -17,18 +18,38 @@ component accessors="true" {
     }
     
     public void function saveEventGenerator(required component eventGenerator) {
-        transaction{
-            return EntitySave(arguments.eventGenerator);
-        }
+        EntitySave(arguments.eventGenerator);
     }
 
     public component function createTransactionGenerator(struct parameters = {}) {
+        arguments.parameters.schedular = schedularService.createSchedular();
         return EntityNew("transactionGenerator", addUserToParameters(arguments.parameters) );
     }
 
     public component function createTransferGenerator(struct parameters = {}) {
+        arguments.parameters.schedular = schedularService.createSchedular();
         return EntityNew("transferGenerator", addUserToParameters(arguments.parameters) );
     }
+
+    public void function runEventGenerator(required component eventGenerator) {
+        invoke(this,"run#eventGenerator.getGeneratorType()#Generator", [arguments.eventGenerator]);
+    }
+
+    public void function runTransferGenerator(required component transferGenerator) {
+        var transfer = new beans.transfer();
+        populateObjectFromGenerator(arguments.transferGenerator, transfer);
+        transfer.setTransferDate(dateAdd('d',transferGenerator.getDeferDate(), transferGenerator.getSchedular().getNextRunDate()));
+        transfer.save();
+    }
+
+    public void function runTransactionGenerator(required component transactionGenerator) {
+        var transaction = new beans.transaction();
+        populateObjectFromGenerator(arguments.transactionGenerator, transaction);
+        transaction.setTransactionDate(dateAdd('d',arguments.transactionGenerator.getDeferDate(), arguments.transactionGenerator.getSchedular().getNextRunDate()));
+        transaction.save();
+    }
+
+/** Private functions **/
 
     private struct function addUserToParameters(required struct parameters) {
         var newParameters = structCopy(arguments.parameters);
@@ -36,4 +57,21 @@ component accessors="true" {
         return newParameters;
     }
 
+    private void function populateObjectFromGenerator(required component eventGenerator, required component target) {
+        var generatorProperties = getMetaData(arguments.eventGenerator).properties;
+        var targetProperties = getMetaData(arguments.target).properties;
+    
+        for (var generatorProperty in generatorProperties) {
+            for (var targetProperty in targetProperties) {
+                if (generatorProperty.name == targetProperty.name) {
+                    var args = {};
+                    var sourceValue = invoke(arguments.eventGenerator, "get#generatorProperty.name#");
+                    if (!isNull(sourceValue)) {
+                        args["#generatorProperty.Name#"] = sourceValue;
+                        invoke(arguments.target, "set#generatorProperty.name#", args);
+                    }
+                }
+            }
+        }
+    }
 }

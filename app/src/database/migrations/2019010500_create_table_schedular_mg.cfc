@@ -6,7 +6,9 @@
 			CREATE TABLE schedular (
 				id   				int(11)		NOT NULL AUTO_INCREMENT,
 				schedularType_id   	int(11)		NOT NULL,
-				eventGenerator_id	int(11)		NOT NULL,
+				eventGenerator_id	int(11)		DEFAULT NULL,
+				lastRunDate			date		DEFAULT NULL,
+				nextRunDate			date		DEFAULT NULL,
 				startDate			date		DEFAULT NULL,
 				monthsOfYear		varchar(20) DEFAULT NULL,
 				daysOfMonth			varchar(50) DEFAULT NULL,

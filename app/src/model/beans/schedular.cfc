@@ -7,6 +7,8 @@ component persistent="true" table="schedular" accessors="true" {
     property name="id" generator="native" ormtype="integer" fieldtype="id";
     property name="schedularType" fieldtype="many-to-one" cfc="schedularType" fkcolumn="schedularType_id";
     property name="eventGenerator" fieldtype="one-to-one" cfc="eventGenerator" fkcolumn="eventGenerator_id";
+    property name="lastRunDate" ormType="timestamp";
+    property name="nextRunDate" ormType="timestamp";
     property name="startDate" ormtype="timestamp";
     property name="monthsOfYear" default="";
     property name="daysOfMonth" default="";

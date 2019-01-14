@@ -3,7 +3,7 @@
         <label class="col-3 col-form-label">Type:</label>
         <div class="col-9">
             <select name="schedularTypeId" class="form-control form-control-sm" data-type-control>
-                <cfloop array="#rc.schedularTypes()#" item="local.schedularType">
+                <cfloop array="#rc.schedularTypes#" item="local.schedularType">
                     <option value="#local.schedularType.getId()#" data-controls="#local.schedularType.getAllowedParameters()#" #selectIf( local.schedular.getSchedularType().getId() eq local.schedularType.getId() )#>
                         #local.schedularType.getName()#
                     </option>
