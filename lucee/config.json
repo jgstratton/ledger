@@ -4,5 +4,6 @@
     "timeServer":"pool.ntp.org",
     "clientManagement":"no",
     "applicationTimeout":"1,0,0,0",
-    "dotNotationUpperCase": false
+    "dotNotationUpperCase": false,
+    "thisTimeZone": "EST"
 }
