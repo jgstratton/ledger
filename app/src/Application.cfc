@@ -19,15 +19,7 @@ component extends="framework.one" output="false" {
 		baseURL = "useRequestURI",
 		defaultSection = 'account',
 		defaultItem = 'list',
-		diEngine = "aop1",
-		diComponent = "framework.aop",
-		diLocations = "./model/beans,./model/services,./model/interceptors",
-        diConfig = {
-			interceptors = [
-				{beanName = "transaction", interceptorName = "authorize"},
-				{beanName = "transaction", interceptorName = "summaryRounding", methods="deleteTransaction,save"}
-			]
-		 }
+		diLocations = "./model/beans,./model/services"
 	};
 
 	variables.framework.environments = {
