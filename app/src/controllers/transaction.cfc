@@ -31,6 +31,7 @@ component name="account" output="false"  accessors=true {
                 alertService.addMultiple("danger",errors);
             } else {
                 transactionService.save(transaction);
+                checkbookSummaryService.transferSummaryRounding();
                 rc.lastTransactionid = transaction.getid();
                 variables.fw.redirect(action='transaction.#rc.returnTo#', append="lastTransactionid,accountid");
             }
@@ -62,6 +63,7 @@ component name="account" output="false"  accessors=true {
     public void function deleteTransaction(required struct rc){
         var transaction = transactionService.getTransactionById(rc.transactionId);
         transactionService.deleteTransaction(transaction);
+        checkbookSummaryService.transferSummaryRounding();
         variables.fw.redirect(action='transaction.#rc.returnTo#', append="accountid");
     }
 

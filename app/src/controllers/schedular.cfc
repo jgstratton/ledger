@@ -73,6 +73,7 @@ component name="schedular" output="false" accessors=true {
             variables.fw.populate(generator);
             variables.fw.populate(schedular);
             schedularService.saveSchedular(schedular);
+            schedular.setNextRunDate( schedularService.determineNextRunDate(schedular) );
             eventGeneratorService.saveEventGenerator(generator);  
         }
 

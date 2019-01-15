@@ -41,22 +41,30 @@ component displayName="Schedular Service" extends="testbox.system.BaseSpec" {
 
     public void function setNextRun_Interval_Test(){
         var schedular = getIntervalSchedularMock();
-        schedular.$('getStartDate','01/01/2020');
-        schedular.$('getInterval', '14');
-        schedularService.$('getNextRunCompareDate','02/01/2020');
+        schedular.$('getStartDate','01/14/2019');
+        schedular.$('getDayInterval', '14');
+        schedularService.$('getNextRunCompareDate','01/16/2019');
         schedular.setNextRunDate( schedularService.determineNextRunDate(schedular));
-        $assert.isEqual('02/12/2020', schedular.getNextRunDate());
+        $assert.isEqual('01/28/2019', schedular.getNextRunDate());
     }
 
     public void function setNextRun_NewInterval_Test(){
         var schedular = getIntervalSchedularMock();
         schedular.$('getStartDate','01/01/2020');
-        schedular.$('getInterval', '14');
+        schedular.$('getDayInterval', '14');
         schedularService.$('getNextRunCompareDate','07/01/2019');
         schedular.setNextRunDate( schedularService.determineNextRunDate(schedular));
-        $assert.isEqual('01/15/2020', schedular.getNextRunDate());
+        $assert.isEqual('01/01/2020', schedular.getNextRunDate());
     }
 
+    public void function setNextRun_CustomCheck_Test(){ 
+        var schedular = getIntervalSchedularMock();
+        schedular.$('getStartDate','01/07/2019');
+        schedular.$('getDayInterval','1');
+        schedularService.$('getNextRunCompareDate','01/14/2019');
+        schedular.setNextRunDate( schedularService.determineNextRunDate(schedular));
+        $assert.isEqual('01/14/2019', schedular.getNextRunDate());
+    }
 
     public void function runSchedular_LastRunDateGetsSet_Test() {
         var schedular = createMock("beans.schedular");

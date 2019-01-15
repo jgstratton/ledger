@@ -3,6 +3,7 @@ component accessors=true  {
 	property transactionService;
 	property categoryService;
 	property accountService;
+	property checkbookSummaryService;
 	
 	property name="fromAccount" type="component";
     property name="toAccount" type="component";
@@ -17,6 +18,7 @@ component accessors=true  {
 		variables.transactionService = beanFactory.getBean("TransactionService");
 		variables.categoryService = beanFactory.getBean("categoryService");
 		variables.accountService = beanFactory.getBean("accountService");
+		variables.checkbookSummaryService = beanFactory.getBean("checkbookSummaryService");
 	}
 
 	public void function populateFromTransaction(any fromTransaction){
@@ -32,8 +34,9 @@ component accessors=true  {
 		prepareSave();
 		transaction{
 			transactionService.save(getFromTransaction());
-			transactionService.save(getToTransaction());
+			transactionService.save(getToTransaction());	
 		}
+		checkbookSummaryService.transferSummaryRounding();
 	}
 
 	public number function getFromAccountID(){
@@ -74,8 +77,8 @@ component accessors=true  {
 			var toTransaction = getFromTransaction().getLinkedTo();
 			var fromTransaction = getFromTransaction();
 		} else {
-			var toTransaction = new beans.transaction();
-			var fromTransaction = new beans.transaction();
+			var toTransaction = transactionService.createEmptyTransaction();
+			var fromTransaction = transactionService.createEmptyTransaction();
 		}
 		this.setFromTransaction(fromTransaction);
 		this.setToTransaction(toTransaction);

@@ -31,7 +31,7 @@ component persistent="true" table="users" accessors="true" {
     }
 
     public numeric function getSummaryBalance(){
-        return checkbookSummaryService.getSummaryBalance(this);
+        return checkbookSummaryService.getSummaryBalance();
     }
 
     public numeric function getRoundingAccountId(){

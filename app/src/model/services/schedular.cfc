@@ -10,14 +10,12 @@ component accessors="true" {
     }
 
     public void function runSchedule(){
-        transaction {
-            if (getHoursSinceLastScheduleRun() >= getHoursBetweenScheduleRuns() ){
-                var readySchedulars = getReadySchedulars();
-                for (schedular in readySchedulars) {
-                    runSchedular(schedular);
-                }
-                session.lastScheduleRun = now();
+        if (getHoursSinceLastScheduleRun() >= getHoursBetweenScheduleRuns() ){
+            var readySchedulars = getReadySchedulars();
+            for (schedular in readySchedulars) {
+                runSchedular(schedular);
             }
+            session.lastScheduleRun = now();
         }
     }
 
@@ -27,7 +25,8 @@ component accessors="true" {
             From schedular s
             join s.eventGenerator g
             Where g.user = :user
-                and nextRunDate <= now()",{
+                and nextRunDate <= now()
+                and status = 1",{
             user: userService.getCurrentUser()
         });
     }
@@ -77,8 +76,9 @@ component accessors="true" {
         for (var year in [year(compareDate), year(compareDate) + 1]) {
             for (var month in arguments.schedular.getMonthsOfYear()) {
                 for (var day in arguments.schedular.getDaysOfMonth()) {
-                    var currentDate = createDate(year, month, day)
+                    var currentDate = createDate(year, month, day);
                     if (DateCompare(currentDate, compareDate, "d") >= 0) {
+                        var currentDate = createDate(year, month, day);
                         if (!schedularRanThisDay(arguments.schedular, currentDate) ) {
                             return currentDate;
                         }
@@ -86,23 +86,24 @@ component accessors="true" {
                 }
             }
         }
-        throw("Unable to determin next run date");
+        abort;
+        throw("Unable to determine next run date #schedular.getId()#");
     }
 
     private date function determineNextRunDateByInterval(required component schedular) {
         var compareDate = getNextRunCompareDate();
         var currentDate = arguments.schedular.getStartDate();
-        while (compareDate > currentDate && !schedularRanThisDay(arguments.schedular, currentDate)) {
-            currentDate = DateAdd('d', arguments.schedular.getInterval(), currentDate);
+        while (DateCompare(compareDate, currentDate, "d") > 0 && !schedularRanThisDay(arguments.schedular, currentDate)) {
+            currentDate = DateAdd('d', arguments.schedular.getDayInterval(), currentDate);
         }
         return currentDate;
     }
 
     private boolean function schedularRanThisDay(required component schedular, required date checkDate) {
-        if (IsNull(arguments.schedular.getLastRunDate())) {
-            return false;
+        if (!IsNull(arguments.schedular.getLastRunDate()) && Datecompare(arguments.checkDate, arguments.schedular.getLastRunDate(),'d') == 0) {
+            return true;
         }
-        return Datecompare(arguments.checkDate, arguments.schedular.getLastRunDate(),'d');
+        return false;
     }
 
     private date function getNextRunCompareDate() {

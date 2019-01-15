@@ -29,8 +29,8 @@ component persistent="true" table="schedular" accessors="true" {
     }
 
     public void function setStartDate(required string startDate) {
-        if (len(arguments.startDate)){
-            this.startDate = arguments.startDate;
+        if (len(arguments.startDate)){           
+            variables.startDate = arguments.startDate;
         }
     }
 

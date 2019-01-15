@@ -1,5 +1,6 @@
 component accessors="true" {
     property schedularService;
+    property userService;
     
     public component function createEventGenerator(struct parameters = {}){
         return EntityNew("eventGenerator", addUserToParameters(arguments.parameters) );
@@ -10,7 +11,7 @@ component accessors="true" {
     }
 
     public array function getEventGenerators(){
-        return EntityLoad("eventGenerator", {user: request.user} );
+        return EntityLoad("eventGenerator", {user: userService.getCurrentUser()} );
     }
 
     public component function getEventGeneratorById(required numeric id) {
@@ -22,12 +23,16 @@ component accessors="true" {
     }
 
     public component function createTransactionGenerator(struct parameters = {}) {
-        arguments.parameters.schedular = schedularService.createSchedular();
+        if (!parameters.keyExists('schedular')) {
+            arguments.parameters.schedular = schedularService.createSchedular();
+        }
         return EntityNew("transactionGenerator", addUserToParameters(arguments.parameters) );
     }
 
     public component function createTransferGenerator(struct parameters = {}) {
-        arguments.parameters.schedular = schedularService.createSchedular();
+        if (!parameters.keyExists('schedular')) {
+            arguments.parameters.schedular = schedularService.createSchedular();
+        }
         return EntityNew("transferGenerator", addUserToParameters(arguments.parameters) );
     }
 
@@ -53,7 +58,7 @@ component accessors="true" {
 
     private struct function addUserToParameters(required struct parameters) {
         var newParameters = structCopy(arguments.parameters);
-        newParameters.user = request.user;
+        newParameters.user = userService.getCurrentUser();
         return newParameters;
     }
 

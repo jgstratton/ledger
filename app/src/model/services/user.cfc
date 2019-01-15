@@ -15,6 +15,20 @@ component{
         return local.user;
     }
 
+    public boolean function checkAccount(required component account) {
+        if (arguments.account.getUser().getId()  != getCurrentUser().getId() ) {
+            throw("Invalid acccount access");
+        }
+        return true;
+    }
+
+    public boolean function checkTransaction(required component transaction) {
+        if (arguments.transaction.getAccount().getUser().getId() != getCurrentUser().getId()) {
+            throw("Invalid account access");
+        }
+        return true;
+    }
+
     public component function getCurrentUser(){
         return request.user;
     }

@@ -1,7 +1,8 @@
 component output="false" accessors=true {
     property transferService;
+    property userService;
 
-    public numeric function getSummaryBalance(required component user) {
+    public numeric function getSummaryBalance() {
         return ormExecuteQuery("
             SELECT coalesce(sum(trn.amount*ctype.multiplier),0) as Balance
             FROM transaction trn
@@ -11,10 +12,10 @@ component output="false" accessors=true {
             WHERE act.user = :user
             AND act.summary = 'Y'
             AND act.deleted is null",
-        {user: user},true);
+        {user: userService.getCurrentUser()}, true);
     }
 
-    public array function getAccountsEligibleForRounding(required component user) {
+    public array function getAccountsEligibleForRounding() {
         return ormExecuteQuery("
             Select a
             FROM account a
@@ -26,19 +27,19 @@ component output="false" accessors=true {
             ORDER BY coalesce(l.type.id,a.type.id),
                         coalesce(l.name,a.name),
                         a.id", 
-            {user: arguments.user});
+            {user: userService.getCurrentUser()});
     }
 
-    public void function transferSummaryRounding(required component user) {
-
-        var transferAmount = getTransferSummaryAmount(arguments.user);  
-        var roundingAccount =  arguments.user.getRoundingAccount(); 
-
+    public void function transferSummaryRounding() {
+        ormflush();
+        var transferAmount = getTransferSummaryAmount();  
+        
+        var roundingAccount =  userService.getCurrentUser().getRoundingAccount(); 
+        
         //if rounding account is not set up, exit
         if (isNull(roundingAccount)) {
             return;
         }
-
         if (transferAmount) {
             roundingTransfer = transferService.createTransfer({
                 fromAccount = roundingAccount.getLinkedAccount(),
@@ -48,15 +49,15 @@ component output="false" accessors=true {
                 transferDate = now()
             });
             roundingTransfer.save();
-            transferService.hideFromTransaction(roundingTransfer);            
-            ormFlush();
+            transferService.hideFromTransaction(roundingTransfer);
+            ormFlush();  
         }
     }
 
-    public numeric function getTransferSummaryAmount(required component user) {
-        var roundingModular = arguments.user.getRoundingModular();
+    public numeric function getTransferSummaryAmount() {
+        var roundingModular = userService.getCurrentUser().getRoundingModular();
         if (!isNull(roundingModular) && roundingModular > 0){
-            return getSummaryBalance(arguments.user) % roundingModular; 
+            return getSummaryBalance() % roundingModular; 
         }
         return 0;
     }
