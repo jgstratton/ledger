@@ -31,7 +31,7 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
             parentAccount.addTransactions( transactionGenerator.generateExpenseTransaction({amount: 0.01}));
             ormFlush();
 
-            mockedCheckbookSummaryService.transferSummaryRounding(user);
+            mockedCheckbookSummaryService.transferSummaryRounding();
             $assert.isEqual(99, user.getSummaryBalance());
             transaction action="rollback";
         }
@@ -45,7 +45,7 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
             parentAccount.addTransactions( transactionGenerator.generateExpenseTransaction({amount: 0.01}));
             ormFlush();
 
-            mockedCheckbookSummaryService.transferSummaryRounding(user);
+            mockedCheckbookSummaryService.transferSummaryRounding();
             $assert.isEqual(95, user.getSummaryBalance());
             transaction action="rollback";
         }
@@ -59,7 +59,7 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
             parentAccount.addTransactions( transactionGenerator.generateExpenseTransaction({amount: 0.01}));
             ormFlush();
 
-            mockedCheckbookSummaryService.transferSummaryRounding(user);
+            mockedCheckbookSummaryService.transferSummaryRounding();
             $assert.isEqual(90, user.getSummaryBalance());
             transaction action="rollback";
         }
@@ -115,7 +115,7 @@ component displayName="Summary Rounding Integration Tests" extends="testbox.syst
             parentAccount.addTransactions( transactionGenerator.generateCreditTransaction({amount: 100}));
             parentAccount.addTransactions( transactionGenerator.generateExpenseTransaction({amount: 0.01}));
             ormFlush();
-            mockedCheckbookSummaryService.transferSummaryRounding(user);
+            mockedCheckbookSummaryService.transferSummaryRounding();
             var sourceTransaction = EntityLoad("transaction", {account:parentAccount},"id desc");
             $assert.isTrue(sourceTransaction[1].isHidden());
             transaction action="rollback";
