@@ -40,7 +40,7 @@
         <div class="row d-none">
             <label class="col-3 col-form-label">Start Date:</label>
             <div class="col-9">
-                <input type="text" name="startDate" class="form-control form-control-sm" value="#local.schedular.getStartDate()#" data-datepicker readonly>
+                <input type="text" name="startDate" class="form-control form-control-sm" value="#dateformat(local.schedular.getStartDate(),"mm/dd/yyyy")#" data-datepicker readonly>
             </div>
         </div>
         <div class="row d-none">
