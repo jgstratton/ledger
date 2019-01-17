@@ -1,5 +1,5 @@
 component accessors="true" {
-    property name="hoursBetweenScheduleRuns" default="0";
+    property name="hoursBetweenScheduleRuns" default="6";
     property eventGeneratorService;
     property userService;
 

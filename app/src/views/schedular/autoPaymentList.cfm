@@ -41,7 +41,7 @@
                         <td class="text-right">#dollarformat(local.eventGenerator.getAmount())#</td>
                         <td class="text-right">
                             <a class="btn btn-link btn-sm text-primary" data-edit data-id="#local.eventGenerator.getEventGeneratorId()#">
-                                <i class="fa fa-pencil"></i> edit #local.eventGenerator.getEventGeneratorId()#
+                                <i class="fa fa-pencil"></i> edit
                                 
                             </a>
                         </td>
