@@ -9,6 +9,7 @@ services:
     volumes:
      - ./data/mysql:/var/lib/mysql
      - ./data/init:/docker-entrypoint-initdb.d
+     - ./data/scripts:/var/scripts
     environment:
      - MYSQL_DATABASE
      - MYSQL_ROOT_PASSWORD

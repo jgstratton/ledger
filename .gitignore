@@ -4,8 +4,10 @@ env.cfm
 settings.json
 
 .env
+/certs
 /data/mysql/*
 /data/init/*
 /data/backup/*
+/data/scripts/*
 /logs/*
 !.keep
