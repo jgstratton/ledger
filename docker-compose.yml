@@ -61,7 +61,7 @@ services:
      - db
     ports: 
      - "${LUCEE_PORT}:8080"
-     - "${LUCEE_SSL_PORT}:443"
+     - "${LUCEE_SSL_PORT}:8443"
     networks:
      - localnet
     volumes:

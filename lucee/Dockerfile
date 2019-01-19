@@ -11,7 +11,7 @@ COPY ./server.json /app/server.json
 COPY ./config.json /app/config.json
 
 RUN box server set web.SSL.enable=$ENABLE_SSL && \
-    box server set web.SSL.port=8020 &&\
+    box server set web.SSL.port=8443 &&\
     if [ "$ENABLE_SSL" = "true" ] ; then box server set web.SSL.certFile=/certs/$CERT_FILE; else echo SSL Not enabled, do not set certFile ; fi &&\
     if [ "$ENABLE_SSL" = "true" ] ; then box server set web.SSL.keyFile=/certs/$CERT_KEY_FILE; else echo SSL Not enabled, do not set keyFile ; fi
 
