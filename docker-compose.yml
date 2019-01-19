@@ -48,7 +48,11 @@ services:
      - localnet
 
   lucee:
-    build: ./lucee
+    build:
+      context: ./lucee
+      dockerfile: Dockerfile
+      args:
+        ENABLE_SSL: "${ENABLE_SSL}"
     container_name: "${CONTAINER_PREFIX}_lucee"
     restart: 'always'
     depends_on:
