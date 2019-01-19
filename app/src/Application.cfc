@@ -2,7 +2,6 @@ component extends="framework.one" output="false" {
 
 	this.name = 'ledger';
 	this.version = "0.0.1";
-	this.dbmigration = "2019010604";
 	this.applicationTimeout = createTimeSpan(0, 2, 0, 0);
 	this.setClientCookies = true;
 	this.sessionManagement = true;
@@ -97,6 +96,7 @@ component extends="framework.one" output="false" {
 			);
 			application.beanfactory = this.getBeanFactory();
 		}
+		migrate();
 	}
 	public void function setupSession() {  
 		lock scope="session" timeout="5"{
@@ -110,9 +110,6 @@ component extends="framework.one" output="false" {
 			setupApplication();
 			StructClear(Session);
 			setupSession();
-			if(this.getEnvironment() eq 'dev'){
-				migrate();
-			}
 			ormReload();
 			location(url="index.cfm",addToken=false);
 			
@@ -183,7 +180,7 @@ component extends="framework.one" output="false" {
 				local.migrate.refresh_migrations();
 			} else {
 				local.migrate = new migrations.migrate();
-				local.migrate.run_migrations(this.dbmigration);
+				local.migrate.run_migrations();
 			}
 		}
 	}
