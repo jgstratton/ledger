@@ -73,7 +73,9 @@ services:
      - MYSQL_DATABASE
      - MYSQL_USER
      - MYSQL_PASSWORD
+     - ENABLE_SSL
      - LUCEE_PORT
+     - LUCEE_SSL_PORT
      - TIER
      - FACEBOOK_APPID
      - FACEBOOK_APPSECRET
