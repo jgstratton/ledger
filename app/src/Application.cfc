@@ -2,7 +2,7 @@ component extends="framework.one" output="false" {
 
 	this.name = 'ledger';
 	this.version = "0.0.1";
-	this.dbmigration = "2019010300";
+	this.dbmigration = "2019010604";
 	this.applicationTimeout = createTimeSpan(0, 2, 0, 0);
 	this.setClientCookies = true;
 	this.sessionManagement = true;

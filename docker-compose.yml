@@ -21,7 +21,6 @@ services:
   db_tests:
     build: ./data
     container_name: "${CONTAINER_PREFIX}_db_tests"
-    restart: 'always'
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;'
     ports:
      - "3307:3306"
@@ -56,12 +55,14 @@ services:
      - db
     ports: 
      - "${LUCEE_PORT}:8080"
+     - "${LUCEE_SSL_PORT}:443"
     networks:
      - localnet
     volumes:
      - ./app/src:/app/src
      - ./app/testbox/tests:/app/testbox/tests
      - ./logs/lucee/:/var/log
+     - ${CERT_PATH}:/certs
     environment:
      - MYSQL_DATABASE
      - MYSQL_USER

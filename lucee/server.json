@@ -1,6 +1,12 @@
 {
     "web": {
         "host": "localhost",
-        "webroot": "/app"
+        "webroot": "/app",
+        "SSL": {
+            "enable": true,
+            "port": 443,
+            "certFile": "/certs/cert.pem",
+            "keyFile": "/certs/privkey.pem"
+        }
     }
 }
