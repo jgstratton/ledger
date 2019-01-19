@@ -53,6 +53,8 @@ services:
       dockerfile: Dockerfile
       args:
         ENABLE_SSL: "${ENABLE_SSL}"
+        CERT_FILE: "${CERT_FILE}"
+        CERT_KEY_FILE: "${CERT_KEY_FILE}"
     container_name: "${CONTAINER_PREFIX}_lucee"
     restart: 'always'
     depends_on:
@@ -66,7 +68,7 @@ services:
      - ./app/src:/app/src
      - ./app/testbox/tests:/app/testbox/tests
      - ./logs/lucee/:/var/log
-     - ${CERT_PATH}:/certs
+     - ${CERT_BASE_PATH}:/certs
     environment:
      - MYSQL_DATABASE
      - MYSQL_USER
