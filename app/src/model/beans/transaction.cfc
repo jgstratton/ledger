@@ -13,8 +13,8 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
     property name="created" ormtype="timestamp";
     property name="edited" ormtype="timestamp";
 
-    property name="linkedTo" fieldtype="many-to-one" cfc="transaction" fkcolumn="linkedTransId";
-    property name="linkedFrom" fieldtype="one-to-many" cfc="transaction" fkcolumn="linkedTransId" inverse="true";
+    property name="linkedTo" fieldtype="one-to-one" cfc="transaction" fkcolumn="linkedTransId";
+    property name="linkedFrom" fieldtype="one-to-many" cfc="transaction" fkcolumn="linkedTransId" mappedby="linkedTo";
     property name="isHidden" default="0";
     
     public void function save() {

@@ -1,5 +1,6 @@
 component output="false" accessors="true" {
     property name="userService";
+    property name="limitedResultsCount" default=100;
 
     public component function getTransactionByid(required numeric id){
         var transaction = entityLoadByPk( "transaction", arguments.id);
@@ -42,7 +43,7 @@ component output="false" accessors="true" {
                 WHERE account = :account
                 and isHidden = 0
                 ORDER BY t.transactionDate desc, t.id desc
-            ",{account:arguments.account, maxresults: 50});
+            ",{account:arguments.account}, false, {maxResults:variables.limitedResultsCount});
         }
     }
 
@@ -78,8 +79,9 @@ component output="false" accessors="true" {
                 WHERE (a = :account #includeSubAccountsClause#)
                 AND   t.verifiedDate #verifiedCondition#
                 and   isHidden = 0
-                ORDER BY t.transactionDate desc
-            ",{account:arguments.account});
+                ORDER BY t.transactionDate desc",
+            {account:arguments.account}, false, 
+            {maxResults:variables.limitedResultsCount} );
         }
     }
 
