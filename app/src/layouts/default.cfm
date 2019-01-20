@@ -62,9 +62,8 @@
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#buildUrl('schedular.autoPaymentList')#">Automatic Payments</a>
                                     <a class="dropdown-item" href="#buildUrl('user.checkbookRounding')#">Add Auto Rounding</a>
+                                    <a class="dropdown-item" href="#buildUrl('user.manageCategories')#">Manage Categories</a>
                                     <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
-                                    <a class="dropdown-item" href="TRN_500.php">Manage Categories</a>
-                                    <a class="dropdown-item" href="TRN_700.php">Manage Bills</a>
                                     <cfif getEnvironment() eq "Dev">
                                         <a class="dropdown-item" href="#buildUrl('admin.devToggles')#">Dev toggles</a>
                                     </cfif>

@@ -65,7 +65,6 @@ component name="transfer" accessors=true {
 
     public void function after( struct rc = {} ){
         rc.accounts = accountService.getAccounts();
-        rc.categories = categoryService.getCategories();
     }
     
 }

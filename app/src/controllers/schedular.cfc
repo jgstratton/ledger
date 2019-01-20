@@ -28,9 +28,9 @@ component name="schedular" output="false" accessors=true {
 
     public void function autoPaymentEditModal(required struct rc) {
         rc.accounts = accountService.getAccounts();
-        rc.categories = categoryService.getCategories();
         rc.schedularTypes = schedularService.getSchedularTypes();
         rc.eventGenerator = eventGeneratorService.getEventGeneratorById(rc.eventGeneratorId);
+        rc.categories = categoryService.getCategories(rc.eventGenerator);
         rc['#rc.eventGenerator.getGeneratorType()#Generator'] = rc.eventGenerator;
         rc.activeTab = rc.eventGenerator.getGeneratorType();
 

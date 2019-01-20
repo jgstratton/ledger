@@ -94,6 +94,6 @@ component name="account" output="false"  accessors=true {
 
     public void function after( struct rc = {} ){
         rc.accounts = accountService.getAccounts();
-        rc.categories = categoryService.getCategories();
+        rc.categories = categoryService.getCategories(rc.transaction);
     }
 }

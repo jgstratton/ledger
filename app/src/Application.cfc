@@ -105,22 +105,25 @@ component extends="framework.one" output="false" {
 		}
 	}
 
-	public void function setupRequest() {  
-		if(structKeyExists(url, "init")) { // use index.cfm?init to reload ORM
+	public void function setupRequest() {
+		//use init to reload application and refresh all migrations (start from scratch)
+		if (url.keyExists("init")) {
 			setupApplication();
 			StructClear(Session);
 			setupSession();
 			ormReload();
-			location(url="index.cfm",addToken=false);
-			
-		} else if(structkeyexists(url,"ormreload") or this.getEnvironment() eq 'dev') {
-			
+			location(url="index.cfm",addToken=false);	
+		} else if(structkeyexists(url,"ormreload") or this.getEnvironment() eq 'dev') {	
 			ormReload();
 		}
 
-		if(structkeyexists(url,"reloadSession")){
+		if (url.keyExists("reloadSession")) {
 			StructClear(Session);
 			setupSession();
+		}
+		
+		if (url.keyExists('migrate')) {
+			migrate();
 		}
 
 		if(session.loggedin){

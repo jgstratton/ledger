@@ -69,9 +69,20 @@ header{
 .nav-2 .dropdown-item:not(:disabled):hover{
     color: #16181b !important;
 }
-.nav-2 .badge{
-    
+
+.dropdown-menu {
+    background-color: #343a40!important;
+    border:none;
 }
+.dropdown-item {
+    color: rgba(255,255,255,.5);
+}
+.dropdown-item:focus, .dropdown-item:hover {
+    color: rgba(255,255,255,.75);
+    text-decoration: none;
+    background-color: inherit;
+}
+
 form{
     margin:0;
 }
