@@ -5,6 +5,7 @@ component name="account" output="false"  accessors=true {
     property categoryService;
     property transferService;
     property alertService;
+    property checkbookSummaryService;
     
     public void function init(fw){
         variables.fw=arguments.fw;
@@ -30,7 +31,7 @@ component name="account" output="false"  accessors=true {
                 alertService.setTitle("danger","Please correct the follow errors:");
                 alertService.addMultiple("danger",errors);
             } else {
-                transactionService.save(transaction);
+                transactionService.saveTransaction(transaction);
                 checkbookSummaryService.transferSummaryRounding();
                 rc.lastTransactionid = transaction.getid();
                 variables.fw.redirect(action='transaction.#rc.returnTo#', append="lastTransactionid,accountid");

@@ -3,6 +3,7 @@ component output="false" accessors="true" {
     property name="limitedResultsCount" default=100;
 
     public component function getTransactionByid(required numeric id){
+        
         var transaction = entityLoadByPk( "transaction", arguments.id);
         if (userService.checkTransaction(transaction)) {
             return transaction;
@@ -30,7 +31,7 @@ component output="false" accessors="true" {
         }
     }
 
-    public void function save( required transaction transaction ){
+    public void function saveTransaction( required transaction transaction){
         if (userService.checkTransaction(arguments.transaction)) {
             EntitySave(arguments.transaction);
         }

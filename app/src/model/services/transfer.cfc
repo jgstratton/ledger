@@ -30,8 +30,10 @@ component output="false" accessors="true" {
 
     public component function createTransfer(struct properties) {
         var newTransfer = variables.getNewTransferBean();
-        for (var property in properties) {
-            cfinvoke(component=newTransfer, method="set#property#", value=arguments.properties[property]);
+        for (var property in arguments.properties) {
+            if (!isNull(arguments.properties[property])) {
+                cfinvoke(component=newTransfer, method="set#property#", value=arguments.properties[property]);
+            }
         }
         return newTransfer;
     }

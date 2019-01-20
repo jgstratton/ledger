@@ -33,10 +33,9 @@ component accessors=true  {
 	public void function save(){
 		prepareSave();
 		transaction{
-			transactionService.save(getFromTransaction());
-			transactionService.save(getToTransaction());	
+			transactionService.saveTransaction(getFromTransaction());
+			transactionService.saveTransaction(getToTransaction());	
 		}
-		checkbookSummaryService.transferSummaryRounding();
 	}
 
 	public number function getFromAccountID(){
@@ -80,8 +79,8 @@ component accessors=true  {
 			var toTransaction = transactionService.createEmptyTransaction();
 			var fromTransaction = transactionService.createEmptyTransaction();
 		}
-		this.setFromTransaction(fromTransaction);
-		this.setToTransaction(toTransaction);
+		setFromTransaction(fromTransaction);
+		setToTransaction(toTransaction);
 		
 		fromTransaction.setAccount( getFromAccount() );
 		toTransaction.setAccount( getToAccount() );
@@ -95,7 +94,7 @@ component accessors=true  {
 		toTransaction.setCategory( categoryService.getCategoryByName('Transfer Into') );
 		fromTransaction.setLinkedTo(toTransaction);
 
-		if (accountService.hasCommonParent(fromAccount,toAccount)) {
+		if (accountService.hasCommonParent( getFromAccount(), getToAccount()) ) {
 			fromTransaction.setVerifiedDate(now());
 			toTransaction.setVerifiedDate(now());
 		}
