@@ -1,10 +1,10 @@
 component accessors="true" {
-    property alertService;
-
     property name="message" default="";
     property name="errors" type="array";
 
     public component function init() {
+        variables.beanFactory = application.beanFactory;
+        variables.alertService = beanFactory.getBean("alertService");
         setErrors(arrayNew());
         return this;
     }
@@ -24,8 +24,12 @@ component accessors="true" {
         return getStatus() == 'success';
     }
 
-    public boolean function generateAlerts(){
-        alertService.generateAlerts('danger',getErrors());
+    public void function generateAlerts(){
+        if (getErrors().len()) {
+            alertService.addMultiple('danger',getErrors());
+        } else {
+            alertService.setTitle('success',getMessage());
+        }
     }
 
     public void function appendResponseErrors(required component secondaryResponse) {

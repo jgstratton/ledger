@@ -55,6 +55,25 @@ component accessors="true" {
         return response;
     }
 
+    public beans.response function getValidateCategory(required struct rc){
+        var response = new beans.response();
+        proccessMissingParameters(rc, response, [
+            {name: 'name', errorMsg: "Please provide a name for this category"},
+            {name: 'multiplier', errorMsg: "You must indicate if this is a income or expensive category"}
+        ]);
+
+        return response;
+    }
+
+    public beans.response function validateMissingParameters(required struct rc, required array parameters) {
+        var response = new beans.response();
+        proccessMissingParameters(arguments.rc, response, arguments.parameters);
+        return response;
+    }
+
+    
+/** private functions **/
+
     private boolean function schedularParameterIsMissing(required struct rc, required component schedularType, required string parameterName) {
         if (!schedularService.schedularParameterValidForType(arguments.parameterName, arguments.schedularType)) {
             return false;
@@ -63,6 +82,14 @@ component accessors="true" {
             return false;
         }
         return true;
+    }
+
+    private void function proccessMissingParameters(required struct rc, required component response, required array parameters) {
+        for (var param in arguments.parameters) {
+            if (parameterIsMissing(rc, param.name)) {
+                response.addError(param.errorMsg);
+            }
+        }
     }
 
     private boolean function parameterIsMissing(required struct rc, required string key) {
