@@ -34,7 +34,8 @@ component persistent="true" table="accounts" accessors="true" {
         return ORMExecuteQuery("
             from account a 
             where a.linkedAccount = :account
-            and a <> :account" , 
+            and a <> :account
+            and a.deleted is null" , 
         {account: this});
     }
 

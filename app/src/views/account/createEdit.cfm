@@ -87,34 +87,33 @@
         </cfif>
     </form>
 
+    <script>
+        viewScripts.add( function(){
+            "use strict";
+
+            var $typeSelect = $("[name='accountTypeId']"),
+                $linkedAccount = $("##linkedAccount"),
+                $btnDelete = $("[data-delete]"),
+                accountid = $("[name='accountid']").val(),
+
+                toggle = function(){
+                    if($typeSelect.find("option:selected").data('virtual') == 0){
+                        $linkedAccount.collapse('hide');
+                    } else {
+                        $linkedAccount .collapse('show');
+                    }
+                },
+
+                deleteAccount = function(){
+                    jConfirm('Delete this account?', function(){
+                        post("#buildurl('account.delete')#", {accountid: accountid}) 
+                    });
+                };
+
+            $typeSelect.change(toggle);
+            $btnDelete.click(deleteAccount);
+            toggle();
+        });
+
+    </script>
 </cfoutput>
-
-<script>
-    viewScripts.add( function(){
-        "use strict";
-
-        var $typeSelect = $("[name='accountTypeId']"),
-            $linkedAccount = $("#linkedAccount"),
-            $btnDelete = $("[data-delete]"),
-            accountid = $("[name='accountid']").val(),
-
-            toggle = function(){
-                if($typeSelect.find("option:selected").data('virtual') == 0){
-                    $linkedAccount.collapse('hide');
-                } else {
-                    $linkedAccount .collapse('show');
-                }
-            },
-
-            deleteAccount = function(){
-                jConfirm('Delete this account?', function(){
-                    post(root_path + 'account/delete', {accountid: accountid}) 
-                });
-            };
-
-        $typeSelect.change(toggle);
-        $btnDelete.click(deleteAccount);
-        toggle();
-    });
-
-</script>
