@@ -7,7 +7,7 @@
 
     <div id="#local.viewId#">
 
-        <h6 class="small text-muted">Recent Transactions</h6>
+        <h6 class="small text-muted sm-pad">Recent Transactions</h6>
 
         <table class="table">
             <col style="width:20px">

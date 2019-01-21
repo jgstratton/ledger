@@ -1,7 +1,7 @@
+<cfparam name="rc.roundingModular" default="1">
 <cfoutput>
     <div class="sm-pad">
-                
-
+            
         #view("includes/alerts")#
         <h3>
             <i class="fa fa-exchange"></i> Auto Rounding / Savings 

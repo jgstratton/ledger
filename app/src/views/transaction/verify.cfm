@@ -10,13 +10,13 @@
         <div id="#local.viewId#">
             
             <cfif local.transactions.len()>
-                <div class="row pad-v-10">
-                    <div class="col text-left">
+                <div class="row pad-v-10 sm-pad">
+                    <div class="col-9 text-left">
                         <cfif rc.account.hasSubAccount()>
                             <label><input type="checkbox" data-include-subaccounts value="1" #checkif(rc.includeSubaccounts)#> Include transactions from sub accounts.</label>
                         </cfif>
                     </div>
-                    <div class="col text-right">
+                    <div class="col-3 text-right">
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-reload><i class="fa fa-refresh"></i> Refresh</button>
                     </div>
                 </div>  

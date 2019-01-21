@@ -15,34 +15,11 @@ component name="account" output="false"  accessors=true {
         param name="rc.returnTo" default="#variables.fw.getSectionAndItem()#";
     }
 
-    private void function update( required struct rc ){
-        var transaction = rc.transaction;
-        var errors = [];
-
-        if (StructKeyExists(rc,'submitTransaction')){
-            variables.fw.populate(transaction);
-            transaction.setCategory(categoryService.getCategoryById(rc.category));
-            if (rc.keyExists('newAccountId')) {
-                transaction.setAccount(accountService.getAccountById(rc.newAccountId));
-            }
-            errors = transaction.validate();
-
-            if (arrayLen(errors)){
-                alertService.setTitle("danger","Please correct the follow errors:");
-                alertService.addMultiple("danger",errors);
-            } else {
-                transactionService.saveTransaction(transaction);
-                checkbookSummaryService.transferSummaryRounding();
-                rc.lastTransactionid = transaction.getid();
-                variables.fw.redirect(action='transaction.#rc.returnTo#', append="lastTransactionid,accountid");
-            }
-        }
-    }
-
     public void function newTransaction( struct rc = {} ){
         rc.account = accountService.getAccountByID(rc.accountid);
         rc.transaction = transactionService.createTransaction(rc.account);
         rc.transactions = transactionService.getRecentTransactions(rc.account);
+        rc.categories = categoryService.getCategories();
         variables.update(rc);
     }
 
@@ -50,6 +27,7 @@ component name="account" output="false"  accessors=true {
         rc.formAction = "transaction.edit";
         rc.transaction = transactionService.getTransactionById(rc.transactionid);
         rc.account = rc.transaction.getAccount();
+        rc.categories = categoryService.getCategories(rc.transaction);
         variables.update(rc);
     }
 
@@ -94,6 +72,32 @@ component name="account" output="false"  accessors=true {
 
     public void function after( struct rc = {} ){
         rc.accounts = accountService.getAccounts();
-        rc.categories = categoryService.getCategories(rc.transaction);
     }
+
+/** Private functions **/
+
+    private void function update( required struct rc ){
+        var transaction = rc.transaction;
+        var errors = [];
+
+        if (StructKeyExists(rc,'submitTransaction')){
+            variables.fw.populate(transaction);
+            transaction.setCategory(categoryService.getCategoryById(rc.category));
+            if (rc.keyExists('newAccountId')) {
+                transaction.setAccount(accountService.getAccountById(rc.newAccountId));
+            }
+            errors = transaction.validate();
+
+            if (arrayLen(errors)){
+                alertService.setTitle("danger","Please correct the follow errors:");
+                alertService.addMultiple("danger",errors);
+            } else {
+                transactionService.saveTransaction(transaction);
+                checkbookSummaryService.transferSummaryRounding();
+                rc.lastTransactionid = transaction.getid();
+                variables.fw.redirect(action='transaction.#rc.returnTo#', append="lastTransactionid,accountid");
+            }
+        }
+    }
+
 }
