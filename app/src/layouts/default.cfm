@@ -9,7 +9,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> 
 
-        <link rel="shortcut icon" href="images/credit-card-front-152-182038.png" /> 
+        <link rel="icon" href="#application.root_path#/assets/images/credit_card.png" /> 
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
