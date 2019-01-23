@@ -20,6 +20,7 @@ component {
 
 	this.rootPath = "/app/";
 	// any mappings go here, we create one that points to the root called test.
+	this.mappings[ "/fw" ] = this.rootPath & "src/framework";
 	this.mappings[ "/tests" ] = this.rootPath & "testbox/tests";
 	this.mappings[ "/testbox" ] =  this.rootPath & "testbox";
 	this.mappings[ "/coldbox" ] = this.rootPath & "testbox/tests/resources/coldbox";
@@ -37,11 +38,7 @@ component {
 	this.ormSettings.dialect = "MicrosoftSQLServer";
 	this.ormSettings.flushatrequestend = false;
 
-	public void function onApplicationStart(){
-		application.beanFactory = new mocks.beanFactory();
-	}
 	public void function onRequestStart() {
-
 		if (structKeyExists(url,"init")){
 			this.onApplicationStart();
 		}
