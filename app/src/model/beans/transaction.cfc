@@ -14,7 +14,7 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
     property name="edited" ormtype="timestamp";
 
     property name="linkedTo" fieldtype="one-to-one" cfc="transaction" fkcolumn="linkedTransId";
-    property name="linkedFrom" fieldtype="one-to-many" cfc="transaction" fkcolumn="linkedTransId" mappedby="linkedTo";
+    property name="linkedFrom" fieldtype="one-to-one" cfc="transaction" mappedby="linkedTo";
     property name="isHidden" default="0";
     
     public void function save() {
@@ -69,8 +69,7 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
         if(this.hasLinkedTo()){
             return this.getLinkedTo();
         } elseif ( this.hasLinkedFrom()) {
-            var linkedFromArray = this.getLinkedFrom();
-            return linkedFromArray[1];
+            return this.getLinkedFrom();
         }
     }
 
