@@ -76,7 +76,9 @@ component extends="framework.one" output="false" {
 		logger = new services.logger();
 		logger.debug("(Request started)");
 		super.onRequestStart(arguments.targetPath);
+		request.beanfactory = application.beanfactory;
 	}
+	
 	/**
 	 * The setupApplication function is called each time the framework is reloaded.
 	 */

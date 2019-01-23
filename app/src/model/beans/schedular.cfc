@@ -15,17 +15,12 @@ component persistent="true" table="schedular" accessors="true" {
     property name="dayInterval" default="1";
     property name="status" default="0";
 
-    public void function init(){
-        variables.beanFactory = application.beanFactory;
-        variables.schedularService = beanFactory.getBean("schedularService");
-    }
-
     public void function save(){
-        schedularService.saveSchedular(this);
+        getSchedularService().saveSchedular(this);
     }
 
     public void function setSchedularTypeID(required numeric schedularTypeId) {
-        setSchedularType(schedularService.getSchedularTypeById(arguments.schedularTypeId));
+        setSchedularType(getSchedularService().getSchedularTypeById(arguments.schedularTypeId));
     }
 
     public void function setStartDate(required string startDate) {
@@ -36,6 +31,14 @@ component persistent="true" table="schedular" accessors="true" {
 
     public void function setschedularStatus(required boolean schedularStatus) {
         setStatus(arguments.schedularStatus);
+    }
+
+    private component function getBeanFactory() {
+        return request.beanfactory;
+    }
+
+    private component function getSchedularService() {
+        return getBeanfactory().getBean("schedularService");
     }
     
 }

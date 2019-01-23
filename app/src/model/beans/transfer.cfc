@@ -1,10 +1,4 @@
 component accessors=true  {
-	property beanFactory;
-	property transactionService;
-	property categoryService;
-	property accountService;
-	property checkbookSummaryService;
-	
 	property name="fromAccount" type="component";
     property name="toAccount" type="component";
     property name="amount";
@@ -13,14 +7,6 @@ component accessors=true  {
 	property name="fromTransaction" type="component";
 	property name="toTransaction" type="component";
 	
-	public any function init() {
-		variables.beanFactory = application.beanFactory;
-		variables.transactionService = beanFactory.getBean("TransactionService");
-		variables.categoryService = beanFactory.getBean("categoryService");
-		variables.accountService = beanFactory.getBean("accountService");
-		variables.checkbookSummaryService = beanFactory.getBean("checkbookSummaryService");
-	}
-
 	public void function populateFromTransaction(any fromTransaction){
 		setFromTransaction( arguments.fromTransaction );
 		setFromAccount( arguments.fromTransaction.getAccount() );
@@ -33,8 +19,8 @@ component accessors=true  {
 	public void function save(){
 		prepareSave();
 		transaction{
-			transactionService.saveTransaction(getFromTransaction());
-			transactionService.saveTransaction(getToTransaction());	
+			getTransactionService().saveTransaction(getFromTransaction());
+			getTransactionService().saveTransaction(getToTransaction());	
 		}
 	}
 
@@ -54,13 +40,13 @@ component accessors=true  {
 
 	public void function setFromAccountId(numeric id){
 		if(arguments.id > 0){
-			setFromAccount( accountService.getAccountById(arguments.id) );
+			setFromAccount( getAccountService().getAccountById(arguments.id) );
 		}
 	}
 	
 	public void function setToAccountId(numeric id){
 		if(arguments.id > 0){
-			setToAccount( accountService.getAccountById(arguments.id) );
+			setToAccount( getAccountService().getAccountById(arguments.id) );
 		}
 	}
 
@@ -76,8 +62,8 @@ component accessors=true  {
 			var toTransaction = getFromTransaction().getLinkedTo();
 			var fromTransaction = getFromTransaction();
 		} else {
-			var toTransaction = transactionService.createEmptyTransaction();
-			var fromTransaction = transactionService.createEmptyTransaction();
+			var toTransaction = getTransactionService().createEmptyTransaction();
+			var fromTransaction = getTransactionService().createEmptyTransaction();
 		}
 		setFromTransaction(fromTransaction);
 		setToTransaction(toTransaction);
@@ -90,15 +76,30 @@ component accessors=true  {
 		toTransaction.setName( getName() );
 		fromTransaction.setTransactionDate( getTransferDate() );
 		toTransaction.setTransactionDate( getTransferDate() );
-		fromTransaction.setCategory( categoryService.getCategoryByName('Transfer From') );
-		toTransaction.setCategory( categoryService.getCategoryByName('Transfer Into') );
+		fromTransaction.setCategory( getCategoryService().getCategoryByName('Transfer From') );
+		toTransaction.setCategory( getCategoryService().getCategoryByName('Transfer Into') );
 		fromTransaction.setLinkedTo(toTransaction);
 
-		if (accountService.hasCommonParent( getFromAccount(), getToAccount()) ) {
+		if (getAccountService().hasCommonParent( getFromAccount(), getToAccount()) ) {
 			fromTransaction.setVerifiedDate(now());
 			toTransaction.setVerifiedDate(now());
 		}
+	}
 
+	private component function getBeanFactory(){
+		return request.beanfactory;
+	}
+
+	private component function getTransactionService() {
+		return getBeanFactory().getBean("transactionService");
+	}
+
+	private component function getCategoryService() {
+		return getBeanFactory().getBean("categoryService");
+	}
+
+	private component function getAccountService() {
+		return getBeanFactory().getBean("accountService");
 	}
 
 }
