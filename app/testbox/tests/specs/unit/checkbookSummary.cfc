@@ -1,4 +1,4 @@
-component displayName="Transfer Service Unit Tests" extends="testbox.system.BaseSpec" {
+component displayName="Transfer Service Unit Tests" extends="resources.BaseSpec" {
     
     function hideFromTransactionTest() {
         transferService = new services.transfer();

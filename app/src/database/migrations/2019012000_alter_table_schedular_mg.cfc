@@ -12,13 +12,6 @@
 	</cffunction>
 
 	<cffunction name="migrate_down" access="public" output="true" returntype="void">
-
-		<cfquery>
-			ALTER TABLE schedular MODIFY monthsOfYear VARCHAR(20);
-		</cfquery>
-		<cfquery>
-			ALTER TABLE schedular MODIFY daysOfMonth VARCHAR(50);
-		</cfquery>
-
+		<!--- No roll back --->
 	</cffunction>
 </cfcomponent>

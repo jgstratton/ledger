@@ -1,15 +1,14 @@
-component displayName="Account Balance Calculations" extends="testbox.system.BaseSpec" {
+component displayName="Account Balance Calculations" extends="resources.BaseSpec" {
     
     private component function setupTestTransactionsAndGetAccount() {
-        var transactionGenerator = new generators.transaction(); 
-        var parentAccount = new generators.account();
-        var subAccount = new generators.account({linkedAccount: parentAccount});
-        parentAccount.addTransactions( transactionGenerator.generateTransaction( {amount: '1.01', verifiedDate:'2000-01-01' } ));
-        parentAccount.addTransactions( transactionGenerator.generateTransaction( {amount: '2.06', verifiedDate:'2000-01-01' } ));
-        parentAccount.addTransactions( transactionGenerator.generateTransaction( {amount: '3.00'} ));
-        subAccount.addTransactions( transactionGenerator.generateTransaction( {amount: '10.50', verifiedDate:'2000-01-01' } ));
-        subAccount.addTransactions( transactionGenerator.generateTransaction( {amount: '12.51', verifiedDate:'2000-01-01' } ));
-        subAccount.addTransactions( transactionGenerator.generateTransaction( {amount: '13.11'} ));
+        var parentAccount = getAccountFactory().getAccount();
+        var subAccount = getAccountFactory().getAccount({linkedAccount: parentAccount});
+        parentAccount.addTransactions( getTransactionFactory().createTransaction( {amount: '1.01', verifiedDate:'2000-01-01' } ));
+        parentAccount.addTransactions( getTransactionFactory().createTransaction( {amount: '2.06', verifiedDate:'2000-01-01' } ));
+        parentAccount.addTransactions( getTransactionFactory().createTransaction( {amount: '3.00'} ));
+        subAccount.addTransactions( getTransactionFactory().createTransaction( {amount: '10.50', verifiedDate:'2000-01-01' } ));
+        subAccount.addTransactions( getTransactionFactory().createTransaction( {amount: '12.51', verifiedDate:'2000-01-01' } ));
+        subAccount.addTransactions( getTransactionFactory().createTransaction( {amount: '13.11'} ));
         ormFlush();
         return parentAccount;
     }

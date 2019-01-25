@@ -1,4 +1,4 @@
-component displayName="Account Integration Tests" extends="testbox.system.BaseSpec" {
+component displayName="Account Integration Tests" extends="resources.BaseSpec" {
     // executes before all tests
     function beforeTests() {}
     // executes after all tests
@@ -17,11 +17,11 @@ component displayName="Account Integration Tests" extends="testbox.system.BaseSp
 
     function getSubAccountsTest() {
         transaction {
-            var parentAccount = new generators.account({name: 'parent'});
-            var nonParentAccount = new generators.account({name: 'not-parent'});
-            var childAccount = new generators.account({name: 'child-1', linkedAccount: parentAccount});
-            var childAccount2 = new generators.account({name: 'child-2', linkedAccount: parentAccount});
-            var nonChildAccount = new generators.account({name: 'non-child', linkedAccount: nonParentAccount});
+            var parentAccount = getAccountFactory().getAccount({name: 'parent'});
+            var nonParentAccount = getAccountFactory().getAccount({name: 'not-parent'});
+            var childAccount = getAccountFactory().getAccount({name: 'child-1', linkedAccount: parentAccount});
+            var childAccount2 = getAccountFactory().getAccount({name: 'child-2', linkedAccount: parentAccount});
+            var nonChildAccount = getAccountFactory().getAccount({name: 'non-child', linkedAccount: nonParentAccount});
 
             $assert.isEqual(2,arrayLen(parentAccount.getSubAccounts()));
             transaction action="rollback";
@@ -29,13 +29,13 @@ component displayName="Account Integration Tests" extends="testbox.system.BaseSp
     }
 
     function getLinkedAccountIdShouldReturnZeroIfNoneExistsTest() {
-        var account = new generators.account({name: 'parent'});
+        var account = getAccountFactory().getAccount({name: 'parent'});
         $assert.isEqual(0,account.getlinkedAccountId());
     }
 
     function getLinkedAccountIdShouldNotBeZeroIfExistsTest() {
-        var parentAccount = new generators.account();
-        var childAccount = new generators.account({linkedAccount:parentAccount});
+        var parentAccount = getAccountFactory().getAccount();
+        var childAccount = getAccountFactory().getAccount({linkedAccount:parentAccount});
         var linkedAccountId = childAccount.getLinkedAccountId();
 
         $assert.isNotEqual(0,linkedAccountId);

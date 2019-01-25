@@ -1,7 +1,7 @@
 /**
  * The transaction generator is a type of event that will generate transactions
  * */
-component persistent="true" table="transactionGenerators" accessors="true" extends="eventGenerator" joincolumn="eventGenerator_id" { 
+component persistent="true" table="transactionGenerators" accessors="true" extends="eventGenerator" joincolumn="eventGenerator_id" {   
    property name="generatorType" persistent="false" default="transaction";
    property name="generatorIcon" persistent="false" default="fa fa-usd";
    property name="id" generator="native" ormtype="integer" fieldtype="id";
@@ -12,13 +12,6 @@ component persistent="true" table="transactionGenerators" accessors="true" exten
    property name="note" ormtype="string" length="200";
    property name="deferDate" ormType="integer" default="0";
 
-   public component function init() {
-		variables.beanFactory = application.beanFactory;
-		variables.categoryService = beanFactory.getBean("categoryService");
-      variables.accountService = beanFactory.getBean("accountService");
-      return this;
-   }
-   
    public component function getSourceAccount(){
       return getAccount();
    }
@@ -38,12 +31,25 @@ component persistent="true" table="transactionGenerators" accessors="true" exten
    }
 
    public void function setCategoryId(required numeric categoryId) {
-      var category = categoryService.getCategoryById(arguments.categoryId);
+      var category = getCategoryService().getCategoryById(arguments.categoryId);
       setCategory(category);
    }
 
    public void function setAccountId(required numeric accountId) {
-      var account = accountService.getAccountById(arguments.accountId);
+      var account = getAccountService().getAccountById(arguments.accountId);
       setAccount(account);
    }
+
+   private component function getBeanFactory() {
+      return request.beanfactory;
+   }
+
+   private component function getCategoryService() {
+      return getBeanFactory().getBean("categoryService");
+   }
+
+   private component function getAccountService() {
+      return getBeanfactory().getBean("accountService");
+   }
+
 }

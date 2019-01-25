@@ -1,17 +1,15 @@
 component accessors="true" {
-    
+
     public component function init() {
-	    variables.beanFactory = application.beanFactory;
-		variables.categoryService = beanFactory.getBean("categoryService");
-        variables.userService = beanFactory.getBean("userService");
         variables.allCategoryData = [];
         variables.activeCategories = [];
         variables.inactiveCategories = [];
-        populateCategoryData();
+        variables.isPopulated = false;
         return this;
     }
 
     public array function getInactiveCategories(){
+        populateCategoryData();
         return variables.inactiveCategories;
     }
 
@@ -26,43 +24,46 @@ component accessors="true" {
 /** Private functions **/
 
     private void function populateCategoryData() {
-        var qryActiveCategories = queryExecute("
-            Select 
-                categories.id, 
-                categories.name, 
-                categories.categoryType_id,
-                categoryTypes.multiplier,
-                coalesce(transactionCount,0) as transactionCount,
-                coalesce(totalAmount,0) as totalAmount,
-                CASE 
-                    WHEN userCategories.category_id is null THEN 0
-                    ELSE 1
-                END as isActive
-            From categories
-            left join (
-                Select cat.id, count(*) as transactionCount, sum(amount) as totalAmount
-                from transactions trans
-                inner join categories cat 
-                    on cat.id = trans.category_id
-                inner join accounts act 
-                    on trans.account_id = act.id
-                    and act.user_id = :user_id
-                group by cat.id
-            ) catCounts
-                on categories.id = catCounts.id
-            Left Join userCategories 
-                on categories.id = userCategories.category_id
-                and userCategories.user_id = :user_id
-            Left join categoryTypes
-                on categories.categoryType_id = categoryTypes.id
-            Where categories.name not in ('Transfer From','Transfer Into')
-            and (coalesce(transactionCount,0) or userCategories.category_id is not null)
-            Order by categories.name",         
-        { user_id: userService.getCurrentUser().getId() })
+        if (!variables.isPopualted) {
+            var qryActiveCategories = queryExecute("
+                Select 
+                    categories.id, 
+                    categories.name, 
+                    categories.categoryType_id,
+                    categoryTypes.multiplier,
+                    coalesce(transactionCount,0) as transactionCount,
+                    coalesce(totalAmount,0) as totalAmount,
+                    CASE 
+                        WHEN userCategories.category_id is null THEN 0
+                        ELSE 1
+                    END as isActive
+                From categories
+                left join (
+                    Select cat.id, count(*) as transactionCount, sum(amount) as totalAmount
+                    from transactions trans
+                    inner join categories cat 
+                        on cat.id = trans.category_id
+                    inner join accounts act 
+                        on trans.account_id = act.id
+                        and act.user_id = :user_id
+                    group by cat.id
+                ) catCounts
+                    on categories.id = catCounts.id
+                Left Join userCategories 
+                    on categories.id = userCategories.category_id
+                    and userCategories.user_id = :user_id
+                Left join categoryTypes
+                    on categories.categoryType_id = categoryTypes.id
+                Where categories.name not in ('Transfer From','Transfer Into')
+                and (coalesce(transactionCount,0) or userCategories.category_id is not null)
+                Order by categories.name",         
+            { user_id: getUserService().getCurrentUser().getId() })
 
-        variables.allCategoryData = convertQueryToArrayOfStruct(qryActiveCategories);
+            variables.allCategoryData = convertQueryToArrayOfStruct(qryActiveCategories);
 
-        populateActiveInactiveCategories();
+            populateActiveInactiveCategories();
+            variables.isPopualted = true;
+        }
     }
 
     private void function populateActiveInactiveCategories(){
@@ -85,5 +86,13 @@ component accessors="true" {
             returnArray.append(rowStruct);
         }
         return returnArray;
+    }
+
+    private component function getBeanFactory() {
+        return request.beanfactory;
+    }
+
+    private component function getUserService() {
+        return application.getBean('userService');
     }
 }
