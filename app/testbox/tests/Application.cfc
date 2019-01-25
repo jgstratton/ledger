@@ -23,9 +23,10 @@ component {
 	this.mappings[ "/fw" ] = this.rootPath & "src/framework";
 	this.mappings[ "/tests" ] = this.rootPath & "testbox/tests";
 	this.mappings[ "/testbox" ] =  this.rootPath & "testbox";
+	this.mappings[ "/resources" ] = this.rootPath & "testbox/tests/resources";
 	this.mappings[ "/coldbox" ] = this.rootPath & "testbox/tests/resources/coldbox";
 	this.mappings[ "/generators" ] = this.rootPath & "testbox/tests/resources/generators";
-	this.mappings[ "/mocks" ] = this.rootPath & "testbox/tests/resources/mocks";
+	this.mappings[ "/factories" ] = this.rootPath & "testbox/tests/resources/factories";
 
 	this.mappings[ "/beans" ] = this.rootPath & "src/model/beans";
 	this.mappings[ "/controllers" ] = this.rootPath & "src/controllers";
@@ -38,10 +39,17 @@ component {
 	this.ormSettings.dialect = "MicrosoftSQLServer";
 	this.ormSettings.flushatrequestend = false;
 
+	this.ormsettings = {
+		cfclocation = [this.mappings[ "/beans" ]],
+		dbcreate = "none",	//using migrations for db table creation instead of letting hibernate create the tables
+		dialect = "MySQL",         
+		eventhandling = "true",
+		eventhandler = "beans.eventhandler",
+		logsql = "true",
+		flushatrequestend = false
+	};
+
 	public void function onRequestStart() {
-		if (structKeyExists(url,"init")){
-			this.onApplicationStart();
-		}
 		local.migrate = new migrations.migrate();
 		if (structKeyExists(url,'reload')) {
 			local.migrate.refresh_migrations();
