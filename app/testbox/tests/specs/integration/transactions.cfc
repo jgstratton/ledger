@@ -1,26 +1,32 @@
-component displayName="Transaction Integration Tests" extends="testbox.system.BaseSpec" {
+component displayName="Transaction Integration Tests" extends="resources.BaseSpec" {
     
     // executes before all tests
-    function beforeTests() {}
+    function beforeTests() {
+        request.user = getUserFactory().getTestUser();
+
+        beanFactory = new factories.beanFactory("/beans, /services");
+        beanFactory.populateBeanFactory([
+            {beanName="transactionService", dottedPath="services.transaction"}
+        ]);
+    }
     // executes after all tests
     function afterTests() {}
 
     private component function setupTestTransactionsAndGetAccount() {
-        var transactionGenerator = new generators.transaction(); 
-        var parentAccount = new generators.account();
-        var subAccount = new generators.account({linkedAccount: parentAccount});
-        parentAccount.addTransactions( transactionGenerator.generateTransaction( {verifiedDate:'2000-01-01' } ));
-        parentAccount.addTransactions( transactionGenerator.generateTransaction( {verifiedDate:'2000-01-01' } ));
-        parentAccount.addTransactions( transactionGenerator.generateTransaction());
-        subAccount.addTransactions( transactionGenerator.generateTransaction( {verifiedDate:'2000-01-01' } ));
-        subAccount.addTransactions( transactionGenerator.generateTransaction( {verifiedDate:'2000-01-01' } ));
-        subAccount.addTransactions( transactionGenerator.generateTransaction());
+        var parentAccount = getAccountFactory().getAccount();
+        var subAccount = getAccountFactory().getAccount( {linkedAccount: parentAccount} );
+        parentAccount.addTransactions( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
+        parentAccount.addTransactions( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
+        parentAccount.addTransactions( getTransactionFactory().createTransaction());
+        subAccount.addTransactions( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
+        subAccount.addTransactions( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
+        subAccount.addTransactions( getTransactionFactory().createTransaction());
         ormFlush();
         return parentAccount;
     }
 
     function getUnverifiedTransactionsWithoutSubAccountsTest() {
-        transactionService = new services.transaction();
+        transactionService = beanFactory.getBean("transactionService");
         transaction {
             parentAccount = setupTestTransactionsAndGetAccount();
             $assert.isEqual(1, transactionService.getUnverifiedTransactions(parentAccount).len());
@@ -29,7 +35,7 @@ component displayName="Transaction Integration Tests" extends="testbox.system.Ba
     }
 
     function getVerifiedTransactionsWithoutSubAccountsTest() {
-        transactionService = new services.transaction();
+        transactionService = beanFactory.getBean("transactionService");
         transaction {
             parentAccount = setupTestTransactionsAndGetAccount();
             $assert.isEqual(2, transactionService.getVerifiedTransactions(parentAccount).len());
@@ -38,7 +44,7 @@ component displayName="Transaction Integration Tests" extends="testbox.system.Ba
     }
 
     function getUnverifiedTransactionsWithSubAccountsTest() {
-        transactionService = new services.transaction();
+        transactionService = beanFactory.getBean("transactionService");
         transaction {
             var parentAccount = setupTestTransactionsAndGetAccount();
             var includeSubAccounts = true;
@@ -49,7 +55,7 @@ component displayName="Transaction Integration Tests" extends="testbox.system.Ba
     }
 
     function getVerifiedTransactionsWithSubAccountsTest() {
-        transactionService = new services.transaction();
+        transactionService = beanFactory.getBean("transactionService");
         transaction {
             var parentAccount = setupTestTransactionsAndGetAccount();
             var includeSubAccounts = true;
@@ -60,7 +66,7 @@ component displayName="Transaction Integration Tests" extends="testbox.system.Ba
     }
 
     function getTransactionsReturnsArrayOfTransactionsTest() {
-        transactionService = new services.transaction();
+        transactionService = beanFactory.getBean("transactionService");
         makePublic( transactionService, 'getTransactions' );
         transaction {
             var parentAccount = setupTestTransactionsAndGetAccount();

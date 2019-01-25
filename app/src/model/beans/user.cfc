@@ -10,10 +10,7 @@ component persistent="true" table="users" accessors="true" {
     property name="category" fieldtype="many-to-many" cfc="category" linktable="userCategories" fkcolumn="user_id" inverseJoinColumn="category_id" lazy="true";
 
     public function init(){
-        //setup private properties
         variables.cached = structnew();
-        variables.beanFactory = application.beanFactory;
-		variables.checkbookSummaryService = beanFactory.getBean("checkbookSummaryService");
     }
 
     public function save(){
@@ -32,7 +29,7 @@ component persistent="true" table="users" accessors="true" {
     }
 
     public numeric function getSummaryBalance(){
-        return checkbookSummaryService.getSummaryBalance();
+        return getCheckbookSummaryService().getSummaryBalance();
     }
 
     public numeric function getRoundingAccountId(){
@@ -44,6 +41,14 @@ component persistent="true" table="users" accessors="true" {
 
     public void function removeRoundingAccount(){
         setRoundingAccount(javaCast('null', ''));
+    }
+
+    private component function getBeanfactory() {
+        return request.beanfactory;
+    }
+
+    private component function getCheckbookSummaryService() {
+        return getBeanFactory().getBean("checkbookSummaryService");
     }
 }
 

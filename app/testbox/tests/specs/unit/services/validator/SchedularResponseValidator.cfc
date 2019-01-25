@@ -1,4 +1,4 @@
-component displayName="Validator Tests" extends="testbox.system.BaseSpec" {
+component displayName="Validator Tests" extends="resources.BaseSpec" {
     
 
     function beforeTests() {

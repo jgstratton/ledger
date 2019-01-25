@@ -1,5 +1,5 @@
 component output="false" accessors="true" {
-    property name="userService";
+    property userService;
     property name="limitedResultsCount" default=100;
 
     public component function getTransactionByid(required numeric id){

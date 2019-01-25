@@ -1,4 +1,4 @@
-component displayName="Schedular Service" extends="testbox.system.BaseSpec" {
+component displayName="Schedular Service" extends="resources.BaseSpec" {
 
     public void function setup(){
         variables.schedularService = createMock("services.schedular");

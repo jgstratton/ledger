@@ -1,4 +1,4 @@
-component displayName="Has common account test" extends="testbox.system.BaseSpec" {
+component displayName="Has common account test" extends="resources.BaseSpec" {
     // executes before all tests
     function beforeTests() {
         variables.accountService = new services.account();

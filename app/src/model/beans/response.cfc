@@ -3,8 +3,6 @@ component accessors="true" {
     property name="errors" type="array";
 
     public component function init() {
-        variables.beanFactory = application.beanFactory;
-        variables.alertService = beanFactory.getBean("alertService");
         setErrors(arrayNew());
         return this;
     }
@@ -26,9 +24,9 @@ component accessors="true" {
 
     public void function generateAlerts(){
         if (getErrors().len()) {
-            alertService.addMultiple('danger',getErrors());
+            getAlertService().addMultiple('danger',getErrors());
         } else {
-            alertService.setTitle('success',getMessage());
+            getAlertService().setTitle('success',getMessage());
         }
     }
 
@@ -36,4 +34,11 @@ component accessors="true" {
         setErrors(getErrors().append(arguments.secondaryResponse.getErrors(),true));
     }
 
+    private component function getBeanfactory() {
+        return request.beanfactory;
+    }
+
+    private component function getAlertService() {
+        return getBeanfactory().getBean("alertService");
+    }
 }

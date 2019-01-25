@@ -144,7 +144,7 @@ component persistent="true" table="accounts" accessors="true" {
     }
 
     private component function getBeanFactory(){
-        return application.beanfactory;
+        return request.beanfactory;
     }
 
     private component function getLogger(){
