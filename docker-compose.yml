@@ -68,7 +68,8 @@ services:
     volumes:
      - ./app/src:/app/src
      - ./app/testbox/tests:/app/testbox/tests
-     - ./logs/lucee/:/var/log
+     - ./logs/app/:/var/log
+     - ./logs/lucee/:/root/serverHome/WEB-INF/lucee-web/logs
      - ${CERT_BASE_PATH}:/certs
     environment:
      - MYSQL_DATABASE
