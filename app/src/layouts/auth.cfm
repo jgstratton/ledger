@@ -3,7 +3,7 @@
 
 <html>	
 	<head>
-        <title>Checkbook FW1</title>
+        <title>My Checkbook</title>
         
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">                   
         <meta charset="UTF-8">
