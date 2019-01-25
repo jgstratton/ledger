@@ -85,6 +85,12 @@
         return '';
     }
 
+    public string function clipText(required string text, required numeric charCount) {
+        if (len(arguments.text) > arguments.charCount) {
+            return left(arguments.text,arguments.charCount) & "...";
+        }
+        return arguments.text;
+    }
     /**
      * Automatically create hidden form fields for existing rc keys
      * */

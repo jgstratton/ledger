@@ -3,9 +3,13 @@
 
     <div id="#local.viewId#">
         <div class="row nav-2">
-            <div class="col text-left">
+            <div class="col-6 text-left">
                 <div class="dropdown">
-                    <button type="button" class="btn btn-link  dropdown-toggle" data-toggle="dropdown">#rc.account.getLongName()#</button>
+                    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+                        <span class="d-inline d-sm-none">#clipText(rc.account.getName(),25)#</span>
+                        <span class="d-none d-sm-inline d-md-none">#rc.account.getName()#</span>
+                        <span class="d-none d-md-inline">#rc.account.getLongName()#</span>
+                    </button>
                     <div class="dropdown-menu bg-dark">
                         <cfloop from="1" to="#arraylen(rc.accounts)#" index="local.i">
                             <cfset local.account = rc.accounts[local.i]>
@@ -17,7 +21,7 @@
                 </div>
             </div>
             
-            <div class="col text-right">
+            <div class="col-6 text-right">
                 <div>
                     Account Total - 
                     <span class="badge badge-success" data-js-hook="accountBalance">
