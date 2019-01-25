@@ -1,4 +1,4 @@
-component displayName="Schedular Tests" extends="testbox.system.BaseSpec" {
+component displayName="Schedular Tests" extends="resources.BaseSpec" {
     
     function eventGeneratorGetsScheduledTest() {
         transaction{

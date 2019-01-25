@@ -1,4 +1,4 @@
-component displayName="Reponse Test" extends="testbox.system.BaseSpec" {
+component displayName="Reponse Test" extends="resources.BaseSpec" {
 
     public void function repsponseAppenderTest(){
         var response1 = new beans.response();

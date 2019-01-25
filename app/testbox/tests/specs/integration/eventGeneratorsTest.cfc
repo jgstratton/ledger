@@ -1,4 +1,4 @@
-component displayName="Event Generator Tests" extends="testbox.system.BaseSpec" {
+component displayName="Event Generator Tests" extends="resources.BaseSpec" {
 
     function setup(){
         variables.userService = createMock("services.user");
