@@ -96,7 +96,9 @@
         <main>
             <div class="center-content">
                 <div class="container-fluid inner-content">
-                    #body#
+                    <div class="sm-pad">
+                        #body#
+                    </div>
                 </div>
             </div>
         </main>
