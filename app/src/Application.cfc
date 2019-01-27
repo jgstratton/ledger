@@ -88,7 +88,10 @@ component extends="framework.one" output="false" {
 			if (this.getEnvVar('ENABLE_SSL')) {
 				application.port = this.getEnvVar('LUCEE_SSL_PORT');
 			}
-			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#application.port#/src";
+			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#application.port#";
+			if (this.getEnvironment() == "dev") {
+				application.root_path = "#application.root_path#/src";
+			}
 			application.src_dir = "#expandPath(".")#";
 			application.version = "#this.version#";
 			application.facebook = createobject("component","model/services/facebook").init(
