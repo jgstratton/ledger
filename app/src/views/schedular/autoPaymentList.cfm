@@ -1,55 +1,55 @@
 <cfoutput>
     <div data-auto-payment-modal></div>
 
-    <div class="sm-pad">
-        #view("includes/alerts")#
-        <div class="text-right">
-            <h3 class="pull-left">Payment Schedular</h3>
-            <button type="button "class="btn btn-sm btn-primary" data-new>
-                <i class="fa fa-plus"></i> Add New
-            </button>
-        </div>
+    #view("includes/alerts")#
+    <div class="text-right">
+        <h3 class="pull-left">Payment Schedular</h3>
+        <button type="button "class="btn btn-sm btn-primary" data-new>
+            <i class="fa fa-plus"></i> Add New
+        </button>
     </div>
 
+
     <cfif rc.generators.len() eq 0>
-        <p class="text-info text-left pt-3 sm-pad">
+        <p class="text-info text-left pt-3">
             You do not have any automatic payments or transfers scheduled.
         </p>
     <cfelse>
-        <table class="table table-striped">
-            <tbody>
-                <cfloop array="#rc.generators#" item="local.eventGenerator">
-                    <tr class="#displayIf(!local.eventGenerator.isScheduled(),'text-disabled')#">
-                        <td>
-                            <cfif local.eventGenerator.isScheduled()>
-                                <i class="fa fa-calendar-check-o text-primary"></i>
-                            <cfelse>
-                                <i class="fa fa-calendar-o"></i>
-                            </cfif>
-                        </td>
-                        <td>
-                            <i class="fa fa-fw #local.eventGenerator.getGeneratoricon()#"></i>
-                            #local.eventGenerator.getEventName()#
-                        </td>
-                        <td>
-                            <span class="d-none d-md-inline">#local.eventGenerator.getGeneratorType()#</span>
-                        </td>
-                        <td class="d-none d-md-table-cell">
-                            #local.eventGenerator.getSourceAccount().getName()#
-                        </td>
-                        
-                        <td class="text-right">#dollarformat(local.eventGenerator.getAmount())#</td>
-                        <td class="text-right">
-                            <a class="btn btn-link btn-sm text-primary" data-edit data-id="#local.eventGenerator.getEventGeneratorId()#">
-                                <i class="fa fa-pencil"></i> edit
-                                
-                            </a>
-                        </td>
-                    </tr>
-                </cfloop>
-            </tbody>
-        </table>
- 
+        <div class="sm-stretch">
+            <table class="table table-striped">
+                <tbody>
+                    <cfloop array="#rc.generators#" item="local.eventGenerator">
+                        <tr class="#displayIf(!local.eventGenerator.isScheduled(),'text-disabled')#">
+                            <td>
+                                <cfif local.eventGenerator.isScheduled()>
+                                    <i class="fa fa-calendar-check-o text-primary"></i>
+                                <cfelse>
+                                    <i class="fa fa-calendar-o"></i>
+                                </cfif>
+                            </td>
+                            <td>
+                                <i class="fa fa-fw #local.eventGenerator.getGeneratoricon()#"></i>
+                                #local.eventGenerator.getEventName()#
+                            </td>
+                            <td>
+                                <span class="d-none d-md-inline">#local.eventGenerator.getGeneratorType()#</span>
+                            </td>
+                            <td class="d-none d-md-table-cell">
+                                #local.eventGenerator.getSourceAccount().getName()#
+                            </td>
+                            
+                            <td class="text-right">#dollarformat(local.eventGenerator.getAmount())#</td>
+                            <td class="text-right">
+                                <a class="btn btn-link btn-sm text-primary" data-edit data-id="#local.eventGenerator.getEventGeneratorId()#">
+                                    <i class="fa fa-pencil"></i> edit
+                                    
+                                </a>
+                            </td>
+                        </tr>
+                    </cfloop>
+                </tbody>
+            </table>
+        </div>
     </cfif>
 
     <script>

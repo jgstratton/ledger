@@ -1,4 +1,7 @@
 <cfoutput>
+    <a href="#buildURL('account.edit?accountid=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm pull-right d-none d-md-block" data-close>
+        <i class="fa fa-gear" title="account settings"></i>
+    </a>
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link #matchDisplay(getItem(),'newTransaction','active disabled')#" href="#buildurl('transaction.newTransaction?accountid=#rc.account.getid()#')#">Add Entry</a>
@@ -10,6 +13,7 @@
         <span class="nav-link  #matchDisplay(getItem(),'edit','active','disabled')#">Edit Entry</span>
         </li>
     </ul> 
+
 </cfoutput>
 
 

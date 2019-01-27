@@ -150,6 +150,12 @@
                 </cfquery>
             </cfloop>
 
+            <!--- Add all categories for this user --->
+            <cfquery>
+                Insert into userCategories(category_id, user_id)
+                Select id, 1
+                from categories
+            </cfquery>
     </cffunction>
 
     <cffunction 
