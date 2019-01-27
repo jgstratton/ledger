@@ -56,6 +56,7 @@ services:
         ENABLE_SSL: "${ENABLE_SSL}"
         CERT_FILE: "${CERT_FILE}"
         CERT_KEY_FILE: "${CERT_KEY_FILE}"
+        TIER: "${TIER}"
     container_name: "${CONTAINER_PREFIX}_lucee"
     restart: 'always'
     depends_on:
