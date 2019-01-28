@@ -1,13 +1,9 @@
 <cfset DisableLayout()>
 <!DOCTYPE html>
-
 <html>	
 	<head>
         <title>My Checkbook</title>
-        
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge">                   
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> 
+        <cfinclude template="includes/meta.cfm">
 
         <link rel="shortcut icon" href="images/credit-card-front-152-182038.png" /> 
 
@@ -21,7 +17,7 @@
             crossorigin="anonymous">
 	</head>
 
-	<body> 
+    <body> 
         <header class="bg-dark">
             <div class="center-content">
 

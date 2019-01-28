@@ -5,9 +5,7 @@
 	<head>
         <title>My Checkbook</title>
         
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge">                   
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> 
+        <cfinclude template="includes/meta.cfm">
 
         <link rel="icon" href="#application.root_path#/assets/images/credit_card.png" /> 
 

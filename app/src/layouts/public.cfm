@@ -4,11 +4,8 @@
 <html>	
 	<head>
         <title>My Checkbook</title>
+        <cfinclude template="includes/meta.cfm">
         
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge">                   
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> 
-
         <link rel="shortcut icon" href="images/credit-card-front-152-182038.png" /> 
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
