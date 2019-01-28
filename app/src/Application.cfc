@@ -146,7 +146,7 @@ component extends="framework.one" output="false" {
 		//user is used in most controllers and views
 		if(session.loggedin){
 			rc.user = request.user;
-		} else if (getSection() != 'auth') {
+		} else if (getSection() != 'auth' && getSection() != 'public') {
 			redirect("auth.login","all");
 		}
 	}
