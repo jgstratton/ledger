@@ -85,11 +85,13 @@ component extends="framework.one" output="false" {
 	 */
 	public void function setupApplication(){
 		lock scope="application" timeout="300" {
+			var protocol = "http";
 			application.port = this.getEnvVar('LUCEE_PORT');
 			if (this.getEnvVar('ENABLE_SSL')) {
 				application.port = this.getEnvVar('LUCEE_SSL_PORT');
+				protocol = "https";
 			}
-			application.root_path = "#getPageContext().getRequest().getScheme()#://#this.getEnvVar('LUCEE_HOST')#:#application.port#";
+			application.root_path = "#protocol#://#this.getEnvVar('LUCEE_HOST')#:#application.port#";
 			if (this.getEnvironment() == "dev") {
 				application.root_path = "#application.root_path#/src";
 			}
