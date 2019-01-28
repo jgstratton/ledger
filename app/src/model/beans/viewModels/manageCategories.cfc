@@ -14,17 +14,19 @@ component accessors="true" {
     }
 
     public array function getActiveCategories(){
+        populateCategoryData();
         return variables.activeCategories;
     }
 
     public array function getCategories(){
+        populateCategoryData();
         return variables.allCategoryData;
     }
 
 /** Private functions **/
 
     private void function populateCategoryData() {
-        if (!variables.isPopualted) {
+        if (!variables.isPopulated) {
             var qryActiveCategories = queryExecute("
                 Select 
                     categories.id, 
@@ -62,7 +64,7 @@ component accessors="true" {
             variables.allCategoryData = convertQueryToArrayOfStruct(qryActiveCategories);
 
             populateActiveInactiveCategories();
-            variables.isPopualted = true;
+            variables.isPopulated = true;
         }
     }
 
@@ -93,6 +95,6 @@ component accessors="true" {
     }
 
     private component function getUserService() {
-        return application.getBean('userService');
+        return getBeanFactory().getBean('userService');
     }
 }
