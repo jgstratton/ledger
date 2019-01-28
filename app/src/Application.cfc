@@ -89,7 +89,7 @@ component extends="framework.one" output="false" {
 			if (this.getEnvVar('ENABLE_SSL')) {
 				application.port = this.getEnvVar('LUCEE_SSL_PORT');
 			}
-			application.root_path = "#getPageContext().getRequest().getScheme()#://#cgi.server_name#:#application.port#";
+			application.root_path = "#getPageContext().getRequest().getScheme()#://#this.getEnvVar('LUCEE_HOST')#:#application.port#";
 			if (this.getEnvironment() == "dev") {
 				application.root_path = "#application.root_path#/src";
 			}

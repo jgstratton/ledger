@@ -79,6 +79,7 @@ services:
      - ENABLE_SSL
      - LUCEE_PORT
      - LUCEE_SSL_PORT
+     - LUCEE_HOST
      - TIER
      - FACEBOOK_APPID
      - FACEBOOK_APPSECRET
@@ -86,6 +87,7 @@ services:
      - cfconfigfile
      - cfconfig_adminPassword
      - TZ
+     
 
   cron:
     build: ./cron
