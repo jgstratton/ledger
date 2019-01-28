@@ -22,10 +22,16 @@ component name="auth" output="false"  accessors=true {
         } else if(structKeyExists(cookie,'fbToken')){
             local.fbToken = cookie.fbToken;
         }      
-
         //if the token is set, then log in the user.
         if(structKeyExists(local,"fbToken")){
-            session.userid = variables.userService.getOrCreate( variables.facebook.getMe(local.fbToken).email ).getId();
+            var fbUser = variables.facebook.getMe(local.fbToken);
+            var username = fbUser.id;
+            
+            if (fbUser.keyExists('email')) {
+                username = fbUser.email;
+            }
+
+            session.userid = variables.userService.getOrCreate( username ).getId();
             session.loggedin = true;
 
             cfcookie(
