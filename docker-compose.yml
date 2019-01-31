@@ -66,6 +66,7 @@ services:
      - "${LUCEE_SSL_PORT}:8443"
     networks:
      - localnet
+     - proxynet
     volumes:
      - ./app/src:/app/src
      - ./app/testbox/tests:/app/testbox/tests
@@ -109,3 +110,6 @@ services:
 networks:
   localnet:
     name: "${CONTAINER_PREFIX}_net"
+  proxynet:
+    external:
+      name: reverse-proxy-net
