@@ -1,0 +1,16 @@
+{
+    "short_name": "My Checkbook",
+    "name": "My Checkbook",
+    "icons": [
+      {
+        "src": "../images/credit_card.png",
+        "type": "image/png",
+        "sizes": "256x256"
+      }
+    ],
+    "start_url": "/",
+    "background_color": "#16181b",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#16181b"
+  }

@@ -8,4 +8,5 @@
     <meta property="og:image" content="#application.root_path#/images/credit-card-front-152-182038.png"> 
     <meta property="og:description" content="My Checkbook">
     <meta property="og:app_id" content="#application.facebook.getAppId()#">
+    <link rel="manifest" href="#application.root_path#/assets/json/manifest.json">
 </cfoutput>
