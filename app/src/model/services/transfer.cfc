@@ -22,9 +22,6 @@ component output="false" accessors="true" {
         if (arguments.transfer.getToAccount().getUser().getId() != arguments.user.getId()) {
             errors.append("#arguments.transfer.getFromAccount().getName()# is not a valid account for the logged in user");
         }
-        if ( !IsNull(arguments.transfer.getFromTransaction())  && arguments.transfer.getFromTransaction().getAccount().getId() != arguments.transfer.getFromAccount().getId() ){
-            errors.append("Transaction / Account mismatch");
-        }
         return errors;
     }
 
