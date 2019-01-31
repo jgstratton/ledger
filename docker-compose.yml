@@ -54,6 +54,7 @@ services:
       dockerfile: Dockerfile
       args:
         ENABLE_SSL: "${ENABLE_SSL}"
+        SSL_PORT: "${LUCEE_SSL_PORT}"
         CERT_FILE: "${CERT_FILE}"
         CERT_KEY_FILE: "${CERT_KEY_FILE}"
         TIER: "${TIER}"

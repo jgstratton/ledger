@@ -85,16 +85,7 @@ component extends="framework.one" output="false" {
 	 */
 	public void function setupApplication(){
 		lock scope="application" timeout="300" {
-			var protocol = "http";
-			application.port = this.getEnvVar('LUCEE_PORT');
-			if (this.getEnvVar('ENABLE_SSL')) {
-				application.port = this.getEnvVar('LUCEE_SSL_PORT');
-				protocol = "https";
-			}
-			application.root_path = "#protocol#://#this.getEnvVar('LUCEE_HOST')#:#application.port#";
-			if (this.getEnvironment() == "dev") {
-				application.root_path = "#application.root_path#/src";
-			}
+			application.root_path = buildRootPath();
 			application.src_dir = "#expandPath(".")#";
 			application.version = "#this.version#";
 			application.facebook = createobject("component","model/services/facebook").init(
@@ -197,5 +188,26 @@ component extends="framework.one" output="false" {
 			}
 			local.migrate.run_migrations();
 		}
+	}
+
+	private string function buildRootPath() {
+		var protocol = "http";
+		var port = this.getEnvVar('LUCEE_PORT');
+		var root_path = '';
+
+		if (this.getEnvVar('ENABLE_SSL')) {
+			port = this.getEnvVar('LUCEE_SSL_PORT');
+			protocol = "https";
+		}
+
+		root_path = "#protocol#://#this.getEnvVar('LUCEE_HOST')#";
+		
+		/*In dev we need to include the port and the /src directory.  In production we don't need 
+		a port because I'm using a reverse proxy to forward to the ports internally*/
+		if (this.getEnvironment() == "dev") {
+			root_path &= ":#port#/src";
+		}
+
+		return root_path;
 	}
 }
