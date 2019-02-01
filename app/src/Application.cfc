@@ -76,8 +76,8 @@ component extends="framework.one" output="false" {
 	public void function onRequestStart( string targetPath ) {
 		logger = new services.logger();
 		logger.debug("(Request started)");
-		super.onRequestStart(arguments.targetPath);
 		request.beanfactory = application.beanfactory;
+		super.onRequestStart(arguments.targetPath);
 	}
 	
 	/**
