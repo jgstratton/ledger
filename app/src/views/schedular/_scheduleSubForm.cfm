@@ -62,6 +62,12 @@
             <input type="checkbox" name="schedularStatus" value="1" #checkif(local.schedular.getStatus())# >
         </div>
     </div>
+    <div class="row">
+        <label class="col-3 col-form-label">Last run date:</label>
+        <div class="col-9 form-control-static">
+            #( len(local.schedular.getLastRunDate()) ? dateformat(local.schedular.getLastRunDate(),"mm/dd/yyyy") : "---")#
+        </div>
+    </div>
 
     <script>
         viewScripts.add( function(){
