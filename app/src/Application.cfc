@@ -100,6 +100,7 @@ component extends="framework.one" output="false" {
 	public void function setupSession() {  
 		lock scope="session" timeout="5"{
 			session.state = createUUID();
+			session.init = now();
 			session.loggedin = false;
 		}
 	}
@@ -116,7 +117,7 @@ component extends="framework.one" output="false" {
 			ormReload();
 		}
 
-		if (url.keyExists("reloadSession")) {
+		if (url.keyExists("reloadSession") || !session.keyExists('init')) {
 			StructClear(Session);
 			setupSession();
 		}

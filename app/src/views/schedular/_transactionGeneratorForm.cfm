@@ -55,7 +55,7 @@
             <label class="col-3 col-form-label">Defer<span class="d-none d-lg-inline"> Date</span>:</label>
             <div class="col-9">
                 <div class="input-group">
-                    <select name="Defer Date" class="form-control form-control-sm">
+                    <select name="deferDate" class="form-control form-control-sm">
                         <option value="0" #matchSelect(0, rc.transactionGenerator.getDeferDate())#>
                             (Use scheduled date)
                         </option>

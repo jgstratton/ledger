@@ -48,11 +48,13 @@ component accessors="true" {
     }
 
     public void function runSchedular(required component schedular) {
-        if (schedular.hasEventGenerator()) {
-            eventGeneratorService.runEventGenerator(schedular.getEventGenerator());
+        transaction {
+            if (schedular.hasEventGenerator()) {
+                eventGeneratorService.runEventGenerator(schedular.getEventGenerator());
+            }
+            schedular.setLastRunDate(now());
+            schedular.setNextRunDate( determineNextRunDate(arguments.schedular) );
         }
-        schedular.setLastRunDate(now());
-        schedular.setNextRunDate( determineNextRunDate(arguments.schedular) );
     }
 
     public date function determineNextRunDate(required component schedular) {
