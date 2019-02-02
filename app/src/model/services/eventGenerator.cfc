@@ -11,7 +11,11 @@ component accessors="true" {
     }
 
     public array function getEventGenerators(){
-        return EntityLoad("eventGenerator", {user: userService.getCurrentUser()} );
+        return EntityLoad(
+            entityName = "eventGenerator", 
+            filter = {user: userService.getCurrentUser()}, 
+            order = "eventName asc",
+            options = {ignorecase: true} );
     }
 
     public component function getEventGeneratorById(required numeric id) {
