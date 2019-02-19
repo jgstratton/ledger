@@ -19,7 +19,8 @@
             crossorigin="anonymous">
 
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/multiple-select/1.2.2/multiple-select.min.css">
-
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" />
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/transactions.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/classes.css?v=#application.version#" />
@@ -53,7 +54,7 @@
                                 <a class="nav-link" href="#buildUrl('transfer.new')#">Transfer</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="TRN_250.php">Search</a>
+                                <a class="nav-link" href="#buildUrl('transactionSearch.search')#">Search</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
@@ -131,6 +132,15 @@
         <script 
             src="https://cdnjs.cloudflare.com/ajax/libs/multiple-select/1.2.2/multiple-select.min.js" 
             integrity="sha384-0oWzNuQzyCYxinHFCTnivO8O/5tM8VHyCy/wzssUzMM8dJzW41ZlnP4ud+hX2FYJ" 
+            crossorigin="anonymous"></script>
+
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" 
+            integrity="sha384-rgWRqC0OFPisxlUvl332tiM/qmaNxnlY46eksSZD84t+s2vZlqGeHrncwIRX7CGp" 
+            crossorigin="anonymous"></script>    
+        
+        <script 
+            src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js" 
+            integrity="sha384-utW62Q5udTycRsqDMdQwjeaKASTAE2cf20juuz5yfC1n1hu8gBJ1Pn0oEzKIb8Gd" 
             crossorigin="anonymous"></script>
 
         <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
