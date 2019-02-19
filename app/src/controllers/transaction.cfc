@@ -11,9 +11,17 @@ component name="account" output="false"  accessors=true {
         variables.fw=arguments.fw;
     }
 
+/** Lifecycle functions **/
+
     public void function before( required struct rc ){
         param name="rc.returnTo" default="#variables.fw.getSectionAndItem()#";
     }
+
+    public void function after( struct rc = {} ){
+        rc.accounts = accountService.getAccounts();
+    }
+
+/** Controller Actions **/
 
     public void function newTransaction( struct rc = {} ){
         rc.account = accountService.getAccountByID(rc.accountid);
@@ -68,10 +76,6 @@ component name="account" output="false"  accessors=true {
         rc.jsonResponse.lastVerifiedId = transactionService.getLastVerifiedID(account);
 
         variables.fw.setView('main.jsonresponse');
-    }
-
-    public void function after( struct rc = {} ){
-        rc.accounts = accountService.getAccounts();
     }
 
 /** Private functions **/
