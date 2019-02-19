@@ -48,6 +48,19 @@ component output="false" accessors="true" {
         }
     }
 
+    public array function searchTransactions(required struct searchParams) {
+        var conditions = "a.user = :user";
+        var parameters = {user: userService.getCurrentUser()};
+
+        return ORMexecuteQuery("
+            SELECT t
+            FROM transaction t
+            JOIN t.account a
+            WHERE #conditions#
+            ORDER BY t.transactionDate desc
+        ", parameters, {maxResults:variables.limitedResultsCount});
+    }
+
     public array function getUnverifiedTransactions(required account account, boolean includeSubAccounts = false){
         if (userService.checkAccount(arguments.account)) {
             return getTransactions(arguments.account, false, arguments.includeSubAccounts);
