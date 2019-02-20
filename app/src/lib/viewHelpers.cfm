@@ -74,6 +74,14 @@
         return numberformat(arguments.number, "$,0.00");
     }
 
+    public string function htmlMoneyFormat(required numeric number) {
+        var class = '';
+        if (arguments.number < 0) {
+            class = 'text-danger';
+        }
+        return "<span class='#class#'>#moneyFormat(abs(arguments.number))#</span>";
+    }
+
     public string function dayFormat(string date = '') {
         return dateformat(arguments.date,"mm/dd/yyyy");
     }

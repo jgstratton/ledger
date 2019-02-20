@@ -1,6 +1,6 @@
 component output="false" accessors="true" {
     property userService;
-    property name="limitedResultsCount" default=100;
+    property name="limitedResultsCount" default=1000;
 
     public component function getTransactionByid(required numeric id){
         
@@ -48,6 +48,40 @@ component output="false" accessors="true" {
         }
     }
 
+    public array function searchTransactions(required struct searchParams) {
+        var conditions = "a.user = :user";
+        var parameters = {user: userService.getCurrentUser()};
+
+        if (keyIsSet(arguments.searchParams,'accountId')) {
+            conditions &= " and a.id = :accountId";
+            parameters['accountId'] = searchParams.accountId;
+        }
+
+        if (keyIsSet(arguments.searchParams,'keyWords')) {
+            conditions &= " and ( 1=1 ";
+            for (var i = 1; i <= listlen(arguments.searchParams.keywords,","); i++) {
+                var keyword = listGetAt(arguments.searchParams.keywords,i);
+                conditions &= " and ( t.name like :keyWord#i# or t.note like :keyWord#i#)";
+                parameters['keyWord#i#'] = "%#trim(keyword)#%";
+            }
+            conditions &= ")"; 
+        }
+
+        if (keyIsSet(arguments.searchParams, 'CategoryId')) {
+            conditions &= " and c.id = :categoryId";
+            parameters['categoryId'] = arguments.searchParams.CategoryId;
+        }
+
+        return ORMexecuteQuery("
+            SELECT t
+            FROM transaction t
+            JOIN t.account a
+            JOIN t.category c
+            WHERE #conditions#
+            ORDER BY t.transactionDate desc
+        ", parameters, {maxResults:variables.limitedResultsCount});
+    }
+
     public array function getUnverifiedTransactions(required account account, boolean includeSubAccounts = false){
         if (userService.checkAccount(arguments.account)) {
             return getTransactions(arguments.account, false, arguments.includeSubAccounts);
@@ -60,31 +94,6 @@ component output="false" accessors="true" {
         }
     }
 
-    private array function getTransactions(required account account, required boolean verified, required boolean includeSubAccounts) {
-        if (userService.checkAccount(arguments.account)) {
-            var includeSubAccountsClause = "";
-            var verifiedCondition = "is null";
-
-            if (arguments.includeSubAccounts) {
-                includeSubAccountsClause = " OR a.id in (SELECT id from account sub where sub.linkedAccount = :account)";
-            }
-            
-            if (arguments.verified) {
-                verifiedCondition = "is not null";
-            }
-
-            return ORMExecuteQuery("
-                SELECT t
-                FROM transaction t
-                JOIN t.account a
-                WHERE (a = :account #includeSubAccountsClause#)
-                AND   t.verifiedDate #verifiedCondition#
-                and   isHidden = 0
-                ORDER BY t.transactionDate desc",
-            {account:arguments.account}, false, 
-            {maxResults:variables.limitedResultsCount} );
-        }
-    }
 
     public numeric function getLastVerifiedID(required account account){
         if (userService.checkAccount(arguments.account)) {
@@ -120,4 +129,37 @@ component output="false" accessors="true" {
             }
         }
     }
+
+/** private functions **/
+
+    private array function getTransactions(required account account, required boolean verified, required boolean includeSubAccounts) {
+        if (userService.checkAccount(arguments.account)) {
+            var includeSubAccountsClause = "";
+            var verifiedCondition = "is null";
+
+            if (arguments.includeSubAccounts) {
+                includeSubAccountsClause = " OR a.id in (SELECT id from account sub where sub.linkedAccount = :account)";
+            }
+            
+            if (arguments.verified) {
+                verifiedCondition = "is not null";
+            }
+
+            return ORMExecuteQuery("
+                SELECT t
+                FROM transaction t
+                JOIN t.account a
+                WHERE (a = :account #includeSubAccountsClause#)
+                AND   t.verifiedDate #verifiedCondition#
+                and   isHidden = 0
+                ORDER BY t.transactionDate desc",
+            {account:arguments.account}, false, 
+            {maxResults:variables.limitedResultsCount} );
+        }
+    }
+
+    private boolean function keyIsSet(required struct structure, required string key) {
+        return structKeyExists(arguments.structure, arguments.key) && len(arguments.structure[arguments.key]) > 0;
+    }
+
 }
