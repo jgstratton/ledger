@@ -1,6 +1,11 @@
 component name="account" output="false"  accessors=true {
     property transactionService;
     property accountService;
+    property categoryService;
+
+    public void function init(fw){
+        variables.fw=arguments.fw;
+    }
 
 /** Lifecycle functions **/
 
@@ -11,7 +16,13 @@ component name="account" output="false"  accessors=true {
 /** Controller Actions **/
 
     public void function search( struct rc = {} ){
-        rc.transactions = transactionService.searchTransactions({});
+        rc.categories = categoryService.getCategories();
+    }
+
+    public void function getSearchResults( struct rc = {} ) {
+        rc.transactions = transactionService.searchTransactions(rc);
+        variables.fw.setLayout("ajax");
+        variables.fw.setView("transactionSearch._searchResults");
     }
 
     public void function editTransaction( struct rc = {} ){
