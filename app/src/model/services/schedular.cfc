@@ -78,7 +78,7 @@ component accessors="true" {
         for (var year in [year(compareDate), year(compareDate) + 1]) {
             for (var month in arguments.schedular.getMonthsOfYear()) {
                 for (var day in arguments.schedular.getDaysOfMonth()) {
-                    var currentDate = createDate(year, month, day);
+                    var currentDate = getValidDateThisMonth(year, month, day);
                     if (DateCompare(currentDate, compareDate, "d") >= 0) {
                         var currentDate = createDate(year, month, day);
                         if (!schedularRanThisDay(arguments.schedular, currentDate) ) {
@@ -90,6 +90,22 @@ component accessors="true" {
         }
         abort;
         throw("Unable to determine next run date #schedular.getId()#");
+    }
+
+    //returns the closest valid date for the values/month given
+    private date function getValidDateThisMonth(required numeric year, required numeric month, required numeric day) {
+        var checkDay = arguments.day;
+        if (checkDay <= 28) {
+            return createDate(year, month, day);
+        }
+        while(checkDay >= 28) {
+            try {
+                return createDate(year,month,checkDay);
+            } catch (any e) {
+                checkDay -= 1;
+            }
+        }
+        throw("Unable to deterime a valid run date #schedular.getId()#");
     }
 
     private date function determineNextRunDateByInterval(required component schedular) {
