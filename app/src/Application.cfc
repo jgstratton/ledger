@@ -179,9 +179,9 @@ component extends="framework.one" output="false" {
 	public void function migrate(){
 		lock scope="application" timeout="300"{
 			if(this.getEnvironment() eq 'dev'){	
-				local.migrate = new migrations.migrate("_mg,_dev");	
+				local.migrate = new migrations.migrate("_mg");	
 				if (structKeyExists(url, "init")) {
-					local.migrate.refresh_migrations();
+					//local.migrate.refresh_migrations();
 					return;
 				}
 			} else {
