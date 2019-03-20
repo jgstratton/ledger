@@ -41,6 +41,9 @@ component{
 		if( structKeyExists(arguments,"migrate_to_version") ){
 			// If the "migrate to" is greater than last ran migration, then run all the migrations up to that point
 			if( arguments.migrate_to_version > listLast( migrations_list ) ){
+
+				getLogger().debug(" #arguments.migrate_to_version# is greater than #listLast( migrations_list )#...");
+
 				for( migrationFile in migration_files ){
 					var migration_number = get_migration_file_number( migrationFile.name );
 					// strip the .cfc from the file name
@@ -54,6 +57,9 @@ component{
 
 			 // If the "migrate to" is less than the last ran migration, then we need to revert the migrations down until we hit the target version
 			} else if( arguments.migrate_to_version < listLast( migrations_list ) ){
+
+				getLogger().debug(" #arguments.migrate_to_version# is less than #listLast( migrations_list )#...");
+
 				for( var i = migration_files.recordcount; i >= 1; i--){
 					var migration_number = get_migration_file_number( migration_files.name[i] );
 					var migration_name = left( migration_files.name[i], len(migration_files.name[i]) - 4);
@@ -74,6 +80,9 @@ component{
 
 				//if the migration has not been run yet then run it
 				if( listFind( migrations_list, migration_number ) == 0 ){
+
+					getLogger().debug("#migration_number# has not yet been run, running now:");
+
 					var migration_cfc = createObject("component", "#this.directory_path##migration_name#").init();
 					run_migration(migration_cfc, migration_number);
 
@@ -93,8 +102,13 @@ component{
 					values (:migration_number, now())
 					", {migration_number: migration_number});
 			} catch(any e) {
-				migration.migrate_down();
-				getLogger().error("Error running migration: #migration_number#");
+				getLogger().error("Error running migration: #migration_number#.. attempting to roll back changes");
+				try{
+					migration.migrate_down();
+				} catch(any e) {
+					getLogger().error("Error during rollback: #e.message#");
+				}
+				
 				rethrow;
 			}
 		}
