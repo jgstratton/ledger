@@ -106,8 +106,8 @@ component extends="framework.one" output="false" {
 	}
 
 	public void function setupRequest() {
-		//use init to reload application and refresh all migrations (start from scratch)
-		if (url.keyExists("init")) {
+		//use refresh_dev_database to reload application and refresh all migrations (start from scratch)
+		if (url.keyExists("refresh_dev_database")) {
 			setupApplication();
 			StructClear(Session);
 			setupSession();
@@ -178,15 +178,13 @@ component extends="framework.one" output="false" {
 	
 	public void function migrate(){
 		lock scope="application" timeout="300"{
-			if(this.getEnvironment() eq 'dev'){	
-				local.migrate = new migrations.migrate("_mg");	
-				if (structKeyExists(url, "init")) {
-					//local.migrate.refresh_migrations();
-					return;
-				}
-			} else {
-				local.migrate = new migrations.migrate();
+			if(this.getEnvironment() eq 'dev' && structKeyExists(url, "refresh_dev_database")){	
+				local.migrate = new migrations.migrate("_mg,_dev");	
+				local.migrate.refresh_migrations();
+				return;				
 			}
+
+			local.migrate = new migrations.migrate();
 			local.migrate.run_migrations();
 		}
 	}
