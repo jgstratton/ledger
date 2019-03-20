@@ -36,7 +36,8 @@
                 t.note,
                 t.verifiedDate,
                 t.created,
-                t.edited
+                t.edited,
+                t.isHidden
 
             FROM transactions t
             INNER JOIN categories c on t.category_id = c.id

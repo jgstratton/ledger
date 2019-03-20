@@ -37,17 +37,6 @@ component output="false" accessors="true" {
         }
     }
 
-    public array function getRecentTransactions(required account account){
-        if (userService.checkAccount(arguments.account)) {
-            return ORMExecuteQuery("
-                FROM transaction t
-                WHERE account = :account
-                and isHidden = 0
-                ORDER BY t.transactionDate desc, t.id desc
-            ",{account:arguments.account}, false, {maxResults:variables.limitedResultsCount});
-        }
-    }
-
     public array function searchTransactions(required struct searchParams) {
         var conditions = "a.user = :user";
         var parameters = {user: userService.getCurrentUser()};

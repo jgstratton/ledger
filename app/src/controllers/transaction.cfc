@@ -2,6 +2,7 @@ component name="account" output="false"  accessors=true {
 
     property accountService;
     property transactionService;
+    property transactionDataService;
     property categoryService;
     property transferService;
     property alertService;
@@ -26,7 +27,7 @@ component name="account" output="false"  accessors=true {
     public void function newTransaction( struct rc = {} ){
         rc.account = accountService.getAccountByID(rc.accountid);
         rc.transaction = transactionService.createTransaction(rc.account);
-        rc.transactions = transactionService.getRecentTransactions(rc.account);
+        rc.transactions = transactionDataService.getTransactionData(rc.account);
         rc.categories = categoryService.getCategories();
         variables.update(rc);
     }

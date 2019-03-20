@@ -34,6 +34,16 @@ component accessors="true" {
         setErrors(getErrors().append(arguments.secondaryResponse.getErrors(),true));
     }
 
+    //not yet in use
+    public string function toJson(){
+        var tempStruct = {
+            "message": this.getMessage(),
+            "errors": this.getErrors(),
+            "status": this.getStatus(),
+        }
+        return serializeJSON(tempStruct);
+    }
+
     private component function getBeanfactory() {
         return request.beanfactory;
     }
