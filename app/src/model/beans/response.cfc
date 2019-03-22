@@ -1,9 +1,13 @@
 component accessors="true" {
     property name="message" default="";
     property name="errors" type="array";
+    property name="data" type="struct";
+    property name="statusCode" type="string";
 
     public component function init() {
+        this.data = {};
         setErrors(arrayNew());
+        setStatusCode(200);
         return this;
     }
 
@@ -18,6 +22,10 @@ component accessors="true" {
         getErrors().append(arguments.error);
     }
 
+    public void function setDataKey(required string key, required any data) {
+        this.data[key] = arguments.data;
+    }
+    
     public boolean function isSuccess(){
         return getStatus() == 'success';
     }

@@ -11,6 +11,7 @@ component extends="framework.one" output="false" {
 	this.mappings["/migrations"] = "/database/migrations";
 	this.mappings["/services"] = "/model/services";
 	this.mappings["/beans"] = "/model/beans";
+	this.mappings["/api"] = "/controllers/api";
 
 	// FW/1 settings
 	variables.framework = {
@@ -19,7 +20,9 @@ component extends="framework.one" output="false" {
 		defaultSection = 'account',
 		defaultItem = 'list',
 		diLocations = "./model/beans,./model/services",
-		diConfig = {singulars : { generators : "bean", viewModels: "bean" }}
+		diConfig = {singulars : { generators : "bean", viewModels: "bean" }},
+		SESOmitIndex = false,
+		generateSES = true
 	};
 
 	variables.framework.environments = {
@@ -140,7 +143,7 @@ component extends="framework.one" output="false" {
 		//user is used in most controllers and views
 		if(session.loggedin){
 			rc.user = request.user;
-		} else if (getSection() != 'auth' && getSection() != 'public') {
+		} else if (arrayfind(["auth", "public", "api"], getSection()) == 0) {
 			redirect("auth.login","all");
 		}
 	}
