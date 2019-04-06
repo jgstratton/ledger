@@ -104,6 +104,7 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=${REACT_APP_PORT}
+      - CHOKIDAR_USEPOLLING=true
     expose:
       - ${REACT_APP_PORT}
     networks:
