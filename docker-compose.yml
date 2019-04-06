@@ -94,16 +94,16 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    command: npm start
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - PORT=${REACT_APP_PORT}
+    command: 'npm start'
+    volumes:
+      - './client:/usr/src/app'
+      - '/usr/src/app/node_modules'
     ports:
       - ${REACT_APP_PORT}:${REACT_APP_PORT}
       - 35729:35729
-    volumes:
-      - ./client/src:/app/src
-      - ./client/public:/app/public
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${REACT_APP_PORT}
     expose:
       - ${REACT_APP_PORT}
     networks:
