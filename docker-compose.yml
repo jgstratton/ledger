@@ -94,7 +94,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    command: 'npm start'
+    command: ${REACT_START_SCRIPT}
     volumes:
       - './client:/usr/src/app'
       - '/usr/src/app/node_modules'
@@ -105,6 +105,7 @@ services:
       - NODE_ENV
       - PORT=${REACT_APP_PORT}
       - CHOKIDAR_USEPOLLING
+      - REACT_APP_PORT
     expose:
       - ${REACT_APP_PORT}
     networks:
