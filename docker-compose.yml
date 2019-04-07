@@ -102,9 +102,9 @@ services:
       - ${REACT_APP_PORT}:${REACT_APP_PORT}
       - 35729:35729
     environment:
-      - NODE_ENV=${NODE_ENV}
+      - NODE_ENV
       - PORT=${REACT_APP_PORT}
-      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_USEPOLLING
     expose:
       - ${REACT_APP_PORT}
     networks:
