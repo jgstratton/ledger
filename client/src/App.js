@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import './css/App.css';
 import Header from './components/Header';
-import { BrowserRouter } from 'react-router-dom';
+import Accounts from './components/Accounts';
+import NotFound404 from './components/NotFound404';
+
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 class App extends Component {
     render() {
@@ -9,6 +12,10 @@ class App extends Component {
             <BrowserRouter>
                 <div className="App">
                     <Header />
+                    <Switch>
+                        <Route exact path="/accounts" component={Accounts} />
+                        <Route component={NotFound404} />
+                    </Switch>
                 </div>
             </BrowserRouter>
         );

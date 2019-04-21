@@ -40,7 +40,7 @@ class Header extends Component {
                         </div>
                         <div className="navbar-collapse collapse" id="navbar">
                             <ul className="navbar-nav mr-auto">
-                                <NavListLink to="#buildUrl('account.list')#">
+                                <NavListLink to="./Accounts">
                                     Accounts
                                 </NavListLink>
                                 <NavListLink to="#buildUrl('transfer.new')#">
