@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import './css/App.css';
-import Header from './components/Header';
-import Accounts from './components/Accounts';
-import NotFound404 from './components/NotFound404';
+import Header from './Header';
+import Accounts from './Accounts';
+import NotFound404 from './NotFound404';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
 
 class App extends Component {
     render() {
