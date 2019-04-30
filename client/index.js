@@ -8,8 +8,8 @@ app.use(express.static('build'));
 
 const path = require('path');
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
 
-const PORT = process.env.REACT_APP_PORT || 3000;
+const PORT = process.env.REACT_PORT || 3000;
 app.listen(PORT).on('error', console.log);
