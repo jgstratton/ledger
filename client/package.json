@@ -2,6 +2,7 @@
     "name": "client",
     "version": "0.1.0",
     "private": true,
+    "proxy": "http://localhost:8020/src/index.cfm",
     "dependencies": {
         "axios": "^0.18.0",
         "express": "^4.16.4",
