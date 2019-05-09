@@ -1,3 +1,6 @@
-export default function(state = null, action) {
-    return state;
-}
+import authReducer from './authReducer';
+import { combineReducers } from 'redux';
+
+export default combineReducers({
+    user: authReducer
+});

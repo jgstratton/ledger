@@ -77,10 +77,17 @@ class Header extends Component {
                                         )}
                                     </div>
                                 </li>
-
-                                <NavListLink to="#buildUrl('auth.logout)#">
-                                    Logout
-                                </NavListLink>
+                                <li className="nav-item">
+                                    <a
+                                        className="nav-link"
+                                        href={
+                                            process.env.REACT_APP_API_URL +
+                                            '/auth/logout'
+                                        }
+                                    >
+                                        Logout
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         <div className="text-right d-none d-md-inline text-secondary">
