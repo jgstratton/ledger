@@ -19,14 +19,16 @@ component name="account" output="false"  accessors=true {
 
             //run any middleware defined.  If middleware returns false, exit immediately.
             for (var mw in getMiddleware(apiName,apiStruct.method)) {
+                logger.debug("API Middleware -  #apiName#.#mw#");
                 var continueExecution = invoke(apiObj, mw, {rc: rc, api: apiStruct});
                 if (!continueExecution) {
                     return;
                 }
             }
+            
+            logger.debug("API Request - #apiName#.#apiStruct.method#");
 
             invoke(apiObj, apiStruct.method, {rc: rc, api: apiStruct});
-            rc.response.setDataKey('middleware',getMiddleware(fw.getItem(),apiStruct.method));
         } catch (any e) {
             rc.response.addError(e.message);
             rc.response.setStatusCode(500);
@@ -93,4 +95,5 @@ component name="account" output="false"  accessors=true {
         }
         return api;
     }
+
 }

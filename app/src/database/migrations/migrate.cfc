@@ -32,9 +32,6 @@ component{
 	public void function run_migrations(string migrate_to_version) {
 		var migrations_list = get_migration_list() ;
 		var migration_files = get_migration_files();
-		getLogger().debug("Migrating to version: #arguments.migrate_to_version#");
-		getLogger().debug(" --- list used: #migrations_list#");
-
 		// If a migration version was provided and it is less than the last run migration,
 		// then rollback the migrations until we hit that version
 
