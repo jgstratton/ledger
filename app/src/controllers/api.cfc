@@ -1,6 +1,6 @@
 component name="account" output="false"  accessors=true {
     property logger;
-
+    
     public void function init(fw){
         variables.fw=arguments.fw;
         variables.apiControllers = {};
@@ -75,14 +75,15 @@ component name="account" output="false"  accessors=true {
      * @returns apiMethod
      */
     private struct function translateRc(required struct rc) {
+        
         var pathArray = listToArray(cgi.PATH_INFO, "/\");
         rc.apiData = [];
         var api = {
             section: pathArray[2],
-            item: pathArray.len() > 2 ? pathArray[3] : pathArray[2],
+            item: pathArray.len() > 2 ? pathArray[3] : pathArray[2]
         };
         api.type = lcase(cgi.request_method);
-        api.method = api.type & api.section;
+        api.method = api.type & api.item;
 
         if (rc.keyExists(api.item)) {
             StructDelete(rc, api.item);
