@@ -6,12 +6,11 @@ import NotFound404 from './NotFound404';
 import * as actions from '../actions';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
 
 class App extends Component {
     componentDidMount() {
         this.props.fetchUser();
+        this.props.fetchSummary();
     }
     render() {
         return (

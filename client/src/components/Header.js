@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const NavListLink = ({ to, children }) => (
@@ -85,7 +86,7 @@ class Header extends Component {
                                             '/auth/logout'
                                         }
                                     >
-                                        Logout
+                                        Logout ({this.props.email})
                                     </a>
                                 </li>
                             </ul>
@@ -93,7 +94,7 @@ class Header extends Component {
                         <div className="text-right d-none d-md-inline text-secondary">
                             Checkbook Summary -{' '}
                             <span className="badge badge-primary">
-                                #moneyFormat(rc.user.getSummaryBalance())#
+                                {'$' + this.props.summary}
                             </span>
                         </div>
                     </nav>
@@ -112,4 +113,9 @@ class Header extends Component {
     }
 }
 
-export default Header;
+function mapStateToProps(state) {
+    const user = state.user;
+    return user;
+}
+
+export default connect(mapStateToProps)(Header);
