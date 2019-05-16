@@ -5,9 +5,9 @@ const express = require('express');
 const proxy = require('http-proxy-middleware');
 const app = express();
 
-app.use(
-    proxy('/api', { target: 'http://localhost:' + process.env.LUCEE_PORT })
-);
+const proxyUrl = 'http://localhost:' + process.env.LUCEE_PORT + '/src/index.cfm/';
+
+app.use(proxy('/api', { target: proxyUrl }));
 app.use(express.static('build'));
 
 const path = require('path');

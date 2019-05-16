@@ -99,6 +99,7 @@ services:
         environment:
             - PORT=${REACT_PORT}
             - REACT_PORT
+            - LUCEE_PORT
         expose:
             - ${REACT_PORT}
         networks:

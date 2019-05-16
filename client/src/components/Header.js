@@ -22,23 +22,15 @@ class Header extends Component {
         console.log(this.props.loggedIn);
         const LoginLogoutLink = this.props.loggedIn ? (
             <li className="nav-item">
-                <Link
-                    to="login"
-                    onClick={this.props.logoutUser}
-                    className="nav-link"
-                >
+                <Link to="/login" onClick={this.props.logoutUser} className="nav-link">
                     Logout
                 </Link>
             </li>
         ) : (
             <li className="nav-item">
-                <Link
-                    to="login"
-                    onClick={this.props.logoutUser}
-                    className="nav-link"
-                >
+                <a className="nav-link" href={process.env.REACT_APP_API_URL + '/auth/proxyLogin?startfb'}>
                     Login
-                </Link>
+                </a>
             </li>
         );
         return LoginLogoutLink;
@@ -68,20 +60,11 @@ class Header extends Component {
                         </div>
                         <div className="navbar-collapse collapse" id="navbar">
                             <ul className="navbar-nav mr-auto">
-                                <NavListLink to="./Accounts">
-                                    Accounts
-                                </NavListLink>
-                                <NavListLink to="#buildUrl('transfer.new')#">
-                                    Transfer
-                                </NavListLink>
-                                <NavListLink to="#buildUrl('transactionSearch.search')#">
-                                    Search
-                                </NavListLink>
+                                <NavListLink to="./Accounts">Accounts</NavListLink>
+                                <NavListLink to="#buildUrl('transfer.new')#">Transfer</NavListLink>
+                                <NavListLink to="#buildUrl('transactionSearch.search')#">Search</NavListLink>
                                 <li className="nav-item dropdown">
-                                    <a
-                                        className="nav-link dropdown-toggle"
-                                        data-toggle="dropdown"
-                                    >
+                                    <a className="nav-link dropdown-toggle" data-toggle="dropdown">
                                         Other Features
                                     </a>
                                     <div className="dropdown-menu">
@@ -94,14 +77,9 @@ class Header extends Component {
                                         <NavDropLink to="#buildUrl('category.manageCategories')#">
                                             Manage Categories
                                         </NavDropLink>
-                                        <NavDropLink to="TRN_300.php">
-                                            Cost Breakdown
-                                        </NavDropLink>
-                                        {process.env.NODE_ENV ===
-                                            'development' && (
-                                            <NavDropLink to="#buildUrl('admin.devToggles')#">
-                                                Dev toggles
-                                            </NavDropLink>
+                                        <NavDropLink to="TRN_300.php">Cost Breakdown</NavDropLink>
+                                        {process.env.NODE_ENV === 'development' && (
+                                            <NavDropLink to="#buildUrl('admin.devToggles')#">Dev toggles</NavDropLink>
                                         )}
                                     </div>
                                 </li>
@@ -109,10 +87,7 @@ class Header extends Component {
                             </ul>
                         </div>
                         <div className="text-right d-none d-md-inline text-secondary">
-                            Checkbook Summary -{' '}
-                            <span className="badge badge-primary">
-                                {'$' + this.props.summary}
-                            </span>
+                            Checkbook Summary - <span className="badge badge-primary">{'$' + this.props.summary}</span>
                         </div>
                     </nav>
 
