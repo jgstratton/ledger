@@ -42,3 +42,23 @@ export const fetchSummary = () => async dispatch => {
 
     dispatch({ type: FETCH_SUMMARY, payload: summary });
 };
+
+export const LOGOUT_USER = 'logout_user';
+
+export const logoutUser = () => async dispatch => {
+    let didLogout = false;
+
+    try {
+        const res = await axios.post('/api/user/logout');
+
+        if (typeof res.data.data.summary != 'undefined') {
+            didLogout = true;
+        }
+    } catch (error) {
+        if (error.response.status != 401) {
+            console.log(error.response);
+        }
+    }
+
+    dispatch({ type: LOGOUT_USER, payload: didLogout });
+};

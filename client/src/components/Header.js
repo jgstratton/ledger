@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as actions from '../actions';
 
 const NavListLink = ({ to, children }) => (
     <li className="nav-item">
@@ -17,6 +18,32 @@ const NavDropLink = ({ to, children }) => (
 );
 
 class Header extends Component {
+    renderLoginLogoutLink = () => {
+        console.log(this.props.loggedIn);
+        const LoginLogoutLink = this.props.loggedIn ? (
+            <li className="nav-item">
+                <Link
+                    to="login"
+                    onClick={this.props.logoutUser}
+                    className="nav-link"
+                >
+                    Logout
+                </Link>
+            </li>
+        ) : (
+            <li className="nav-item">
+                <Link
+                    to="login"
+                    onClick={this.props.logoutUser}
+                    className="nav-link"
+                >
+                    Login
+                </Link>
+            </li>
+        );
+        return LoginLogoutLink;
+    };
+
     render() {
         return (
             <header className="bg-dark">
@@ -78,17 +105,7 @@ class Header extends Component {
                                         )}
                                     </div>
                                 </li>
-                                <li className="nav-item">
-                                    <a
-                                        className="nav-link"
-                                        href={
-                                            process.env.REACT_APP_API_URL +
-                                            '/auth/logout'
-                                        }
-                                    >
-                                        Logout ({this.props.email})
-                                    </a>
-                                </li>
+                                {this.renderLoginLogoutLink()}
                             </ul>
                         </div>
                         <div className="text-right d-none d-md-inline text-secondary">
@@ -118,4 +135,7 @@ function mapStateToProps(state) {
     return user;
 }
 
-export default connect(mapStateToProps)(Header);
+export default connect(
+    mapStateToProps,
+    actions
+)(Header);

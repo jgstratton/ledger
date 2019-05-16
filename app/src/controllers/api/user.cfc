@@ -25,6 +25,11 @@ component output="false"  accessors=true {
         rc.response.setDataKey('summary',user.getSummaryBalance());
     }
 
+    public void function postLogout(required struct rc, required struct api) {
+        getLogger().debug("Logging the user out of the application...");
+        getAuthenticatorService().logout();
+    }
+
     public boolean function requireLogin(required struct rc, required struct api){
         return getMiddleWare().requireLogin(rc,api);
     }
@@ -43,6 +48,10 @@ component output="false"  accessors=true {
 
     private component function getLogger(){
         return getBeanFactory().getBean("loggerService");
+    }
+
+    private component function getAuthenticatorService(){
+        return getBeanFactory().getBean("authenticatorService");
     }
 
 }

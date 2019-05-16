@@ -1,6 +1,8 @@
 component name="auth" output="false"  accessors=true {
     property userService;
     property alertService;
+    property authenticatorService;
+
     facebook = application.facebook;
 
     public void function init(fw){
@@ -45,11 +47,8 @@ component name="auth" output="false"  accessors=true {
     }
 
     public void function logout( struct rc = {} ){
-        lock scope="session" timeout="10"{
-            structClear(session);
-            cfcookie(name="fbtoken" expires="now");
-            alertService.setTitle("success","You have sucessfully been logged out.");
-            variables.fw.redirect("auth.login");
-        }
+        authenticatorService.logout();
+        alertService.setTitle("success","You have sucessfully been logged out.");
+        variables.fw.redirect("auth.login");
     }
 }
