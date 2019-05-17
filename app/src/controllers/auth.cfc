@@ -48,10 +48,13 @@ component name="auth" output="false"  accessors=true {
         session.state = createUUID();
         session.loginByProxy = false;
         if(isProxy) {
+            loggerService.debug("Sessiong session variable loginByProxy = true");
             session.loginByProxy = true;
             session.logInSource = cgi.HTTP_REFERER;
         }
-        location url="#facebook.getAuthURL("email",session.state)#";
+        var faceBookAuthUrl = "#facebook.getAuthURL("email",session.state)#";
+        loggerService.debug(faceBookAuthUrl);
+        location url=faceBookAuthUrl;
     }
 
     //log in user (via facebook authentication)

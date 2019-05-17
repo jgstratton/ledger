@@ -8,9 +8,15 @@ import reducers from './reducers';
 import './css/index.css';
 import './css/App.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'font-awesome/css/font-awesome.css';
 import App from './components/App';
 
-const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
+const initialState = {
+    user: {
+        loggedIn: false
+    }
+};
+const store = createStore(reducers, initialState, applyMiddleware(reduxThunk));
 
 ReactDOM.render(
     <Provider store={store}>
