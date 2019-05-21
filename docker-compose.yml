@@ -100,6 +100,7 @@ services:
             - PORT=${REACT_PORT}
             - REACT_PORT
             - LUCEE_PORT
+            - ${CERT_BASE_PATH}:/certs
         expose:
             - ${REACT_PORT}
         networks:
