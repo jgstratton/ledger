@@ -5,7 +5,7 @@ const express = require('express');
 const proxy = require('http-proxy-middleware');
 const app = express();
 
-const proxyUrl = 'http://localhost:' + process.env.LUCEE_PORT + '/src/index.cfm/';
+const proxyUrl = 'http://lucee:8080/src/index.cfm';
 
 app.use(proxy('/api', { target: proxyUrl }));
 app.use(express.static('build'));
