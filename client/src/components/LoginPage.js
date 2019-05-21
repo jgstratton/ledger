@@ -8,7 +8,7 @@ class LoginPage extends Component {
                 <p className="text-info">
                     Welcome to <b>My Checkbook</b>!
                 </p>
-                <a className="btn btn-primary" href={process.env.REACT_APP_API_URL + '/auth/proxyLogin?startfb'}>
+                <a className="btn btn-primary" href={'./auth/proxyLogin?startfb'}>
                     <i className="fa fa-facebook-square" /> Login with Facebook
                 </a>
             </div>
