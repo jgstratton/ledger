@@ -1,112 +1,127 @@
 version: '3.7'
 
 services:
-  db:
-    build: ./data
-    container_name: "${CONTAINER_PREFIX}_db"
-    restart: 'always'
-    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;'
-    volumes:
-     - ./data/mysql:/var/lib/mysql
-     - ./data/init:/docker-entrypoint-initdb.d
-     - ./data/scripts:/var/scripts
-    environment:
-     - MYSQL_DATABASE
-     - MYSQL_ROOT_PASSWORD
-     - MYSQL_USER
-     - MYSQL_PASSWORD 
-     - TZ
-    networks:
-     - localnet
+    db:
+        build: ./data
+        container_name: '${CONTAINER_PREFIX}_db'
+        restart: 'always'
+        command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;'
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+            - ./data/init:/docker-entrypoint-initdb.d
+            - ./data/scripts:/var/scripts
+        environment:
+            - MYSQL_DATABASE
+            - MYSQL_ROOT_PASSWORD
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - TZ
+        networks:
+            - localnet
 
-  db_tests:
-    build: ./data
-    container_name: "${CONTAINER_PREFIX}_db_tests"
-    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;'
-    ports:
-     - "3307:3306"
-    environment:
-     - MYSQL_DATABASE=tests
-     - MYSQL_ROOT_PASSWORD
-     - MYSQL_USER
-     - MYSQL_PASSWORD 
-     - TZ
-    networks:
-     - localnet
+    db_tests:
+        build: ./data
+        container_name: '${CONTAINER_PREFIX}_db_tests'
+        command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;'
+        ports:
+            - '3307:3306'
+        environment:
+            - MYSQL_DATABASE=tests
+            - MYSQL_ROOT_PASSWORD
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - TZ
+        networks:
+            - localnet
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:4.8.2
-    container_name: "${CONTAINER_PREFIX}_phpmyadmin"
-    depends_on:
-      - db
-    ports:
-     - "${PHPMYADMIN_PORT}:80"
-    environment:
-     - MYSQL_ROOT_PASSWORD
-     - MYSQL_USER
-     - MYSQL_PASSWORD
-    networks:
-     - localnet
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:4.8.2
+        container_name: '${CONTAINER_PREFIX}_phpmyadmin'
+        depends_on:
+            - db
+        ports:
+            - '${PHPMYADMIN_PORT}:80'
+        environment:
+            - MYSQL_ROOT_PASSWORD
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+        networks:
+            - localnet
 
-  lucee:
-    build:
-      context: ./lucee
-      dockerfile: Dockerfile
-      args:
-        ENABLE_SSL: "${ENABLE_SSL}"
-        SSL_PORT: "${LUCEE_SSL_PORT}"
-        CERT_FILE: "${CERT_FILE}"
-        CERT_KEY_FILE: "${CERT_KEY_FILE}"
-        TIER: "${TIER}"
-    container_name: "${CONTAINER_PREFIX}_lucee"
-    restart: 'always'
-    depends_on:
-     - db
-    ports: 
-     - "${LUCEE_PORT}:8080"
-     - "${LUCEE_SSL_PORT}:8443"
-    networks:
-     - localnet
-    volumes:
-     - ./app/src:/app/src
-     - ./app/testbox/tests:/app/testbox/tests
-     - ./logs/app/:/var/log
-     - ./logs/lucee/:/root/serverHome/WEB-INF/lucee-web/logs
-     - ${CERT_BASE_PATH}:/certs
-    environment:
-     - MYSQL_DATABASE
-     - MYSQL_USER
-     - MYSQL_PASSWORD
-     - ENABLE_SSL
-     - LUCEE_PORT
-     - LUCEE_SSL_PORT
-     - LUCEE_HOST
-     - TIER
-     - FACEBOOK_APPID
-     - FACEBOOK_APPSECRET
-     - DEFAULT_USER_EMAIL
-     - cfconfigfile
-     - cfconfig_adminPassword
-     - TZ
-     
+    lucee:
+        build:
+            context: ./lucee
+            dockerfile: Dockerfile
+            args:
+                ENABLE_SSL: '${ENABLE_SSL}'
+                SSL_PORT: '${LUCEE_SSL_PORT}'
+                CERT_FILE: '${CERT_FILE}'
+                CERT_KEY_FILE: '${CERT_KEY_FILE}'
+                TIER: '${TIER}'
+        container_name: '${CONTAINER_PREFIX}_lucee'
+        restart: 'always'
+        depends_on:
+            - db
+        ports:
+            - '${LUCEE_PORT}:8080'
+            - '${LUCEE_SSL_PORT}:8443'
+        networks:
+            - localnet
+        volumes:
+            - ./app/src:/app/src
+            - ./app/testbox/tests:/app/testbox/tests
+            - ./logs/app/:/var/log
+            - ./logs/lucee/:/root/serverHome/WEB-INF/lucee-web/logs
+            - ${CERT_BASE_PATH}:/certs
+        environment:
+            - MYSQL_DATABASE
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - ENABLE_SSL
+            - LUCEE_PORT
+            - LUCEE_SSL_PORT
+            - LUCEE_HOST
+            - TIER
+            - FACEBOOK_APPID
+            - FACEBOOK_APPSECRET
+            - DEFAULT_USER_EMAIL
+            - cfconfigfile
+            - cfconfig_adminPassword
+            - TZ
 
-  cron:
-    build: ./cron
-    container_name: "${CONTAINER_PREFIX}_cron"
-    restart: 'always'
-    depends_on:
-      - db
-    networks:
-      - localnet
-    volumes:
-      - ./data/backup:/backup
-    command: ["-l", "8", "-d", "8"]
-    environment:
-      - MYSQL_HOST=db
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_DATABASE
+    react:
+        container_name: '${CONTAINER_PREFIX}_react'
+        build:
+            context: ./client
+            dockerfile: Dockerfile
+        ports:
+            - ${REACT_PORT}:${REACT_PORT}
+        environment:
+            - PORT=${REACT_PORT}
+            - REACT_PORT
+            - LUCEE_PORT
+        expose:
+            - ${REACT_PORT}
+        networks:
+            - localnet
+
+    cron:
+        build: ./cron
+        container_name: '${CONTAINER_PREFIX}_cron'
+        restart: 'always'
+        depends_on:
+            - db
+        networks:
+            - localnet
+        volumes:
+            - ./data/backup:/backup
+        command: ['-l', '8', '-d', '8']
+        environment:
+            - MYSQL_HOST=db
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - MYSQL_DATABASE
 
 networks:
-  localnet:
-    name: "${CONTAINER_PREFIX}_net"
+    localnet:
+        name: '${CONTAINER_PREFIX}_net'

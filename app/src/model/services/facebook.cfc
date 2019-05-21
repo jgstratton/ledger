@@ -7,7 +7,7 @@ component accessors="true"{
     public function init (appid, secret, redirecturl){
         variables.appid = arguments.appid;
         variables.secret = arguments.secret;
-        variables.redirecturl = arguments.redirecturl;
+        variables.redirecturl = arguments.redirecturl & "?action=auth.login";
         return this;
     }
 

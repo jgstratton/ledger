@@ -10,4 +10,7 @@ settings.json
 /data/backup/*
 /data/scripts/*
 /logs/*
+node_modules/
+/client/build/*
+/_localBackup/*
 !.keep

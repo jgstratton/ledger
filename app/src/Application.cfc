@@ -11,6 +11,7 @@ component extends="framework.one" output="false" {
 	this.mappings["/migrations"] = "/database/migrations";
 	this.mappings["/services"] = "/model/services";
 	this.mappings["/beans"] = "/model/beans";
+	this.mappings["/api"] = "/controllers/api";
 
 	// FW/1 settings
 	variables.framework = {
@@ -19,12 +20,14 @@ component extends="framework.one" output="false" {
 		defaultSection = 'account',
 		defaultItem = 'list',
 		diLocations = "./model/beans,./model/services",
-		diConfig = {singulars : { generators : "bean", viewModels: "bean" }}
+		diConfig = {singulars : { generators : "bean", viewModels: "bean" }},
+		SESOmitIndex = false,
+		generateSES = true
 	};
 
 	variables.framework.environments = {
 		dev = { 
-				reloadApplicationOnEveryRequest = true, 
+				reloadApplicationOnEveryRequest = false, 
 				error = "main.error_dev" },
 		prod = { 
 			reloadApplicationOnEveryRequest = false, 
@@ -81,6 +84,19 @@ component extends="framework.one" output="false" {
 	}
 	
 	/**
+	 * When error makes it all the way up the application error handler, create a dump file in the 
+	 * logs folder and log the error.  Note, this will override the default fw1 onError method.
+	 */
+	public void function onError(struct exception, string eventName) {
+		getLogger().error("An application error occured: #exception.message#");
+		writedump(var="#exception#", output="/var/log/dump_#datetimeFormat(now(),"yyyy-mm-dd hh-mm-ssttt")#.html", top="10", format="html");
+		writedump(var="An error has occured");
+		if (this.getEnvironment() eq 'dev'){
+			writedump(var="#exception#", top="10", format="html");
+		}
+	}
+
+	/**
 	 * The setupApplication function is called each time the framework is reloaded.
 	 */
 	public void function setupApplication(){
@@ -105,6 +121,10 @@ component extends="framework.one" output="false" {
 		}
 	}
 
+	/*
+		Note, there's an issue somewhere when orm reloads that causes random null pointer exception errors.  Don't run ormReload on every request.
+		Run it manually when changes are made.
+	*/
 	public void function setupRequest() {
 		//use refresh_dev_database to reload application and refresh all migrations (start from scratch)
 		if (url.keyExists("refresh_dev_database")) {
@@ -113,7 +133,7 @@ component extends="framework.one" output="false" {
 			setupSession();
 			ormReload();
 			location(url="index.cfm",addToken=false);	
-		} else if(structkeyexists(url,"ormreload") or this.getEnvironment() eq 'dev') {	
+		} else if(structkeyexists(url,"ormreload")) {	
 			ormReload();
 		}
 
@@ -140,7 +160,7 @@ component extends="framework.one" output="false" {
 		//user is used in most controllers and views
 		if(session.loggedin){
 			rc.user = request.user;
-		} else if (getSection() != 'auth' && getSection() != 'public') {
+		} else if (arrayfind(["auth", "public", "api"], getSection()) == 0) {
 			redirect("auth.login","all");
 		}
 	}
@@ -208,5 +228,9 @@ component extends="framework.one" output="false" {
 		}
 
 		return root_path;
+	}
+
+	private component function getLogger() {
+		return application.beanfactory.getBean("loggerService");
 	}
 }
