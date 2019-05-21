@@ -10,7 +10,6 @@ COPY ./src /cache/src
 COPY ./public /cache/public
 COPY package.json /cache/package.json
 COPY package-lock.json /cache/package-lock.json
-COPY .env .env
 
 # install all dependencies needed for dev
 RUN npm install
