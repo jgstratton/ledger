@@ -4,6 +4,7 @@
 const express = require('express');
 const proxy = require('http-proxy-middleware');
 const app = express();
+const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const proxyUrl = 'http://lucee:8080/src/index.cfm';
