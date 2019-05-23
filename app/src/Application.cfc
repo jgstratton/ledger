@@ -72,6 +72,22 @@ component extends="framework.one" output="false" {
 			showTemplateWrappers: false
 		}
 	}
+
+	/**
+	 * Add logging when the target path doesn't exist.  We can't onMissingTemplate here because the application alreay uses onRequest in 
+	 * framework one, and lucee won't let you use both on Request and onMissingTemplate.  If the template exists, we hand it off to fw1, if not
+	 * log the error.
+	 */
+	function onRequest( targetPath ) {
+		var absolutePath = ExpandPath(targetPath);
+		if (fileExists(absolutePath)) {
+			super.onRequest(targetPath);
+		} else {
+			getLogger().error("Page not found (#absolutePath#): #cgi.request_url#");
+			echo("Page not found");
+		}
+	}
+
 	/**
 	 * There is an issue where the onRequestStart runs twice for one request,  creating the log entry makes the problem
 	 * go away, I have no idea why.
@@ -167,10 +183,14 @@ component extends="framework.one" output="false" {
 
 	public void function setupResponse() {  }
 
+	/**
+	 * Add logging when target view doesn't exist.
+	 */
 	public string function onMissingView(struct rc = {}) {
+		getLogger().error("View not found: #cgi.request_url#");
 		return "Error 404 - Page not found.";
-	}
-
+	}	
+	
 	/**
 	 * Override the customTemplateEngine to provide view/layout wrapper
 	 */
