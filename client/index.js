@@ -15,6 +15,7 @@ const certKey = process.env.CERT_BASE_PATH + '/' + process.env.CERT_KEY_FILE;
 const path = require('path');
 
 app.use(proxy('/api', { target: proxyUrl }));
+app.use(proxy('/auth', { target: proxyUrl }));
 app.use(express.static('build'));
 
 app.get('*', (req, res) => {
