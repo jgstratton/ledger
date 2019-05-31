@@ -123,8 +123,8 @@ component extends="framework.one" output="false" {
 			application.facebook = createobject("component","model/services/facebook").init(
 				this.getEnvVar('FACEBOOK_APPID'),
 				this.getEnvVar('FACEBOOK_APPSECRET'),
-				"#application.root_path#/?action=auth.login",
-				"#application.root_react_path#/auth/?action=auth.login"
+				"#getAuthReturnPath(false)#",
+				"#getAuthReturnPath(true)#"
 			);
 			application.beanfactory = this.getBeanFactory();
 		}
@@ -234,7 +234,7 @@ component extends="framework.one" output="false" {
 		var protocol = "http";
 		var lucee_port = this.getEnvVar('LUCEE_PORT');
 		var root_path = '';
-		var react_path = '';
+		var root_react_path = '';
 
 		if (this.getEnvVar('ENABLE_SSL')) {
 			lucee_port = this.getEnvVar('LUCEE_SSL_PORT');
@@ -242,16 +242,28 @@ component extends="framework.one" output="false" {
 		}
 
 		root_path = "#protocol#://#this.getEnvVar('LUCEE_HOST')#";
-		react_path = "#protocol#://#this.getEnvVar('REACT_HOST')#";
+		root_react_path = "#protocol#://#this.getEnvVar('REACT_HOST')#";
 
 		/*In dev we need to include the port and the /src directory.  In production we don't need 
 		a port because I'm using a reverse proxy to forward to the ports internally*/
 		if (this.getEnvironment() == "dev") {
 			root_path &= ":#lucee_port#/src";
+			root_react_path = root_path;
 		}
 
 		application.root_path = root_path;
-		application.root_react_path = react_path;
+		application.root_react_path = root_react_path;
+	}
+
+
+	private string function getAuthReturnPath(boolean isProxy = false) {
+		//when not using a proxy, or in dev, use the root_path and controller action
+		if (!isProxy || this.getEnvironment() == "dev") {
+			return "#application.root_path#/?action=auth.login";
+		}
+
+		//when using proxy in prod, use the react path with /auth (so request will get reforwarded back to the back end) 
+		return "#application.root_react_path#/auth/?action=auth.login"		
 	}
 
 	private component function getLogger() {
