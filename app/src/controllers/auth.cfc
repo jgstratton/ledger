@@ -58,6 +58,7 @@ component name="auth" output="false"  accessors=true {
 
     //log in user (via facebook authentication)
     private void function completeFacebookLogin(required string fbToken) {
+        cfparam name="session.loginByProxy" default=false;
         var fbUser = variables.facebook.getMe(fbToken);
         var username = fbUser.id;
         
