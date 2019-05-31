@@ -48,7 +48,6 @@ component name="auth" output="false"  accessors=true {
         session.state = createUUID();
         session.loginByProxy = false;
         if(isProxy) {
-            loggerService.debug("Sessiong session variable loginByProxy = true");
             session.loginByProxy = true;
             session.logInSource = cgi.HTTP_REFERER;
         }
@@ -73,7 +72,7 @@ component name="auth" output="false"  accessors=true {
             name="fbtoken"
             value="#fbToken#"
             expires="30");
-
+        
         if(session.loginByProxy) {
             loggerService.debug("navigating to #session.loginSource#");
             location("#session.logInSource#",false);

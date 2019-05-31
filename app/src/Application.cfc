@@ -117,13 +117,14 @@ component extends="framework.one" output="false" {
 	 */
 	public void function setupApplication(){
 		lock scope="application" timeout="300" {
-			application.root_path = buildRootPath();
+			buildRootPath();
 			application.src_dir = "#expandPath(".")#";
 			application.version = "#this.version#";
 			application.facebook = createobject("component","model/services/facebook").init(
 				this.getEnvVar('FACEBOOK_APPID'),
 				this.getEnvVar('FACEBOOK_APPSECRET'),
-				"#application.root_path#/"
+				"#application.root_path#/?action=auth.login",
+				"#application.root_react_path#/auth/?action=auth.login"
 			);
 			application.beanfactory = this.getBeanFactory();
 		}
@@ -229,25 +230,28 @@ component extends="framework.one" output="false" {
 		}
 	}
 
-	private string function buildRootPath() {
+	private void function buildRootPath() {
 		var protocol = "http";
-		var port = this.getEnvVar('LUCEE_PORT');
+		var lucee_port = this.getEnvVar('LUCEE_PORT');
 		var root_path = '';
+		var react_path = '';
 
 		if (this.getEnvVar('ENABLE_SSL')) {
-			port = this.getEnvVar('LUCEE_SSL_PORT');
+			lucee_port = this.getEnvVar('LUCEE_SSL_PORT');
 			protocol = "https";
 		}
 
 		root_path = "#protocol#://#this.getEnvVar('LUCEE_HOST')#";
-		
+		react_path = "#protocol#://#this.getEnvVar('REACT_HOST')#";
+
 		/*In dev we need to include the port and the /src directory.  In production we don't need 
 		a port because I'm using a reverse proxy to forward to the ports internally*/
 		if (this.getEnvironment() == "dev") {
-			root_path &= ":#port#/src";
+			root_path &= ":#lucee_port#/src";
 		}
 
-		return root_path;
+		application.root_path = root_path;
+		application.root_react_path = react_path;
 	}
 
 	private component function getLogger() {
