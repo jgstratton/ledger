@@ -45,7 +45,7 @@ component name="account" output="false"  accessors=true {
         if (!variables.apiControllers.keyExists(apiName)) {
             variables.apiControllers[apiName] = {}
             var apiRef = variables.apiControllers[apiName];
-
+            getLogger().debug("Api Controller: api.#apiName#");
             apiRef.obj = new "api.#apiName#"(variables.fw); 
 
             // get the defined middleware from the annotations

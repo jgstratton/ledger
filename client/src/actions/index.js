@@ -11,12 +11,12 @@ export const fetchUser = () => async dispatch => {
     };
     try {
         const res = await axios.get('/api/user');
-        if (typeof res.data.data.user != 'undefined') {
+        if (typeof res.data.data.user !== 'undefined') {
             user = res.data.data.user;
             user.loggedIn = true;
         }
     } catch (error) {
-        if (error.response.status != 401) {
+        if (error.response.status !== 401) {
             console.log(error.response);
         }
     }
@@ -31,11 +31,11 @@ export const fetchSummary = () => async dispatch => {
     try {
         const res = await axios.get('/api/user/summary');
 
-        if (typeof res.data.data.summary != 'undefined') {
+        if (typeof res.data.data.summary !== 'undefined') {
             summary = res.data.data.summary;
         }
     } catch (error) {
-        if (error.response.status != 401) {
+        if (error.response.status !== 401) {
             console.log(error.response);
         }
     }
@@ -51,11 +51,11 @@ export const logoutUser = () => async dispatch => {
     try {
         const res = await axios.post('/api/user/logout');
 
-        if (typeof res.data.data.summary != 'undefined') {
+        if (typeof res.data.data.summary !== 'undefined') {
             didLogout = true;
         }
     } catch (error) {
-        if (error.response.status != 401) {
+        if (error.response.status !== 401) {
             console.log(error.response);
         }
     }

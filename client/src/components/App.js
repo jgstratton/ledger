@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from './Header';
-import Accounts from './Accounts';
+import AccountsPage from './accounts/AccountsPage';
 import LoginPage from './LoginPage';
 import NotFound404 from './NotFound404';
 import * as actions from '../actions';
@@ -48,7 +48,12 @@ class App extends Component {
                     <Page>
                         <Switch>
                             <PublicRoute loggedIn={this.props.loggedIn} exact path="/login" component={LoginPage} />
-                            <PrivateRoute loggedIn={this.props.loggedIn} exact path="/accounts" component={Accounts} />
+                            <PrivateRoute
+                                loggedIn={this.props.loggedIn}
+                                exact
+                                path="/accounts"
+                                component={AccountsPage}
+                            />
                             <Route component={NotFound404} />
                         </Switch>
                     </Page>

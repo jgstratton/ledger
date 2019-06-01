@@ -49,9 +49,9 @@ class Header extends Component {
                                     <NavListLink to="#buildUrl('transfer.new')#">Transfer</NavListLink>
                                     <NavListLink to="#buildUrl('transactionSearch.search')#">Search</NavListLink>
                                     <li className="nav-item dropdown">
-                                        <a className="nav-link dropdown-toggle" data-toggle="dropdown">
+                                        <button className="nav-link dropdown-toggle" data-toggle="dropdown">
                                             Other Features
-                                        </a>
+                                        </button>
                                         <div className="dropdown-menu">
                                             <NavDropLink to="#buildUrl('schedular.autoPaymentList')#">
                                                 Automatic Payments
