@@ -10,6 +10,7 @@ component extends="framework.one" output="false" {
 	this.mappings["/framework"] = "/framework";
 	this.mappings["/migrations"] = "/database/migrations";
 	this.mappings["/services"] = "/model/services";
+	this.mappings["/utils"] = "/model/utils";
 	this.mappings["/beans"] = "/model/beans";
 	this.mappings["/api"] = "/controllers/api";
 
