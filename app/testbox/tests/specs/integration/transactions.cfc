@@ -15,12 +15,12 @@ component displayName="Transaction Integration Tests" extends="resources.BaseSpe
     private component function setupTestTransactionsAndGetAccount() {
         var parentAccount = getAccountFactory().getAccount();
         var subAccount = getAccountFactory().getAccount( {linkedAccount: parentAccount} );
-        parentAccount.addTransaction( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
-        parentAccount.addTransaction( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
-        parentAccount.addTransaction( getTransactionFactory().createTransaction());
-        subAccount.addTransaction( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
-        subAccount.addTransaction( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
-        subAccount.addTransaction( getTransactionFactory().createTransaction());
+        parentAccount.addTransactions( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
+        parentAccount.addTransactions( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
+        parentAccount.addTransactions( getTransactionFactory().createTransaction());
+        subAccount.addTransactions( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
+        subAccount.addTransactions( getTransactionFactory().createTransaction( {verifiedDate:'2000-01-01' } ));
+        subAccount.addTransactions( getTransactionFactory().createTransaction());
         ormFlush();
         return parentAccount;
     }

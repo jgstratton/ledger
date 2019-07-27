@@ -10,7 +10,7 @@ component name="account" output="false"  accessors=true {
 
     public void function list( struct rc = {} ) {
 
-        if(not rc.user.hasAccount()){
+        if(not rc.user.hasAccounts()){
             variables.fw.setView('account.blank');
         } else {
             rc.mainAccounts = rc.user.getAccountGroups();
