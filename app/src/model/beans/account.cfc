@@ -9,7 +9,10 @@ component persistent="true" table="accounts" accessors="true" {
     property name="edited" ormtype="timestamp";
     property name="deleted" ormtype="timestamp";
     property name="transactions" fieldtype="one-to-many" cfc="transaction" fkcolumn="account_id" singularname="transaction";
-    property name="type" fieldtype="many-to-one" cfc="accountType" fkcolumn="accountType_id";
+    property name="type" fieldtype="many-to-one" cfc="accountType" fkcolumn="accountType_id" apiDataPopulatorFnc="getTypeName";;
+
+    //pseudo properties
+    property name="inSummary" type="boolean" persistent="false" update="false" insert="false" apiDataPopulatorFnc="getInSummary";
 
     public function getLongName(){
         if(this.hasLinkedAccount()){
@@ -69,6 +72,12 @@ component persistent="true" table="accounts" accessors="true" {
         return '';
     }
 
+    public string function getTypeName() {
+        if(this.hasType()){
+            return this.getType().getName();
+        } 
+        return '';
+    }
     public any function getLinkedAccountID(){
         if(this.hasLinkedAccount()){
             return this.getLinkedAccount().getId();
@@ -84,7 +93,7 @@ component persistent="true" table="accounts" accessors="true" {
         return '';
     }
 
-    public boolean function inSummary(){
+    public boolean function getInSummary(){
         return (this.getSummary() eq 'Y');
     }
     

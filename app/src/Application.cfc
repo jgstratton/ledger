@@ -20,8 +20,11 @@ component extends="framework.one" output="false" {
 		baseURL = "useRequestURI",
 		defaultSection = 'account',
 		defaultItem = 'list',
-		diLocations = "./model/beans,./model/services",
-		diConfig = {singulars : { generators : "bean", viewModels: "bean" }},
+		diLocations = "./model/beans,./model/services, ./model/utils",
+		diConfig = {
+			singletonPattern : "(services|utils)$",
+			singulars : { generators : "bean", viewModels: "bean" }
+		},
 		SESOmitIndex = false,
 		generateSES = true
 	};
