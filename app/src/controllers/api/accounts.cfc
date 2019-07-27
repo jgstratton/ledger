@@ -1,4 +1,4 @@
-component output="true"  accessors=true {
+component output="false"  accessors=true {
 
     public void function init(fw){
         variables.fw=arguments.fw;
@@ -7,14 +7,26 @@ component output="true"  accessors=true {
     /**
      * @middleware "requireLogin"
      */
-    public void function getAccounts(required struct rc){
+    public void function getAccounts(required struct rc, required struct api){
         var accountsData = ArrayNew();
+
         var accounts = rc.user.getAccountGroups();
         for (var account in accounts) {
-            var accountStruct = getApiDataPopulatorService().populateAccountsStruct(account, {maxDepth:10});
+            var accountStruct = {
+                id: account.getId(),
+                name: account.getName(),
+                iconClass: account.getIcon(),
+                balance: account.getBalance(),
+                linkedBalance: account.getLinkedBalance(),
+                verifiedLinkedBalance: account.getVerifiedLinkedBalance(),
+                inSummary: account.inSummary() ? true : false,
+                subAccounts: []
+            };
+
             accountsData.append(accountStruct);
         }
-        rc.response.setDataKey('accounts',serializeJSON(accountsData));
+
+        rc.response.setDataKey('accounts',accountsData);
     }
 
     public boolean function requireLogin(required struct rc, required struct api){
@@ -31,10 +43,6 @@ component output="true"  accessors=true {
 
     private component function getLogger(){
         return getBeanFactory().getBean("loggerService");
-    }
-
-    private component function getApiDataPopulatorService() {
-        return getBeanFactory().getBean("apiDataPopulatorService");
     }
 
 }
