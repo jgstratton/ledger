@@ -7,6 +7,7 @@ component {
     this.sessionTimeout     = createTimeSpan( 0, 0, 15, 0 );
     this.applicationTimeout = createTimeSpan( 0, 0, 15, 0 );
 
+	//use this for integration tests
 	this.datasources["tests"] = {
 		type: 'mysql',
 		database: 'tests',
@@ -15,6 +16,27 @@ component {
 		username: this.getEnvVar('MYSQL_USER'),
 		password: this.getEnvVar('MYSQL_PASSWORD')
 	};
+
+	//only use this for fiddle, don't run tests on the actual database
+	this.datasources["appds"] = {
+		type: 'mysql',
+		database: this.getEnvVar('MYSQL_DATABASE'),
+		host: "db",
+		port: "3306",
+		username: this.getEnvVar('MYSQL_USER'),
+		password: this.getEnvVar('MYSQL_PASSWORD')
+	};
+
+	public void function onApplicationStart(){
+		application.switchDatasource = function( string name) {
+			if (arguments.name != this.datasource) {
+				this.datasource = arguments.name;
+				ormreload();
+				writedump('Reloaded orm with datasource: #name#');
+			}
+		}
+	}
+
 
 	this.datasource="tests";
 
@@ -31,6 +53,7 @@ component {
 	this.mappings[ "/beans" ] = this.rootPath & "src/model/beans";
 	this.mappings[ "/controllers" ] = this.rootPath & "src/controllers";
 	this.mappings[ "/services" ] = this.rootPath & "src/model/services";
+	this.mappings[ "/utils" ] = this.rootPath & "src/model/utils";
 	this.mappings[ "/migrations" ] =this.rootPath & "src/database/migrations";
 
 	this.ormenabled = true;
@@ -56,7 +79,6 @@ component {
 		} else {
 			local.migrate.run_migrations();  
 		}
-		
 		ormreload();
 	}
 

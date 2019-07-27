@@ -15,7 +15,7 @@ component output="false" {
     
         transaction{
             var account = getAccountByid(arguments.id);
-            if(account.hasTransactions()){
+            if(account.hasTransaction()){
                 account.setDeleted(now());
             } else {
                 EntityDelete(account);

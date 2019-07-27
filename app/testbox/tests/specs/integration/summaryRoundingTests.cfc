@@ -25,8 +25,8 @@ component displayName="Summary Rounding Integration Tests" extends="resources.Ba
         transaction {
             _setupModular();
             user.setRoundingModular(1);
-            parentAccount.addTransactions( getTransactionFactory().createCreditTransaction({amount: 100}) );
-            parentAccount.addTransactions( getTransactionFactory().createExpenseTransaction({amount: 0.01}) );
+            parentAccount.addTransaction( getTransactionFactory().createCreditTransaction({amount: 100}) );
+            parentAccount.addTransaction( getTransactionFactory().createExpenseTransaction({amount: 0.01}) );
             ormFlush();
             beanFactory.getBean("checkbookSummaryService").transferSummaryRounding();
             $assert.isEqual(99, user.getSummaryBalance());
@@ -41,8 +41,8 @@ component displayName="Summary Rounding Integration Tests" extends="resources.Ba
         transaction {
             _setupModular();
             user.setRoundingModular(5);
-            parentAccount.addTransactions( getTransactionFactory().createCreditTransaction({amount: 100}));
-            parentAccount.addTransactions( getTransactionFactory().createExpenseTransaction({amount: 0.01}));
+            parentAccount.addTransaction( getTransactionFactory().createCreditTransaction({amount: 100}));
+            parentAccount.addTransaction( getTransactionFactory().createExpenseTransaction({amount: 0.01}));
             ormFlush();
 
             beanFactory.getBean("checkbookSummaryService").transferSummaryRounding();
@@ -55,8 +55,8 @@ component displayName="Summary Rounding Integration Tests" extends="resources.Ba
         transaction {
             _setupModular();
             user.setRoundingModular(10);
-            parentAccount.addTransactions( getTransactionFactory().createCreditTransaction({amount: 100}));
-            parentAccount.addTransactions( getTransactionFactory().createExpenseTransaction({amount: 0.01}));
+            parentAccount.addTransaction( getTransactionFactory().createCreditTransaction({amount: 100}));
+            parentAccount.addTransaction( getTransactionFactory().createExpenseTransaction({amount: 0.01}));
             ormFlush();
 
             beanFactory.getBean("checkbookSummaryService").transferSummaryRounding();
@@ -112,8 +112,8 @@ component displayName="Summary Rounding Integration Tests" extends="resources.Ba
         transaction {
             _setupModular();
             user.setRoundingModular(10);
-            parentAccount.addTransactions( getTransactionFactory().createCreditTransaction({amount: 100}));
-            parentAccount.addTransactions( getTransactionFactory().createExpenseTransaction({amount: 0.01}));
+            parentAccount.addTransaction( getTransactionFactory().createCreditTransaction({amount: 100}));
+            parentAccount.addTransaction( getTransactionFactory().createExpenseTransaction({amount: 0.01}));
             ormFlush();
             beanFactory.getBean("checkbookSummaryService").transferSummaryRounding();
             var sourceTransaction = EntityLoad("transaction", {account:parentAccount},"id desc");

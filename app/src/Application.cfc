@@ -10,6 +10,7 @@ component extends="framework.one" output="false" {
 	this.mappings["/framework"] = "/framework";
 	this.mappings["/migrations"] = "/database/migrations";
 	this.mappings["/services"] = "/model/services";
+	this.mappings["/utils"] = "/model/utils";
 	this.mappings["/beans"] = "/model/beans";
 	this.mappings["/api"] = "/controllers/api";
 
@@ -19,8 +20,11 @@ component extends="framework.one" output="false" {
 		baseURL = "useRequestURI",
 		defaultSection = 'account',
 		defaultItem = 'list',
-		diLocations = "./model/beans,./model/services",
-		diConfig = {singulars : { generators : "bean", viewModels: "bean" }},
+		diLocations = "./model/beans,./model/services, ./model/utils",
+		diConfig = {
+			singletonPattern : "(services|utils)$",
+			singulars : { generators : "bean", viewModels: "bean" }
+		},
 		SESOmitIndex = false,
 		generateSES = true
 	};
