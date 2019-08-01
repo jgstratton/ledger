@@ -20,9 +20,8 @@ component extends="framework.one" output="false" {
 		baseURL = "useRequestURI",
 		defaultSection = 'account',
 		defaultItem = 'list',
-		diLocations = "./model/beans,./model/services, ./model/utils",
+		diLocations = "./model/beans,./model/services,./model/utils",
 		diConfig = {
-			singletonPattern : "(services|utils)$",
 			singulars : { generators : "bean", viewModels: "bean" }
 		},
 		SESOmitIndex = false,
@@ -120,6 +119,7 @@ component extends="framework.one" output="false" {
 	 * The setupApplication function is called each time the framework is reloaded.
 	 */
 	public void function setupApplication(){
+		ormReload();
 		lock scope="application" timeout="300" {
 			buildRootPath();
 			application.src_dir = "#expandPath(".")#";
@@ -134,6 +134,7 @@ component extends="framework.one" output="false" {
 		}
 		migrate();
 	}
+	
 	public void function setupSession() {  
 		lock scope="session" timeout="5"{
 			session.state = createUUID();
