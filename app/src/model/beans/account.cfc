@@ -4,15 +4,12 @@ component persistent="true" table="accounts" accessors="true" {
     property name="name" ormtype="string" length="100";
     property name="linkedAccount" fieldtype="many-to-one" cfc="account" fkcolumn="linkedAccount"; //parent account
     property name="subAccounts" fieldtype="one-to-many" type="array" cfc="account" fkcolumn="linkedAccount" inverse="true";
-    property name="summary" ormType="string" length="1";
+    property name="summary" ormType="string" length="1" apiDataPopulatorFnc="inSummary";
     property name="created" ormtype="timestamp";
     property name="edited" ormtype="timestamp";
     property name="deleted" ormtype="timestamp";
     property name="transactions" fieldtype="one-to-many" cfc="transaction" fkcolumn="account_id" singularname="transaction";
     property name="type" fieldtype="many-to-one" cfc="accountType" fkcolumn="accountType_id" apiDataPopulatorFnc="getTypeName";;
-
-    //pseudo properties
-    property name="inSummary" type="boolean" persistent="false" update="false" insert="false" apiDataPopulatorFnc="getInSummary";
 
     public function getLongName(){
         if(this.hasLinkedAccount()){
@@ -93,10 +90,10 @@ component persistent="true" table="accounts" accessors="true" {
         return '';
     }
 
-    public boolean function getInSummary(){
+    public boolean function inSummary(){
         return (this.getSummary() eq 'Y');
     }
-    
+
     public boolean function isVirtual(){
         if(this.hasType()){
             return (this.getType().isVirtual());

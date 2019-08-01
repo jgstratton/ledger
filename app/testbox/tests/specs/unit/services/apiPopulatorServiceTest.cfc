@@ -21,12 +21,12 @@ component extends="testbox.system.BaseSpec" {
                 var subAccount = createMock("beans.account")
                     .$("getId",2)
                     .$("getName","Test Sub Account")
-                    .$("getInSummary",true);
+                    .$("inSummary",true);
 
                 var account = createMock("beans.account")
                     .$("getId",1)
                     .$("getName","Test Account")
-                    .$("getInSummary",true)
+                    .$("inSummary",true)
                     .$("getSubAccounts",[subAccount]);
                 
                 var transaction = new beans.transaction();

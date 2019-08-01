@@ -14,7 +14,7 @@ component output="true"  accessors=true {
             var accountStruct = getApiDataPopulatorService().populateAccountsStruct(account, {maxDepth:10});
             accountsData.append(accountStruct);
         }
-        rc.response.setDataKey('accounts',serializeJSON(accountsData));
+        rc.response.setDataKey('accounts',accountsData);
     }
 
     public boolean function requireLogin(required struct rc, required struct api){
