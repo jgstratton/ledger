@@ -9,4 +9,8 @@ component persistent="true" table="accountTypes" accessors="true" {
     public boolean function isVirtual(){
         return this.getIsVirtual();
     }
+
+    public void function save(){
+        EntitySave(this);
+    }
 }

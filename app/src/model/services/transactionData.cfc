@@ -7,7 +7,7 @@ component output="false" accessors="true" {
     property queryUtilService;
 
     public function init(){
-        variables.queryUtilService = new services.utils.queryUtil();
+        variables.queryUtilService = new utils.queryUtilService();
     }
 
     public array function getTransactionData(required account account){
