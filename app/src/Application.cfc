@@ -44,7 +44,8 @@ component extends="framework.one" output="false" {
 		host: "db",
 		port: "3306",
 		username: this.getEnvVar('MYSQL_USER'),
-		password: this.getEnvVar('MYSQL_PASSWORD')
+		password: this.getEnvVar('MYSQL_PASSWORD'),
+		custom: {allowMultiQueries:true}
 	};
 	this.datasource = "appds";
 	
