@@ -143,7 +143,12 @@
             integrity="sha384-utW62Q5udTycRsqDMdQwjeaKASTAE2cf20juuz5yfC1n1hu8gBJ1Pn0oEzKIb8Gd" 
             crossorigin="anonymous"></script>
 
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+
         <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
+        <script src="#application.root_path#/assets/js/dateUtil.js?v=#application.version#"></script>
+        <script src="#application.root_path#/assets/js/chartUtil.js?v=#application.version#"></script>
 
         <!--- add global js variables --->
         <script>
