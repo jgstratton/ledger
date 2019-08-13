@@ -1,7 +1,5 @@
 component accessors="true" extends="base"{
-    property name="value";
     property name="options" type="array";
-    property name="type" ;
 
     public string function getName(){
         return 'select';
@@ -37,6 +35,17 @@ component accessors="true" extends="base"{
         clearOptions();
         for (var option in arguments.options) {
             addOption(option);
+        }
+        return this;
+    }
+
+    /**
+     * Sets the current value to the option value at the given index
+     * @returns this (chaining)
+     */
+    public component function setValueByIndex(required numeric index) {
+        if (getOptions().len() >= index) {
+            setValue(getOptions()[index].value);
         }
         return this;
     }

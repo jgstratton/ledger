@@ -1,18 +1,37 @@
 component accessors="true" {
     property name="trailingAverage" input="viewModels.inputs.select";
     property name="density" input="viewModels.inputs.select";
-    property name="startDate";
-    property name="endDate";
-    property name="Accounts" input="viewModels.inputs.select";
-    property name="IncludeLinked";
+    property name="startDate" input="viewModels.inputs.date";
+    property name="endDate" input="viewModels.inputs.date";
+    property name="accounts" input="viewModels.inputs.select";
+    property name="includeLinked" input="viewModels.inputs.boolean";
 
     //values that come from the rc struct when viewModel is initialized
     property name="user" rcProperty="true";
+
+    public string function getChartData() {
+        var selectedAccountIds = getAccounts().getValue();
+        var userAccounts = getUser().getAccountGroups();
+        var chartData = {
+            'datasets' : []
+        };
+        for (account in UserAccounts) {
+            getLoggerService().debug("Getting chart data for account #account.getid()#");
+            if (listFind(selectedAccountIds,account.getId())) {
+                chartData.datasets.append({
+                    'label': account.getName(),
+                    'data': getTransactionDataService().getAccountRunningHistory(account)
+                });
+            }
+        }
+        return serializeJson(chartData);
+    }
 
     private void function init(required struct rc) {
         initializeInputs();
         populateFromRc(rc);
         setOptions();
+        setDefaultValues();
     }
 
     /**
@@ -66,16 +85,21 @@ component accessors="true" {
     }
 
     private void function setDefaultValues() {
-        var defaults = {
-            trailingAverage: 0,
-            density: 1,
-            startDate: dateadd('yyyy',1,now()),
-            endDate: now()
+        getTrailingAverage().setValue(0);
+        getDensity().setValue(1);
+        getStartDate().setValue(dateadd('yyyy',1,now()));
+        getEndDate().setValue(now());
+        if (getAccounts().getOptions().len()) {
+            getAccounts().setValueByIndex(1)
         }
-        variables.trailingAverage = 0;
-        variables.density = 1;
-        variables.startDate = dateadd('yyyy',1,now());
-        variables.endDate = now();
-        //variables.accounts = 
+        getIncludeLinked().setValue(true);
+    }
+
+    private component function getTransactionDataService() {
+        return request.beanfactory.getBean("transactionDataService");
+    }
+
+    private component function getLoggerService() {
+        return request.beanfactory.getBean("loggerService");
     }
 }

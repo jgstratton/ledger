@@ -65,9 +65,9 @@ component output="false" accessors="true" {
                     avg(t_past.balance) as y
                 FROM RunningTotals t
                 INNER JOIN RunningTotals2 as t_past 
-                    ON t_past.transactionDate between t.transactionDate - 0 and t.transactionDate
-                WHERE t.transactionDate > '2018-01-01'
-                    AND MOD(EntryNum, 1) = 0
+                    ON t_past.transactionDate between t.transactionDate - 90 and t.transactionDate
+                WHERE t.transactionDate > '2012-01-01'
+                    AND MOD(EntryNum, 30) = 0
                 GROUP BY t.transactionDate, date_format(t.transactionDate,'%Y-%m-%d'), t.balance
                 ORDER BY t.transactionDate;
 
@@ -79,11 +79,9 @@ component output="false" accessors="true" {
                     accountId: arguments.account.getId()
                 }
             );
+
         }
-        
-        //writedump(qryRunningTotals);
+
         return queryUtilService.queryToArray(qryRunningTotals);
     }
-
-
 }
