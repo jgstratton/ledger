@@ -12,6 +12,7 @@ component extends="framework.one" output="false" {
 	this.mappings["/services"] = "/model/services";
 	this.mappings["/utils"] = "/model/utils";
 	this.mappings["/beans"] = "/model/beans";
+	this.mappings["/viewModels"] = "/model/beans/viewModels";
 	this.mappings["/api"] = "/controllers/api";
 
 	// FW/1 settings
@@ -273,6 +274,6 @@ component extends="framework.one" output="false" {
 	}
 
 	private component function getLogger() {
-		return application.beanfactory.getBean("loggerService");
+		return new services.logger();
 	}
 }
