@@ -6,7 +6,7 @@ component accessors="true" {
         return this;
     }
 
-    public string function getName(){
+    public string function getType(){
         return 'input';
     }
 }

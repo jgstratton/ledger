@@ -1,7 +1,7 @@
 component accessors="true" extends="base"{
     property name="options" type="array";
 
-    public string function getName(){
+    public string function getType(){
         return 'select';
     }
 

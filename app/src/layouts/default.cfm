@@ -149,6 +149,7 @@
         <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
         <script src="#application.root_path#/assets/js/dateUtil.js?v=#application.version#"></script>
         <script src="#application.root_path#/assets/js/chartUtil.js?v=#application.version#"></script>
+        <script src="#application.root_path#/assets/js/routerUtil.js?v=#application.version#"></script>
 
         <!--- add global js variables --->
         <script>

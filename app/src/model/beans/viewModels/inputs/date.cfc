@@ -1,5 +1,5 @@
 component accessors="true" extends="base"{
-    public string function getName(){
+    public string function getType(){
         return 'date';
     }
 

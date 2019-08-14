@@ -9,29 +9,31 @@ component accessors="true" {
     //values that come from the rc struct when viewModel is initialized
     property name="user" rcProperty="true";
 
-    public string function getChartData() {
+    public struct function getChartData() {
         var selectedAccountIds = getAccounts().getValue();
-        var userAccounts = getUser().getAccountGroups();
+        var userAccounts = getAccountService().getAccounts(); //getUser().getAccountGroups();
         var chartData = {
-            'datasets' : []
+            'datasets' : [],
+            'labels' : []
         };
         for (account in UserAccounts) {
             getLoggerService().debug("Getting chart data for account #account.getid()#");
             if (listFind(selectedAccountIds,account.getId())) {
                 chartData.datasets.append({
                     'label': account.getName(),
-                    'data': getTransactionDataService().getAccountRunningHistory(account)
+                    'data': getAccountRunningHistory(account)
                 });
             }
         }
-        return serializeJson(chartData);
+        return chartData;
     }
 
     private void function init(required struct rc) {
         initializeInputs();
-        populateFromRc(rc);
+        populatePropertiesFromRc(rc);
         setOptions();
         setDefaultValues();
+        populateInputsFromRc(rc);
     }
 
     /**
@@ -52,8 +54,10 @@ component accessors="true" {
     /**
      * Copy the relavent values directly from the rc struct
      */
-    private void function populateFromRc(required struct rc) {
+    private void function populatePropertiesFromRc(required struct rc) {
         var meta = getMetaData(this);
+
+        //update values with rcProperty attribute
         for (var property in meta.properties) {
             if (property.keyExists('rcProperty') && rc.keyExists(property.name)) {
                 invoke(this,"set#property.name#", { "#property.name#": rc[property.name]});
@@ -61,9 +65,23 @@ component accessors="true" {
         }
     }
 
+    /**
+     * Copy the relavent values directly from the rc struct
+     */
+    private void function populateInputsFromRc(required struct rc) {
+        var meta = getMetaData(this);
+        //set the input values based on rc
+        for (var property in meta.properties) {
+            if (property.keyExists('input') && rc.keyExists(property.name)) {
+                var inputProperty = invoke(this,"get#property.name#");
+                inputProperty.setValue(rc[property.name]);
+            }
+        }
+    }
+
     private void function setOptions() {
         getTrailingAverage().setOptions([
-            {value: 0, text: 'No Average'},
+            {value: 1, text: 'No Average'},
             {value: 7, text: 'Weekly'},
             {value: 30, text: 'Monthly'},
             {value: 365, text: 'Yearly'}
@@ -85,14 +103,80 @@ component accessors="true" {
     }
 
     private void function setDefaultValues() {
-        getTrailingAverage().setValue(0);
-        getDensity().setValue(1);
+        getTrailingAverage().setValue(30);
+        getDensity().setValue(7);
         getStartDate().setValue(dateadd('yyyy',1,now()));
         getEndDate().setValue(now());
         if (getAccounts().getOptions().len()) {
-            getAccounts().setValueByIndex(1)
+            getAccounts().setValueByIndex(1);
         }
-        getIncludeLinked().setValue(true);
+        getIncludeLinked().setValue(false);
+    }
+
+    /**
+     * Get the account running avergage data for the chart
+     */
+    private array function getAccountRunningHistory(required account account) {
+        transaction{
+            queryExecute("
+                SET @runtot:=0;
+                SET @entryNum:=0;
+
+                CREATE TEMPORARY TABLE RunningTotals
+                SELECT
+                    q1.transactionDate,
+                    (@runtot := @runtot + q1.dayTotal) AS balance,
+                    (@entryNum := @entryNum + 1) as EntryNum
+                FROM
+                    (
+                        SELECT transactionDate, SUM(signedAmount) AS dayTotal
+                        FROM  vw_transactionData vw 
+                        LEFT JOIN accounts a on vw.account_id = a.id
+                        WHERE  vw.account_id = :accountid or a.linkedAccount = :linkedAccountId
+                        GROUP  BY transactionDate
+                        ORDER BY transactionDate
+                    ) AS q1;
+
+                /* Can't use the same temp table twice in 1 query, so i have to duplicated it */
+                CREATE TEMPORARY TABLE RunningTotals2
+                SELECT transactionDate, balance FROM RunningTotals;",
+
+                {
+                    accountId: arguments.account.getId(),
+                    linkedAccountId: getIncludeLinked().getValue() ? arguments.account.getId() : 0
+                }
+            );
+
+            var qryRunningTotals = queryExecute("
+                
+                SELECT 
+                    t.transactionDate, 
+                    date_format(t.transactionDate,'%Y-%m-%d') as x, 
+                    t.balance, 
+                    avg(t_past.balance) as y
+                FROM RunningTotals t
+                INNER JOIN RunningTotals2 as t_past 
+                    ON t_past.transactionDate between t.transactionDate - :trailingAverage and t.transactionDate
+                WHERE t.transactionDate > '2012-01-01'
+                    AND MOD(EntryNum, :density) = 0
+                GROUP BY t.transactionDate, date_format(t.transactionDate,'%Y-%m-%d'), t.balance
+                ORDER BY t.transactionDate;
+                ",
+                {
+                    accountId: arguments.account.getId(),
+                    trailingAverage: getTrailingAverage().getValue(),
+                    density: getDensity().getValue()
+                }
+            );
+
+            /* Delete temporary tables */
+            queryExecute("                
+                DROP TEMPORARY TABLE RunningTotals;
+                DROP TEMPORARY TABLE RunningTotals2;
+            ");
+        }
+
+        return getQueryUtilService().queryToArray(qryRunningTotals);
     }
 
     private component function getTransactionDataService() {
@@ -101,5 +185,13 @@ component accessors="true" {
 
     private component function getLoggerService() {
         return request.beanfactory.getBean("loggerService");
+    }
+
+    private component function getAccountService() {
+        return request.beanfactory.getBean("accountService");
+    }
+
+    private component function getQueryUtilService() {
+        return request.beanfactory.getBean("queryUtilService");
     }
 }

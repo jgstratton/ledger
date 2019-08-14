@@ -1,9 +1,10 @@
 component accessors="true" extends="base"{
-    public string function getName(){
+    property name="value" default="0";
+    public string function getType(){
         return 'boolean';
     }
 
     public boolean function getValue() {
-        return super.getValue() ? true : false;
+        return variables.value ? true : false;
     }
 }
