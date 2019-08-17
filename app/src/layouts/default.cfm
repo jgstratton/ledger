@@ -57,7 +57,7 @@
                                 <a class="nav-link" href="#buildUrl('transactionSearch.search')#">Search</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
+                                <a href="##" class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#buildUrl('schedular.autoPaymentList')#">Automatic Payments</a>
                                     <a class="dropdown-item" href="#buildUrl('user.checkbookRounding')#">Add Auto Rounding</a>
