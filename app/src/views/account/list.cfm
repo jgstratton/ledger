@@ -26,7 +26,7 @@
                     <div class="card-header h6">
                         <i class="fa fa-fw #thisAccount.getIcon()#"></i>
                         #thisAccount.getname()#
-                        <div class="pull-right text-right">
+                        <div class="float-right text-right">
                             <h4>#moneyFormat(thisAccount.getLinkedBalance())#</h4>
                         </div> 
                     </div>
@@ -95,7 +95,7 @@
                         <hr>
                         <div class="text-muted font-weight-light">
                             Verified account total: 
-                            <span class="pull-right">#moneyFormat(thisAccount.getVerifiedLinkedBalance())#</span>
+                            <span class="float-right">#moneyFormat(thisAccount.getVerifiedLinkedBalance())#</span>
                         </div>
                     </div>
                 </div>
@@ -104,6 +104,6 @@
         </cfloop>
     </div>
 
-    <a href="#buildurl('account.create')#" class="btn btn-primary btn-sm pull-right d-md-inline" ><i class="fa fa-plus"></i> Create New Account</a>
+    <a href="#buildurl('account.create')#" class="btn btn-primary btn-sm float-right d-md-inline" ><i class="fa fa-plus"></i> Create New Account</a>
 
 </cfoutput>

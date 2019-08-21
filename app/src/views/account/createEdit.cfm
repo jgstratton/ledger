@@ -70,7 +70,7 @@
                     <button type="submit" name="submitAccount" class="btn btn-sm btn-primary">
                         Update Account
                     </button>
-                    <button type="button" class="btn btn-danger btn-sm pull-right" data-delete="#rc.account.getid()#">
+                    <button type="button" class="btn btn-danger btn-sm float-right" data-delete="#rc.account.getid()#">
                         <i class="fa fa-trash"></i> Delete
                     </button>
                 </div>

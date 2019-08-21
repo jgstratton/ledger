@@ -10,7 +10,7 @@
                 <div class="col-md-6">
                     <i class="fa fa-exchange"></i> Edit Transfer
                     
-                    <button type="button" class="btn btn btn-outline-danger btn-sm pull-right" data-delete-btn>
+                    <button type="button" class="btn btn btn-outline-danger btn-sm float-right" data-delete-btn>
                         <i class="fa fa-trash"></i> Delete Transfer
                     </button>   
                     <hr>

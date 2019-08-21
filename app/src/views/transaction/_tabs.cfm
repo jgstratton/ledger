@@ -1,5 +1,5 @@
 <cfoutput>
-    <a href="#buildURL('account.edit?accountid=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm pull-right d-none d-md-block" data-close>
+    <a href="#buildURL('account.edit?accountid=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm float-right d-none d-md-inline-block" data-close>
         <i class="fa fa-gear" title="account settings"></i>
     </a>
     <ul class="nav nav-tabs">
