@@ -3,22 +3,27 @@
 }
 
 .dollar-negative:after {
-    content: ")"
+    content: ')';
 }
 
-.dollar-negative:before{
-    content: "("
+.dollar-negative:before {
+    content: '(';
 }
 
-.form-control-ms{
-    padding:0;
+.form-control-ms {
+    padding: 0;
 }
 
-.ms-choice{
-    border:none;
+.ms-choice {
+    border: none;
+}
+
+.ms-parent.form-control {
+    padding: 0px;
+    width: 100% !important;
 }
 
 .text-disabled {
-    color: #96a5b3!important;
+    color: #96a5b3 !important;
     font-style: italic;
 }
