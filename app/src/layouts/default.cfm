@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="./assets/lib/multiple-select/multiple-select.min.css">
         <link rel="stylesheet" href="./assets/lib/datatables/jquery.dataTables.min.css">
         <link rel="stylesheet" href="./assets/lib/datatables/responsive.dataTables.min.css">
-
+        <link rel="stylesheet" href="./assets/lib/daterangepicker/daterangepicker.css">
         <!--- include application styles --->
         <link rel="stylesheet" type="text/css" href="./assets/css/app.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="./assets/css/transactions.css?v=#application.version#" />
@@ -114,6 +114,8 @@
         <script src="./assets/lib/moment/moment.min.js"></script>
         <script src="./assets/lib/moment/moment.min.js"></script>
         <script src="./assets/lib/chart/chart.min.js"></script>
+        <script src="./assets/lib/daterangepicker/daterangepicker.js"></script>
+        
 
 
         <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
