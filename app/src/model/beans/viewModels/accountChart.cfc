@@ -11,7 +11,7 @@ component accessors="true" {
 
     public struct function getChartData() {
         var selectedAccountIds = getAccounts().getValue();
-        var userAccounts = getAccountService().getAccounts(); //getUser().getAccountGroups();
+        var userAccounts = getAccountService().getAccounts();
         var chartData = {
             'datasets' : [],
             'labels' : []
@@ -94,7 +94,7 @@ component accessors="true" {
             {value: 365, text: 'Yearly'}
         ]);
 
-        var userAccounts = getUser().getAccountGroups();
+        var userAccounts = getAccountService().getAccounts();
         if (local.keyExists('userAccounts')) {
             getAccounts().setOptions(arrayMap(userAccounts, function(userAccount){
                 return {value: userAccount.getId(), text: userAccount.getName()}
@@ -103,7 +103,7 @@ component accessors="true" {
     }
 
     private void function setDefaultValues() {
-        getTrailingAverage().setValue(30);
+        getTrailingAverage().setValue(7);
         getDensity().setValue(7);
         getStartDate().setValue(dateadd('yyyy',-1,now()));
         getEndDate().setValue(now());
