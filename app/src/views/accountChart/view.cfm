@@ -88,7 +88,8 @@
         var $form = $templateDiv.find('form');
         var $multiSelects = $templateDiv.find("[data-multiselect]");
         var color = Chart.helpers.color;
-       
+        var $submitBtn = $form.find("button[type='submit']");
+
         var chart = new Chart($canvas, {
             type: 'line',
             data: {},
@@ -131,6 +132,7 @@
         });
 
         $form.submit(function(e){
+            startSpinner();
             getChartData();
             return false;
         });
@@ -149,6 +151,7 @@
                 setDatasetColors(chartData);
                 chart.data = chartData;
                 chart.update();
+                stopSpinner();     
             })
             .fail(function(a, b){
                 $("body").append(a.responseText);
@@ -185,6 +188,16 @@
             });
 
         });
+
+        function startSpinner() {
+            $submitBtn.prop('disabled',true);
+            $submitBtn.find('i').addClass('fa-spinner fa-spin').removeClass('fa-check');
+        }
+
+        function stopSpinner() {
+            $submitBtn.prop('disabled',false);
+            $submitBtn.find('i').removeClass('fa-spinner fa-spin').addClass('fa-check');
+        }
 
         getChartData();
     });
