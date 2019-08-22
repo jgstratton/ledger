@@ -12,6 +12,7 @@ component extends="framework.one" output="false" {
 	this.mappings["/services"] = "/model/services";
 	this.mappings["/utils"] = "/model/utils";
 	this.mappings["/beans"] = "/model/beans";
+	this.mappings["/viewModels"] = "/model/beans/viewModels";
 	this.mappings["/api"] = "/controllers/api";
 
 	// FW/1 settings
@@ -44,7 +45,8 @@ component extends="framework.one" output="false" {
 		host: "db",
 		port: "3306",
 		username: this.getEnvVar('MYSQL_USER'),
-		password: this.getEnvVar('MYSQL_PASSWORD')
+		password: this.getEnvVar('MYSQL_PASSWORD'),
+		custom: {allowMultiQueries:true}
 	};
 	this.datasource = "appds";
 	
@@ -272,6 +274,6 @@ component extends="framework.one" output="false" {
 	}
 
 	private component function getLogger() {
-		return application.beanfactory.getBean("loggerService");
+		return new services.logger();
 	}
 }

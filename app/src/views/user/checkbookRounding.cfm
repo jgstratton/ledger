@@ -55,7 +55,7 @@
                             </cfif>
                         </button>
                         <cfif rc.roundingAccount>
-                            <button type="button" class="btn btn-sm btn-outline-secondary pull-right" data-disable-btn>
+                            <button type="button" class="btn btn-sm btn-outline-secondary float-right" data-disable-btn>
                                 <i class="fa fa-times"></i> Disable
                             </button>
                         </cfif>

@@ -7,25 +7,23 @@
         
         <cfinclude template="includes/meta.cfm">
 
-        <link rel="icon" href="#application.root_path#/assets/images/credit_card.png" /> 
+        <link rel="icon" href=".assets/images/credit_card.png" /> 
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css" />
-
-        <link 
-            rel="stylesheet" 
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
-            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
-            crossorigin="anonymous">
-
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/multiple-select/1.2.2/multiple-select.min.css">
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" />
-        <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/app.css?v=#application.version#" />
-        <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/transactions.css?v=#application.version#" />
-        <link rel="stylesheet" type="text/css" href="#application.root_path#/assets/css/classes.css?v=#application.version#" />
+        <!--- include styles from libraries --->
+        <link rel="stylesheet" href="./assets/lib/font-awesome/css/all.css">
+        <link rel="stylesheet" href="./assets/lib/font-awesome/css/v4-shims.css">
+        <link rel="stylesheet" href="./assets/lib/jquery-ui-themes/smoothness.jquery-ui.min.css" />
+        <link rel="stylesheet" href="./assets/lib/bootstrap/bootstrap.min.css" />
+        <link rel="stylesheet" href="./assets/lib/multiple-select/multiple-select.min.css">
+        <link rel="stylesheet" href="./assets/lib/datatables/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="./assets/lib/datatables/responsive.dataTables.min.css">
+        <link rel="stylesheet" href="./assets/lib/daterangepicker/daterangepicker.css">
+        <!--- include application styles --->
+        <link rel="stylesheet" type="text/css" href="./assets/css/app.css?v=#application.version#" />
+        <link rel="stylesheet" type="text/css" href="./assets/css/transactions.css?v=#application.version#" />
+        <link rel="stylesheet" type="text/css" href="./assets/css/classes.css?v=#application.version#" />
        
-        <script src="#application.root_path#/assets/js/viewScripts.js?v=#application.version#"></script>
+        <script src="./assets/js/viewScripts.js?v=#application.version#"></script>
         
 
 	</head>
@@ -102,48 +100,28 @@
             </div>
         </main>
 
-        <!--- Scripts needed for bootstrap 4 --->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-
+        <!--- include js libraries / dependencies--->
+        <script src="./assets/lib/jquery/jquery.min.js"></script>
+        <script src="./assets/lib/popper/popper.min.js"></script>
+        <script src="./assets/lib/bootstrap/bootstrap.min.js"></script>
+        <script src="./assets/lib/jquery-ui/jquery-ui.min.js"></script>
+        <script src="./assets/lib/jquery-validate/jquery.validate.min.js"></script>
+        <script src="./assets/lib/jquery-validate/additional-methods.min.js"></script>
+        <script src="./assets/lib/jquery-touch-events/jquery.mobile-events.min.js"></script>
+        <script src="./assets/lib/multiple-select/multiple-select.min.js"></script>
+        <script src="./assets/lib/datatables/jquery.dataTables.min.js"></script>
+        <script src="./assets/lib/datatables/dataTables.responsive.min.js"></script>
+        <script src="./assets/lib/moment/moment.min.js"></script>
+        <script src="./assets/lib/moment/moment.min.js"></script>
+        <script src="./assets/lib/chart/chart.min.js"></script>
+        <script src="./assets/lib/daterangepicker/daterangepicker.js"></script>
         
-        <!--- Scripts for UI and validate--->
-        <script
-            src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-            crossorigin="anonymous"></script>
 
-        <script 
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.js" 
-            integrity="sha256-yazfaIh2SXu8rPenyD2f36pKgrkv5XT+DQCDpZ/eDao=" 
-            crossorigin="anonymous"></script>
-
-        <script 
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js" 
-            integrity="sha256-0Yg/eibVdKyxkuVo1Qwh0DspoUCHvSbm/oOoYVz32BQ=" 
-            crossorigin="anonymous"></script>
-
-        <script 
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery-touch-events/1.0.5/jquery.mobile-events.js" 
-            integrity="sha384-PH9iS/KgZGPhP/z3Er7jDrTMgCNk3wS+MMT/u4fBbhryGQJPwDvbltI6Z2LECqCQ" 
-            crossorigin="anonymous"></script>
-            
-        <script 
-            src="https://cdnjs.cloudflare.com/ajax/libs/multiple-select/1.2.2/multiple-select.min.js" 
-            integrity="sha384-0oWzNuQzyCYxinHFCTnivO8O/5tM8VHyCy/wzssUzMM8dJzW41ZlnP4ud+hX2FYJ" 
-            crossorigin="anonymous"></script>
-
-        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" 
-            integrity="sha384-rgWRqC0OFPisxlUvl332tiM/qmaNxnlY46eksSZD84t+s2vZlqGeHrncwIRX7CGp" 
-            crossorigin="anonymous"></script>    
-        
-        <script 
-            src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js" 
-            integrity="sha384-utW62Q5udTycRsqDMdQwjeaKASTAE2cf20juuz5yfC1n1hu8gBJ1Pn0oEzKIb8Gd" 
-            crossorigin="anonymous"></script>
 
         <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
+        <script src="#application.root_path#/assets/js/dateUtil.js?v=#application.version#"></script>
+        <script src="#application.root_path#/assets/js/chartUtil.js?v=#application.version#"></script>
+        <script src="#application.root_path#/assets/js/routerUtil.js?v=#application.version#"></script>
 
         <!--- add global js variables --->
         <script>
