@@ -44,13 +44,18 @@
         </div>
         <div class="row">
             <label class="col-3 col-form-label">Date Range:</label>
-            <div class="col-4">
-                <cfset input = rc.viewModel.getStartDate()>
-                <input type="text" name="#input.getName()#" value="#input.getFormattedValue()#" class="form-control form-control-sm">
-            </div>
-            <div class="col-4">
-                <cfset input = rc.viewModel.getEndDate()>
-                <input type="text" name="#input.getName()#" value="#input.getFormattedValue()#" class="form-control form-control-sm">
+            <div class="col-9">
+                <cfset startDateInput = rc.viewModel.getStartDate()>
+                <cfset endDateInput = rc.viewModel.getEndDate()>
+                <input 
+                    type="text" 
+                    value="" 
+                    class="form-control form-control-sm" 
+                    data-daterange 
+                    data-input-start="#startDateInput.getName()#"
+                    data-input-end="#endDateInput.getName()#">
+                <input type="hidden" name="#startDateInput.getName()#" value="#startDateInput.getFormattedValue()#" class="form-control form-control-sm">
+                <input type="hidden" name="#endDateInput.getName()#" value="#endDateInput.getFormattedValue()#" class="form-control form-control-sm">
             </div>
         </div>
         <div class="row">
@@ -159,6 +164,27 @@
                 dataset.fill = false;
             }
         }
+
+        $("[data-daterange]").each(function(){
+            var $inputStart = $("[name='" + $(this).data('inputStart') + "']");
+            var $inputEnd = $("[name='" + $(this).data('inputEnd') + "']");
+
+            $("[data-daterange]").daterangepicker({
+                startDate: $inputStart.val(),
+                endDate: $inputEnd.val(),
+                ranges: {
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    '1 Year': [moment().subtract(365, 'days'), moment()],
+                    '3 Years': [moment().subtract(365*3, 'days'), moment()],
+                    '5 Years': [moment().subtract(365*5, 'days'), moment()],
+                    '10 Years': [moment().subtract(365*10, 'days'), moment()]
+                }
+            }).on('apply.daterangepicker', function(event, picker) {
+                $inputStart.val(picker.startDate.format('MM/DD/YYYY'));
+                $inputEnd.val(picker.endDate.format('MM/DD/YYYY'));
+            });
+
+        });
 
         getChartData();
     });

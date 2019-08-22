@@ -105,7 +105,7 @@ component accessors="true" {
     private void function setDefaultValues() {
         getTrailingAverage().setValue(30);
         getDensity().setValue(7);
-        getStartDate().setValue(dateadd('yyyy',1,now()));
+        getStartDate().setValue(dateadd('yyyy',-1,now()));
         getEndDate().setValue(now());
         if (getAccounts().getOptions().len()) {
             getAccounts().setValueByIndex(1);
@@ -132,7 +132,9 @@ component accessors="true" {
                         SELECT transactionDate, SUM(signedAmount) AS dayTotal
                         FROM  vw_transactionData vw 
                         LEFT JOIN accounts a on vw.account_id = a.id
-                        WHERE  vw.account_id = :accountid or a.linkedAccount = :linkedAccountId
+                        WHERE  (vw.account_id = :accountid or a.linkedAccount = :linkedAccountId)
+                            AND vw.transactionDate >= :accountStartDate
+                            AND vw.transactionDate <= :accountEndDate
                         GROUP  BY transactionDate
                         ORDER BY transactionDate
                     ) AS q1;
@@ -143,7 +145,9 @@ component accessors="true" {
 
                 {
                     accountId: arguments.account.getId(),
-                    linkedAccountId: getIncludeLinked().getValue() ? arguments.account.getId() : 0
+                    linkedAccountId: getIncludeLinked().getValue() ? arguments.account.getId() : 0,
+                    accountStartDate: getStartDate().getSqlValue(),
+                    accountEndDate: getEndDate().getSqlValue()
                 }
             );
 
