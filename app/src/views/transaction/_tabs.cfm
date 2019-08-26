@@ -1,11 +1,17 @@
 <cfoutput>
-    
-    <a title="Edit Account" href="#buildURL('account.edit?accountid=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm float-right d-none d-md-inline-block" data-close>
+        
+    <a href="#buildurl('transaction.newTransaction?accountid=#rc.account.getid()#')#" class="btn btn-primary btn-sm mr-1" title="Add Transaction">
+        <i class="fa fa-plus"></i> New Transaction
+    </a>
+    <a title="Edit Account" href="#buildURL('account.edit?accountid=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm float-right" data-close>
         <i class="fa fa-gear" title="account settings"></i>
     </a>
     <a href="#buildURL('accountChart.view?accounts=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm float-right mr-1" title="View Account Balance History">
         <i class="fa fa-chart-line"></i>
     </a>
+  
+
+    <!---
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link #matchDisplay(getItem(),'newTransaction','active disabled')#" href="#buildurl('transaction.newTransaction?accountid=#rc.account.getid()#')#">Add Entry</a>
@@ -17,7 +23,7 @@
         <span class="nav-link  #matchDisplay(getItem(),'edit','active','disabled')#">Edit Entry</span>
         </li>
     </ul> 
-
+--->
 </cfoutput>
 
 
