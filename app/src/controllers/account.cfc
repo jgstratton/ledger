@@ -8,16 +8,6 @@ component name="account" output="false"  accessors=true {
         variables.fw=arguments.fw;
     }
 
-    public void function list( struct rc = {} ) {
-
-        if(not rc.user.hasAccount()){
-            variables.fw.setView('account.blank');
-        } else {
-            rc.mainAccounts = rc.user.getAccountGroups();
-            rc.summary = rc.user.getSummaryBalance();
-        }
-    }
-
     private void function createEdit (struct rc = {}, account){
         var account = arguments.account;
         var accountService = variables.accountService;

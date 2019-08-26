@@ -19,8 +19,8 @@ component extends="framework.one" output="false" {
 	variables.framework = {
 		action = 'action',
 		baseURL = "useRequestURI",
-		defaultSection = 'account',
-		defaultItem = 'list',
+		defaultSection = 'main',
+		defaultItem = 'accountsList',
 		diLocations = "./model/beans,./model/services,./model/utils",
 		diConfig = {
 			singulars : { generators : "bean", viewModels: "bean" }
