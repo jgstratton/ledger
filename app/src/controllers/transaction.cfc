@@ -41,7 +41,10 @@ component name="account" output="false"  accessors=true {
     }
 
     public void function verify( struct rc = {} ){
-        param name="rc.includeSubaccounts" default="0";
+        
+        if (!rc.keyExists('includeSubaccounts') || !len(rc.includeSubaccounts)) {
+            rc.includeSubaccounts = false;
+        }
         rc.account = accountService.getAccountById(rc.accountid);
         rc.unverifiedTransactions = transactionService.getUnverifiedTransactions(rc.account, rc.includeSubaccounts);
         rc.verifiedTransactions = transactionService.getVerifiedTransactions(rc.account, rc.includeSubaccounts);
