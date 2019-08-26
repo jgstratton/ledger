@@ -60,8 +60,15 @@ component name="auth" output="false"  accessors=true {
     private void function completeFacebookLogin(required string fbToken) {
         cfparam (name="session.loginByProxy", default="false");
         var fbUser = variables.facebook.getMe(fbToken);
+
+        //if the token doesn't contain an id, it's no good.  Log the user out
+        if (!fbUser.keyExists('id')) {
+            logout();
+            return;
+        }
+
         var username = fbUser.id;
-        
+         
         if (fbUser.keyExists('email')) {
             username = fbUser.email;
         }
