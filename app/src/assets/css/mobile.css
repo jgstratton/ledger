@@ -1,0 +1,58 @@
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;
+    }
+    h3 {
+        font-size: 1.4rem;
+    }
+    header {
+        margin-bottom: 0.5rem;
+    }
+
+    .mobile-hide {
+        display: none;
+    }
+    .sm-pad {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .sm-stretch {
+        padding-left: -10px;
+        padding-right: -10px;
+    }
+    .inner-content > div:not(.modal),
+    .inner-content > ul > li.list-group-item,
+    .inner-content > ul.nav-tabs {
+        border-radius: 0 !important;
+        border-left: none;
+        border-right: none;
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+    .inner-content > ul.nav-tabs > li:first-child {
+        margin-left: 15px;
+    }
+
+    .nav-tabs .nav-link {
+        padding: 0.25rem 0.5rem;
+    }
+    #verifySummary {
+        padding: 15px;
+        border-radius: 0 !important;
+        border-left: none;
+        border-right: none;
+        box-sizing: content-box;
+    }
+    .ui-datepicker {
+        width: 100%;
+        padding: 5%;
+        left: 0px !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-radius: 0;
+    }
+    .ui-datepicker-header {
+        border: none;
+        background: none;
+    }
+}
