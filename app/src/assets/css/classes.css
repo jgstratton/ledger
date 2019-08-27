@@ -27,3 +27,10 @@
     color: #96a5b3 !important;
     font-style: italic;
 }
+.bg-dark {
+    color: white;
+}
+.full-width {
+    margin-left: -15px;
+    margin-right: -15px;
+}

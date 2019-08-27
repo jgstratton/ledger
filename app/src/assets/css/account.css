@@ -1,0 +1,26 @@
+.account-summary h6 {
+    line-height: 1.5;
+    font-size: 1.2rem;
+    font-weight: normal;
+    padding: 4px;
+}
+
+.account-summary .balance-wrap {
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.account-summary .balance {
+    flex: 1;
+    padding: 5px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.account-summary .balance:nth-child(n + 2) {
+    border-left: 1px solid #ccc;
+}
+
+.account-summary .balance .amount {
+    font-weight: bold;
+}
