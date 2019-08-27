@@ -10,7 +10,6 @@
         <body> 
             <header>
                 #view('account/_header')#
-                #view('main/navbar')#
             </header>
         
             <main>

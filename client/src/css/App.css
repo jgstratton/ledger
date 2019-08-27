@@ -93,15 +93,8 @@ form {
     table-layout: fixed;
 }
 
-.list-group-header {
-    padding: 0.75rem 1.25rem;
-    font-weight: bold;
-}
 .nav-tabs {
     margin-bottom: 15px;
-}
-.site-footer {
-    padding: 0.55rem;
 }
 
 td,

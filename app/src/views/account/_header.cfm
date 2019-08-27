@@ -9,14 +9,15 @@
 
     <div id="#local.viewId#" class="account-summary">
         <div class="bg-dark">
-            <div class="center-content">
-                <div>
-                    <button class="navbar-toggler collapsed float-left" type="button" data-toggle="collapse" data-target="##navbar">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                </div>
+            <div class="center-content d-flex">
+                <button class="float-left navbar-toggler" type="button" data-toggle="collapse" data-target="##navbar">
+                    <i class="fa fa-bars"></i>
+                </button>
                 <h6 class="text-center">#rc.account.getLongName()#</h6>
             </div>
+            #view('main/navbar', {
+                activeSection: 'account'
+            })#
         </div>
         <div class="balance-wrap center-content">
             <div class="balance">
