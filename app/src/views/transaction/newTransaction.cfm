@@ -1,11 +1,12 @@
 <cfoutput>
 
     #view("transaction/_tabs")#
+    <!---
     #view("transaction/_transactionForm")#
-
+    --->
     <cfset local.viewID = "view" & randrange(1,10000000)>
 
-    <div id="#local.viewId#">
+    <div id="#local.viewId#" class="center-content">
 
         <h6 class="small text-muted">Recent Transactions</h6>
 
