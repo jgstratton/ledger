@@ -89,11 +89,7 @@ class Header extends Component {
 
                     <div className="title-bar">
                         <hr />
-                        {/*
-                <cfif request.section eq "transaction" or (request.section eq 'transfer' and request.item eq 'edit')>
-                    #view('transaction/_header')#
-                </cfif>
-                */}
+                        {}
                     </div>
                 </div>
             </header>
