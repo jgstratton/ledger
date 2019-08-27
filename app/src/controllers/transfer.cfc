@@ -30,6 +30,7 @@ component name="transfer" accessors=true {
             update(rc);
         }
         rc.account = rc.transaction.getAccount();
+        variables.fw.setLayout('account');
         variables.fw.setView('transaction.edit');
     }
 

@@ -1,15 +1,8 @@
 <cfoutput>
 
-    #view("transaction/_transactionForm")#
-
     <div id="#local.templateId#" class="center-content">
-        <a href="#buildurl('transaction.newTransaction?accountid=#rc.account.getid()#')#" class="btn btn-primary btn-sm mr-1" title="Add Transaction">
-            <i class="fa fa-plus"></i> New Transaction
-        </a>
-        <h6 class="small text-muted">Recent Transactions</h6>
-
         <div class="sm-stretch">
-            <table class="table">
+            <table class="table table-sm">
                 <col style="width:20px">
                 <thead>
                     <tr>
@@ -19,7 +12,6 @@
                         <th class="d-none d-md-table-cell">Category</th>
                         <th class="d-none d-md-table-cell">Note</th>
                         <th style="text-align:right">Amount</th>
-                        <th>&nbsp;</th>
                     </tr>
             
                 </thead>
@@ -43,17 +35,16 @@
                             </cfif>
                         </td>
                         <td>#dayFormat(local.transaction.TransactionDate)#</td>
-                        <td>#local.transaction.Name#</td>
+                        <td>
+                            <a href="##" data-edit-transaction="#local.transaction.id#" data-is-transfer="#(len(local.transaction.transferType) gt 0)#">
+                                #local.transaction.Name#
+                            </a>
+                        </td>
                         <td class="d-none d-md-table-cell">
                             #local.transaction.Category_Name#
                         </td>
                         <td class="d-none d-md-table-cell">#local.transaction.Note#</td>
                         <td class="#local.transStyle#" align="right">#moneyFormat(abs(local.transaction.signedAmount))#</td>
-                        <td>
-                            <button type="submit" class="btn btn-link" data-edit-transaction="#local.transaction.id#" data-is-transfer="#(len(local.transaction.transferType) gt 0)#">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                        </td>
                     </tr>
 
                 </cfloop>
@@ -77,7 +68,7 @@
             }
             post(postUrl, {
                 transactionid:$(this).data('editTransaction'),
-                returnTo: 'transaction.newTransaction',
+                returnTo: 'transaction.transactionList',
                 accountid: '#rc.accountId#'
             });
         });

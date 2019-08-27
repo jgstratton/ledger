@@ -48,10 +48,18 @@ component name="account" output="false"  accessors=true {
      * @authorizer "authorizeByAccountId"
      * @layout "account"
      */
+    public void function transactionList( struct rc = {} ){
+        rc.account = accountService.getAccountByID(rc.accountid);
+        rc.transactions = transactionDataService.getTransactionData(rc.account);
+    }
+
+    /**
+     * @authorizer "authorizeByAccountId"
+     * @layout "account"
+     */
     public void function newTransaction( struct rc = {} ){
         rc.account = accountService.getAccountByID(rc.accountid);
         rc.transaction = transactionService.createTransaction(rc.account);
-        rc.transactions = transactionDataService.getTransactionData(rc.account);
         rc.categories = categoryService.getCategories();
         variables.update(rc);
     }

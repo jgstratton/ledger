@@ -1,6 +1,4 @@
     <cfoutput>
-
-        #view("transaction/_tabs")#
         
         <cfset local.viewID = "view" & randrange(1,10000000)>
         <cfset local.transactions = []>

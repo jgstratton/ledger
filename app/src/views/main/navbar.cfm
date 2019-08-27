@@ -7,7 +7,7 @@
             <ul class="navbar-nav mr-auto">
                 <cfif local.activeSection eq "account">
                     <cfset local.accountOptions = [{
-                            action: 'transaction.newTransaction',
+                            action: 'transaction.transactionList',
                             label: 'Transaction History',
                             icon: 'fa fa-list'
                         },{

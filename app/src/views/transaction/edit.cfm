@@ -1,6 +1,5 @@
 <cfoutput>
 
-    #view("transaction/_tabs")#
     <cfif rc.transaction.isTransfer()>
         #view("transaction/_transferForm")# 
     <cfelse>
