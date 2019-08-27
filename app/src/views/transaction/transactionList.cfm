@@ -1,6 +1,9 @@
 <cfoutput>
 
     <div id="#local.templateId#" class="center-content">
+        <a href="#buildurl('transaction.newTransaction?accountid=#rc.account.getid()#')#" class="btn btn-primary btn-lg fixed-bottom-right-circle-button" title="Add Transaction">
+            <i class="fa fa-plus"></i>
+        </a>
         <div class="sm-stretch">
             <table class="table table-sm">
                 <col style="width:20px">
