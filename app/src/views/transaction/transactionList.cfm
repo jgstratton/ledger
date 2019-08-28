@@ -5,11 +5,11 @@
             <i class="fa fa-plus"></i>
         </a>
         <div class="sm-stretch">
-            <table class="table table-sm">
+            <table class="table styled-table">
                 <col style="width:20px">
                 <thead>
                     <tr>
-                        <th></th>
+                        <th class="mobile-hide"></th>
                         <th>Date</th>
                         <th>Description</th>
                         <th class="d-none d-md-table-cell">Category</th>
@@ -32,7 +32,7 @@
                     </cfif>
 
                     <tr class="#local.rowClass#">
-                        <td>
+                        <td class="mobile-hide">
                             <cfif len(local.transaction.transferType) gt 0>
                                 <i class="fa fa-fw fa-exchange" title="transfer #local.transaction.transferType# #local.transaction.linkedAccountName#"></i>
                             </cfif>
