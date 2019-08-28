@@ -24,12 +24,14 @@
     <link rel="stylesheet" href="./assets/lib/datatables/jquery.dataTables.min.css">
     <link rel="stylesheet" href="./assets/lib/datatables/responsive.dataTables.min.css">
     <link rel="stylesheet" href="./assets/lib/daterangepicker/daterangepicker.css">
+
     <!--- include application styles --->
     <link rel="stylesheet" type="text/css" href="./assets/css/app.css?v=#application.version#" />
     <link rel="stylesheet" type="text/css" href="./assets/css/mobile.css?v=#application.version#" />
     <link rel="stylesheet" type="text/css" href="./assets/css/transactions.css?v=#application.version#" />
     <link rel="stylesheet" type="text/css" href="./assets/css/classes.css?v=#application.version#" />
     <link rel="stylesheet" type="text/css" href="./assets/css/navbar.css?v=#application.version#" />
+    <link rel="stylesheet" type="text/css" href="./assets/css/footer.css?v=#application.version#" />
 
     <script src="./assets/js/viewScripts.js?v=#application.version#"></script>
 

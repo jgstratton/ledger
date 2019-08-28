@@ -5,5 +5,7 @@
     <cfelse>
         #view("transaction/_transactionForm")#   
     </cfif>
-    
+    #view("navigation/navBackFooter", {
+        paramList: 'accountid'
+    })#
 </cfoutput>

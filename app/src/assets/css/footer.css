@@ -1,0 +1,13 @@
+.footer-bar {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    background-color: #343a40;
+    color: white;
+    padding: 1rem;
+    margin-left: -0.5rem;
+}
+
+.footer-bar a {
+    color: white;
+}
