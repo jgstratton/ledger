@@ -40,5 +40,20 @@
     bottom: 20px;
     right: 20px;
     border-radius: 50%;
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.50;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+}
+
+.styled-table {
+    color: #717171;
+}
+
+.styled-table td {
+    padding: 1rem;
+}
+
+@media (max-width: 576px) {
+    .styled-table td {
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
 }
