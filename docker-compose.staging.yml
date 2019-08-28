@@ -11,7 +11,7 @@ services:
                 CERT_FILE: '${CERT_FILE}'
                 CERT_KEY_FILE: '${CERT_KEY_FILE}'
                 TIER: '${TIER}'
-        container_name: '${CONTAINER_PREFIX}_lucee'
+        container_name: '${CONTAINER_PREFIX}_lucee_staging'
         restart: 'always'
         ports:
             - '${LUCEE_PORT}:8080'
