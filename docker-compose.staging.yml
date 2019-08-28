@@ -13,8 +13,6 @@ services:
                 TIER: '${TIER}'
         container_name: '${CONTAINER_PREFIX}_lucee'
         restart: 'always'
-        depends_on:
-            - db
         ports:
             - '${LUCEE_PORT}:8080'
             - '${LUCEE_SSL_PORT}:8443'
