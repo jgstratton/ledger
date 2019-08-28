@@ -1,3 +1,4 @@
+<cfparam name="local.authenticated" default="false">
 <cfoutput>
 
     <title>My Checkbook</title>

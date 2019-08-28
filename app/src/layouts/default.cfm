@@ -3,7 +3,9 @@
 
     <html>	
         <head>
-            #view('main/head')#
+            #view('main/head', {
+                authenticated:true
+            })#
         </head>
 
         <body> 
