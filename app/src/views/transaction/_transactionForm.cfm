@@ -24,7 +24,7 @@
             </div>
             <div class="col-3">
                 <cfif local.mode eq "edit">
-                    <button type="button" class="btn btn btn-outline-danger btn-sm float-right" data-delete-btn>
+                    <button type="button" class="btn btn btn-outline-danger btn-sm float-right trash-btn" data-delete-btn>
                         <i class="fa fa-trash"></i> <span class="mobile-hide">Delete Entry</span>
                     </button> 
                 </cfif>         

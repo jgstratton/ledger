@@ -24,19 +24,19 @@
                 <div class="amount" data-js-hook="accountBalance">
                     #moneyFormat(rc.account.getBalance())#
                 </div>
-                Account Balance
+                <a href="##">Account Balance</a>
             </div>
             <div class="balance">
                 <div class="amount" data-js-hook="linkedBalanceVerified">
                     #dollarFormat(rc.account.getVerifiedLinkedBalance())#
                 </div>
-                Verified Balance
+                <a href="##">Verified Balance</a>
             </div>
             <div class="balance">
                 <div class="amount" data-js-hook="summaryBalance">
                     #moneyFormat(rc.user.getSummaryBalance())#
                 </div>
-                Checkbook Summary
+                <a href="##">Checkbook Summary</a>
             </div>
         </div>
     </div>
