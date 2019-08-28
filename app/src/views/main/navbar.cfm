@@ -21,7 +21,8 @@
                         },{
                             action: 'accountChart.view',
                             label: 'View Account Balance History',
-                            icon: 'fa fa-chart-line'
+                            icon: 'fa fa-chart-line',
+                            params: {accounts: rc.accountid}
                         },{
                             action: 'account.edit',
                             label: 'Edit Account',
@@ -33,13 +34,16 @@
                         <div class="nav-section">                        
                             <ul class="navbar-nav mr-auto">
                                 <cfset local.currentAction = "#request.section#.#request.item#">
+                                <cfset defaultParams = {
+                                    accountid: rc.accountid,
+                                    returnTo: local.currentAction
+                                }>
                                 <cfloop array="#local.accountOptions#" index="accountOption">
                                     <li class="nav-item">
                                         <cfif accountOption.action neq local.currentAction>
-                                            <a class="nav-link" href="#buildUrl(action: accountOption.action, queryString: {
-                                                accountid: rc.accountid,
-                                                returnTo: local.currentAction
-                                            })#">
+                                            <cfset local.queryString = accountOption.params ?: {}>
+                                            <cfset local.queryString.append(defaultParams)>
+                                            <a class="nav-link" href="#buildUrl(action: accountOption.action, queryString: local.queryString)#">
                                                 <i class="#accountOption.icon#"></i>
                                                 #accountOption.label#
                                             </a>
