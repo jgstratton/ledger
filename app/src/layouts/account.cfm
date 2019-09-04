@@ -23,6 +23,7 @@
                     </div>
                 </div>
             </main>
+            <footer></footer>
             #view('main/includeScripts')#
         </body>
     </html>

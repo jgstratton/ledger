@@ -10,8 +10,19 @@
             </cfif>
         </cfloop>
 
-        <div class="footer-bar">
-            <a href="#buildurl(action: rc.returnto, queryString: local.queryString )#"><i class="fa fa-arrow-left"></i></a>
-        </div>
+        <script type="text/html" data-footer-content>
+            <div class="footer-bar">
+                <div class="center-content">
+                    <a href="#buildurl(action: rc.returnto, queryString: local.queryString )#"><i class="fa fa-arrow-left"></i></a>
+                </div>
+            </div>
+        </script>
+        <script>
+            viewScripts.add(function(){
+                var $view = $('###local.templateID#');
+                var $footerContent = $view.find("[data-footer-content]");
+                $("footer").append($footerContent.html());
+            });
+        </script>
     </cfif>
 </cfoutput>
