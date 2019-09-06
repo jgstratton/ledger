@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+    lucee_staging:
+        build:
+            context: ./lucee
+            dockerfile: Dockerfile
+            args:
+                ENABLE_SSL: '${ENABLE_SSL}'
+                SSL_PORT: '${LUCEE_SSL_PORT}'
+                CERT_FILE: '${CERT_FILE}'
+                CERT_KEY_FILE: '${CERT_KEY_FILE}'
+                TIER: '${TIER}'
+        container_name: '${CONTAINER_PREFIX}_lucee_staging'
+        restart: 'always'
+        ports:
+            - '${LUCEE_PORT}:8080'
+            - '${LUCEE_SSL_PORT}:8443'
+        networks:
+            - localnet
+        volumes:
+            - ./app/src:/app/src
+            - ./app/testbox/tests:/app/testbox/tests
+            - ./logs/app/:/var/log
+            - ./logs/lucee/:/root/serverHome/WEB-INF/lucee-web/logs
+            - ${CERT_BASE_PATH}:/certs
+        environment:
+            - MYSQL_DATABASE
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - ENABLE_SSL
+            - LUCEE_PORT
+            - LUCEE_SSL_PORT
+            - LUCEE_HOST
+            - REACT_HOST
+            - TIER
+            - FACEBOOK_APPID
+            - FACEBOOK_APPSECRET
+            - DEFAULT_USER_EMAIL
+            - cfconfigfile
+            - cfconfig_adminPassword
+            - TZ
+
+networks:
+    localnet:
+        name: '${CONTAINER_PREFIX}_net'
