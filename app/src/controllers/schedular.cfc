@@ -1,4 +1,4 @@
-component name="schedular" output="false" accessors=true {
+component name="schedular" output="false" accessors=true extends="_baseController" {
     property eventGeneratorService;
     property accountService;
     property categoryService;
@@ -14,6 +14,10 @@ component name="schedular" output="false" accessors=true {
         rc.generators = eventGeneratorService.getEventGenerators(); 
     }
 
+    /**
+     * @layout "ajax"
+     * @view "schedular.autoPaymentModal"
+     */
     public void function autoPaymentNewModal(required struct rc){
         rc.accounts = accountService.getAccounts();
         rc.categories = categoryService.getCategories();
@@ -21,11 +25,12 @@ component name="schedular" output="false" accessors=true {
         rc.transferGenerator = eventGeneratorService.createTransferGenerator();
         rc.schedularTypes = schedularService.getSchedularTypes();
         rc.activeTab = 'transaction';
-
-        variables.fw.setLayout("ajax");
-        variables.fw.setView('schedular.autoPaymentModal');
     }
 
+    /**
+     * @layout "ajax"
+     * @view "schedular.autoPaymentModal"
+     */
     public void function autoPaymentEditModal(required struct rc) {
         rc.accounts = accountService.getAccounts();
         rc.schedularTypes = schedularService.getSchedularTypes();
@@ -33,9 +38,6 @@ component name="schedular" output="false" accessors=true {
         rc.categories = categoryService.getCategories(rc.eventGenerator);
         rc['#rc.eventGenerator.getGeneratorType()#Generator'] = rc.eventGenerator;
         rc.activeTab = rc.eventGenerator.getGeneratorType();
-
-        variables.fw.setLayout("ajax");
-        variables.fw.setView('schedular.autoPaymentModal');
     }
 
     public void function validateTransactionGeneratorForm(required struct rc){
