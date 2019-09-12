@@ -1,13 +1,16 @@
 component name="schedular" output="false" accessors=true extends="_baseController" {
-    property eventGeneratorService;
-    property accountService;
-    property categoryService;
-    property alertService;
-    property schedularService;
-    property validatorService;
 
     public void function init(fw){
         variables.fw = arguments.fw;
+    }
+
+    public void function before( required struct rc ){
+		runAuthorizer(rc, false);
+		updateLayoutAndView();
+    }
+
+    public void function after( struct rc = {} ){
+        runRenderData(rc);
     }
 
     public void function autoPaymentList(required struct rc){
@@ -40,16 +43,20 @@ component name="schedular" output="false" accessors=true extends="_baseControlle
         rc.activeTab = rc.eventGenerator.getGeneratorType();
     }
 
+    /**
+     * @renderData "json"
+     */
     public void function validateTransactionGeneratorForm(required struct rc){
         var validators = ["ValidateTransactionGenerator", "ValidateGeneratorSchedular"];
-        var response = validatorService.runValidators(validators, arguments.rc);
-        variables.fw.renderData().data( response ).type( 'json' );
+        rc.response = validatorService.runValidators(validators, arguments.rc);
     }
 
+    /**
+     * @renderData "json"
+     */
     public void function validateTransferGeneratorForm(required struct rc){
         var validators = ["ValidateTransferGenerator", "ValidateGeneratorSchedular"];
-        var response = validatorService.runValidators(validators, arguments.rc);
-        variables.fw.renderData().data( response ).type( 'json' );
+        rc.response = validatorService.runValidators(validators, arguments.rc);
     }
 
     public void function saveGeneratorForm(required struct rc) {
@@ -83,6 +90,13 @@ component name="schedular" output="false" accessors=true extends="_baseControlle
 
         //redirect back to list
         variables.fw.redirect('schedular.autoPaymentList');
+    }
+
+    /**
+     * @authorizer "authorizeByEventGeneratorId"
+     */
+    public void function deleteEventGenerator(required struct rc) {
+
     }
 
     /**

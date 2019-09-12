@@ -1,15 +1,5 @@
 component name="account" output="false" accessors=true extends="_baseController" {
 
-    property accountService;
-    property transactionService;
-    property transactionDataService;
-    property categoryService;
-    property transferService;
-    property alertService;
-    property checkbookSummaryService;
-	property authorizerService;
-	property metaDataService;
-    
     public void function init(fw){
         variables.fw=arguments.fw;
     }
@@ -127,22 +117,4 @@ component name="account" output="false" accessors=true extends="_baseController"
             }
         }
     }
-
-    private void function authorizeByTransactionId( required struct rc ) {
-        if(!rc.keyExists('transactionId')) {
-            variables.fw.redirect('main.accountsList');
-            return;
-        }
-        var transaction = transactionService.getTransactionById(rc.transactionId);
-        authorizerService.authorizeByTransaction(transaction);
-	}
-	
-	private void function authorizeByAccountId (required struct rc ) {
-		if(!rc.keyExists('accountId')) {
-            variables.fw.redirect('main.accountsList');
-            return;
-        }
-        var account = accountService.getAccountById(rc.accountId);
-        authorizerService.authorizeByAccount(account);
-	}
 }

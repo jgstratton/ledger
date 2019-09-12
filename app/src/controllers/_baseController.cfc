@@ -1,4 +1,17 @@
 component name="_baseController" output="false"  accessors=true {
+
+	property accountService;
+	property alertService;
+	property authorizerService;
+	property categoryService;
+	property checkbookSummaryService;
+	property eventGeneratorService;
+	property metaDataService;
+    property transactionDataService;
+    property transactionService;
+    property transferService;
+	property schedularService;
+	property validatorService;
 	
 	private void function runAuthorizer(required struct rc, throwErrorOnMissingAuthorizer = false) {
 		var methodName = variables.fw.getItem();
@@ -20,6 +33,37 @@ component name="_baseController" output="false"  accessors=true {
 		}
 		if (metaDataService.methodHasAnnotation(this, methodName, "view")) {
 			variables.fw.setView(metaDataService.getMethodAnnotation(this, methodName, "view"));
+		}
+	}
+
+	private void function runRenderData(required struct rc) {
+		var methodName = variables.fw.getItem();
+		if (metaDataService.methodHasAnnotation(this, methodName, "renderData")) {
+			if (!rc.keyExists('response')) {
+				throw(type="missingResponse", message="Response does not exist in request context.  Unable to render data");
+			}
+			variables.fw.renderData().data( rc.response ).type( metaDataService.getMethodAnnotation(this, methodName, "renderResponse"));
+		}
+	}
+
+	private void function authorizeByTransactionId( required struct rc ) {
+		checkAuthKeyInRequest('transactionId');
+		authorizerService.authorizeByTransactionId(rc.transactionId);
+	}
+	
+	private void function authorizeByAccountId (required struct rc ) {
+		checkAuthKeyInRequest('accountId');
+        authorizerService.getAccountById(rc.accountId);
+	}
+
+	private void function authorizeByEventGeneratorId (required struct rc ) {
+		checkAuthKeyInRequest('eventGeneratorId');
+    	authorizerService.getAccountById(rc.eventGeneratorId);
+	}
+	
+	private void function checkAuthKeyInRequest (required string varName) {
+		if (!rc.keyExists(varName)){
+			throw(type="missingAuthorizerKey", message="The variable #varname# is required to authorize the action but it was not provided in the request scope.");
 		}
 	}
 }
