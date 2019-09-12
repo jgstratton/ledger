@@ -15,6 +15,6 @@ RUN box server set web.SSL.enable=$ENABLE_SSL && \
     box server set web.SSL.port=$SSL_PORT &&\
     if [ "$ENABLE_SSL" = "true" ] ; then box server set web.SSL.certFile=/certs/$CERT_FILE; else echo SSL Not enabled, do not set certFile ; fi &&\
     if [ "$ENABLE_SSL" = "true" ] ; then box server set web.SSL.keyFile=/certs/$CERT_KEY_FILE; else echo SSL Not enabled, do not set keyFile ; fi &&\
-    if [ "$TIER" = "prod" ] ; then box server set web.webroot="/app/src"; else box server set web.webroot="/app"; fi
+    if [ "$TIER" = "prod" ] || [ "$TIER" = "staging" ]; then box server set web.webroot="/app/src"; else box server set web.webroot="/app"; fi 
 
 RUN cd /app && box cfconfig import config.json
