@@ -13,7 +13,10 @@ component accessors="true" {
     public array function getEventGenerators(){
         return EntityLoad(
             entityName = "eventGenerator", 
-            filter = {user: userService.getCurrentUser()}, 
+            filter = {
+                user: userService.getCurrentUser(),
+                deleted: 0
+            }, 
             order = "eventName asc",
             options = {ignorecase: true} );
     }

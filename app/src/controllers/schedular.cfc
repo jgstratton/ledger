@@ -95,8 +95,11 @@ component name="schedular" output="false" accessors=true extends="_baseControlle
     /**
      * @authorizer "authorizeByEventGeneratorId"
      */
-    public void function deleteEventGenerator(required struct rc) {
-
+    public void function deleteScheduledEvent(required struct rc) {
+       var generator = eventGeneratorService.getEventGeneratorById(rc.eventGeneratorId);
+       generator.softDelete();
+       ormFlush();
+       variables.fw.redirect('schedular.autoPaymentList');
     }
 
     /**

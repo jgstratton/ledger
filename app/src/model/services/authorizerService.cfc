@@ -4,7 +4,7 @@ component output="false" accessors=true {
 	property transactionService;
 	property eventGeneratorService;
 
-	public void function authorizeByTransactionId(requird numeric transactionId) {
+	public void function authorizeByTransactionId(required numeric transactionId) {
 		var transaction = verifyAuthComponent(transactionService.getTransactionById(transactionId));
         authorizerService.authorizeByTransaction(transaction);
 	}
@@ -18,7 +18,7 @@ component output="false" accessors=true {
 		}
 	}
 
-	public void function authorizeByAccountId(requird numeric accountId) {
+	public void function authorizeByAccountId(required numeric accountId) {
 		var account = verifyAuthComponent(accountService.getAccountById(accountId));
         authorizeByAccount(account);
 	}
@@ -32,7 +32,7 @@ component output="false" accessors=true {
 		}
 	}
 	
-	public void function authorizeByEventGeneratorId(requird numeric eventGeneratorId) {
+	public void function authorizeByEventGeneratorId(required numeric eventGeneratorId) {
 		var eventGenerator = verifyAuthComponent(eventGeneratorService.getEventGeneratorById(eventGeneratorId));
         authorizeByEventGenerator(eventGenerator);
 	}

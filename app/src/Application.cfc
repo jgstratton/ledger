@@ -181,6 +181,7 @@ component extends="framework.one" output="false" {
 	}
 
 	public void function before(struct rc){
+		getLogger().debug("Started request on controller #getSectionAndItem()#");
 		//user is used in most controllers and views
 		if(session.loggedin){
 			rc.user = request.user;

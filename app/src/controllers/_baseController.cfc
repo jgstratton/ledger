@@ -13,7 +13,7 @@ component name="_baseController" output="false"  accessors=true {
 	property schedularService;
 	property validatorService;
 	
-	private void function runAuthorizer(required struct rc, throwErrorOnMissingAuthorizer = false) {
+	private void function runAuthorizer(required struct rc, boolean throwErrorOnMissingAuthorizer = false) {
 		var methodName = variables.fw.getItem();
 		if (!metaDataService.methodHasAnnotation(this, methodName, "authorizer")) {
 			if (throwErrorOnMissingAuthorizer){
@@ -47,21 +47,21 @@ component name="_baseController" output="false"  accessors=true {
 	}
 
 	private void function authorizeByTransactionId( required struct rc ) {
-		checkAuthKeyInRequest('transactionId');
+		checkAuthKeyInRequest(rc, 'transactionId');
 		authorizerService.authorizeByTransactionId(rc.transactionId);
 	}
 	
 	private void function authorizeByAccountId (required struct rc ) {
-		checkAuthKeyInRequest('accountId');
-        authorizerService.getAccountById(rc.accountId);
+		checkAuthKeyInRequest(rc, 'accountId');
+        authorizerService.authorizeByAccountId(rc.accountId);
 	}
 
 	private void function authorizeByEventGeneratorId (required struct rc ) {
-		checkAuthKeyInRequest('eventGeneratorId');
-    	authorizerService.getAccountById(rc.eventGeneratorId);
+		checkAuthKeyInRequest(rc, 'eventGeneratorId');
+    	authorizerService.authorizeByEventGeneratorId(rc.eventGeneratorId);
 	}
 	
-	private void function checkAuthKeyInRequest (required string varName) {
+	private void function checkAuthKeyInRequest (required struct rc, required string varName) {
 		if (!rc.keyExists(varName)){
 			throw(type="missingAuthorizerKey", message="The variable #varname# is required to authorize the action but it was not provided in the request scope.");
 		}

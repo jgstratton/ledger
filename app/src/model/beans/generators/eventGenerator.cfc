@@ -11,12 +11,21 @@ component persistent="true" table="eventGenerators" accessors="true" {
     property name="eventName";
     property name="created" ormtype="timestamp";
     property name="edited" ormtype="timestamp";
+    property name="deleted" default="0";
 
     public boolean function isScheduled(){
         if (hasSchedular()){
             return getSchedular().getStatus();
         }
         return false;
+    }
+
+    public void function save(){
+        entitySave(this);
+    }
+
+    public void function softDelete() {
+        setDeleted(1);
     }
 }
 
