@@ -1,19 +1,26 @@
-component name="schedular" output="false" accessors=true {
-    property eventGeneratorService;
-    property accountService;
-    property categoryService;
-    property alertService;
-    property schedularService;
-    property validatorService;
+component name="schedular" output="false" accessors=true extends="_baseController" {
 
     public void function init(fw){
         variables.fw = arguments.fw;
+    }
+
+    public void function before( required struct rc ){
+		runAuthorizer(rc, false);
+		updateLayoutAndView();
+    }
+
+    public void function after( struct rc = {} ){
+        runRenderData(rc);
     }
 
     public void function autoPaymentList(required struct rc){
         rc.generators = eventGeneratorService.getEventGenerators(); 
     }
 
+    /**
+     * @layout "ajax"
+     * @view "schedular.autoPaymentModal"
+     */
     public void function autoPaymentNewModal(required struct rc){
         rc.accounts = accountService.getAccounts();
         rc.categories = categoryService.getCategories();
@@ -21,11 +28,12 @@ component name="schedular" output="false" accessors=true {
         rc.transferGenerator = eventGeneratorService.createTransferGenerator();
         rc.schedularTypes = schedularService.getSchedularTypes();
         rc.activeTab = 'transaction';
-
-        variables.fw.setLayout("ajax");
-        variables.fw.setView('schedular.autoPaymentModal');
     }
 
+    /**
+     * @layout "ajax"
+     * @view "schedular.autoPaymentModal"
+     */
     public void function autoPaymentEditModal(required struct rc) {
         rc.accounts = accountService.getAccounts();
         rc.schedularTypes = schedularService.getSchedularTypes();
@@ -33,21 +41,22 @@ component name="schedular" output="false" accessors=true {
         rc.categories = categoryService.getCategories(rc.eventGenerator);
         rc['#rc.eventGenerator.getGeneratorType()#Generator'] = rc.eventGenerator;
         rc.activeTab = rc.eventGenerator.getGeneratorType();
-
-        variables.fw.setLayout("ajax");
-        variables.fw.setView('schedular.autoPaymentModal');
     }
 
+    /**
+     * @renderData "json"
+     */
     public void function validateTransactionGeneratorForm(required struct rc){
         var validators = ["ValidateTransactionGenerator", "ValidateGeneratorSchedular"];
-        var response = validatorService.runValidators(validators, arguments.rc);
-        variables.fw.renderData().data( response ).type( 'json' );
+        rc.response = validatorService.runValidators(validators, arguments.rc);
     }
 
+    /**
+     * @renderData "json"
+     */
     public void function validateTransferGeneratorForm(required struct rc){
         var validators = ["ValidateTransferGenerator", "ValidateGeneratorSchedular"];
-        var response = validatorService.runValidators(validators, arguments.rc);
-        variables.fw.renderData().data( response ).type( 'json' );
+        rc.response = validatorService.runValidators(validators, arguments.rc);
     }
 
     public void function saveGeneratorForm(required struct rc) {
@@ -81,6 +90,16 @@ component name="schedular" output="false" accessors=true {
 
         //redirect back to list
         variables.fw.redirect('schedular.autoPaymentList');
+    }
+
+    /**
+     * @authorizer "authorizeByEventGeneratorId"
+     */
+    public void function deleteScheduledEvent(required struct rc) {
+       var generator = eventGeneratorService.getEventGeneratorById(rc.eventGeneratorId);
+       generator.softDelete();
+       ormFlush();
+       variables.fw.redirect('schedular.autoPaymentList');
     }
 
     /**

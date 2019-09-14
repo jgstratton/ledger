@@ -1,48 +1,18 @@
-component name="account" output="false"  accessors=true {
+component name="account" output="false" accessors=true extends="_baseController" {
 
-    property accountService;
-    property transactionService;
-    property transactionDataService;
-    property categoryService;
-    property transferService;
-    property alertService;
-    property checkbookSummaryService;
-	property authorizerService;
-	property metaDataService;
-    
     public void function init(fw){
         variables.fw=arguments.fw;
     }
 
     public void function before( required struct rc ){
 		param name="rc.returnTo" default="#variables.fw.getSectionAndItem()#";
-		runAuthorizer(rc);
+		runAuthorizer(rc, true);
 		updateLayoutAndView();
     }
 
     public void function after( struct rc = {} ){
         rc.accounts = accountService.getAccounts();
     }
-
-	private void function runAuthorizer(required struct rc) {
-		var methodName = variables.fw.getItem();
-		if (!metaDataService.methodHasAnnotation(this, methodName, "authorizer")) {
-			throw(type="missingauthorizer", message="#methodName# of the transaction service is missing an authorizer");
-		}
-
-		var authorizer = metaDataService.getMethodAnnotation(this, methodName, "authorizer");
-		invoke(this, authorizer, {rc:rc});
-	}
-
-	private void function updateLayoutAndView(){
-		var methodName = variables.fw.getItem();
-		if (metaDataService.methodHasAnnotation(this, methodName, "layout")) {
-			variables.fw.setLayout(metaDataService.getMethodAnnotation(this, methodName, "layout"));
-		}
-		if (metaDataService.methodHasAnnotation(this, methodName, "view")) {
-			variables.fw.setView(metaDataService.getMethodAnnotation(this, methodName, "view"));
-		}
-	}
 
     /**
      * @authorizer "authorizeByAccountId"
@@ -147,22 +117,4 @@ component name="account" output="false"  accessors=true {
             }
         }
     }
-
-    private void function authorizeByTransactionId( required struct rc ) {
-        if(!rc.keyExists('transactionId')) {
-            variables.fw.redirect('main.accountsList');
-            return;
-        }
-        var transaction = transactionService.getTransactionById(rc.transactionId);
-        authorizerService.authorizeByTransaction(transaction);
-	}
-	
-	private void function authorizeByAccountId (required struct rc ) {
-		if(!rc.keyExists('accountId')) {
-            variables.fw.redirect('main.accountsList');
-            return;
-        }
-        var account = accountService.getAccountById(rc.accountId);
-        authorizerService.authorizeByAccount(account);
-	}
 }

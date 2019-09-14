@@ -63,7 +63,24 @@ component extends="testbox.system.BaseSpec" {
 						authorizerService.authorizeByAccount(account);
 					});
 				});
-				
+
+				describe("is authorized to access an event generator", function() {
+					beforeEach( function() {
+						eventGenerator = createMock("beans.generators.eventGenerator");
+					});
+
+					it("throws an error if they do not have access to the eventGenerator", function() {
+						eventGenerator.$("getUser", otherUser, false);
+						expect(function(){
+							authorizerService.authorizeByeventGenerator(eventGenerator);
+						}).toThrow("UnauthorizedUser");
+					});
+
+					it("does not throw and error if they do have access to the eventGenerator", function() {
+						eventGenerator.$("getUser", currentUser, false);
+						authorizerService.authorizeByeventGenerator(eventGenerator);
+					});
+				});
 			});
 		});
 	}

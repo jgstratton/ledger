@@ -13,10 +13,14 @@
                     <!--- when editing, add the delete button--->
                     <cfif rc.keyExists('eventGenerator')>
                         <div class="text-right" style="position:relative;height:0;">
-                            <button type="button" class="btn btn btn-outline-danger btn-sm" style="position:relative" data-delete-btn="">
+                            <button type="button" class="btn btn btn-outline-danger btn-sm" style="position:relative" id="btnDeleteGenerator">
                                 <i class="fa fa-trash"></i> Delete
                             </button>
                         </div>
+                        <form id="deleteEventGenerator" method="post" style="display:none" action="#buildurl('schedular.deleteScheduledEvent')#">
+                            <input type="hidden" name="type" value="#rc.eventGenerator.getGeneratorType()#">
+                            <input type="hidden" name="eventGeneratorId" value="#rc.eventGeneratorId#">
+                        </form>
                     </cfif>
                     <!--- Display the tabs --->
                     <ul class="nav nav-tabs" role="tablist">
@@ -69,6 +73,7 @@
             var $modalDiv = $("##" + "modal#local.templateId#"),
                 $closeBtn = $modalDiv.find("[data-close]"),
                 $saveBtn = $modalDiv.find("[data-save]"),
+                $submitFormBtn = $modalDiv.find("[data-submit-form]");
                 $tabLinks = $modalDiv.find("[data-tab]"),
                 $tabPanes = $modalDiv.find(".tab-pane"),
                 $errorDiv = $modalDiv.find("[data-submit-errors]"),
@@ -115,6 +120,18 @@
                     
                 });
                 
+            });
+
+            $("##btnDeleteGenerator").click(function(){
+                disableButtons();
+                $modalDiv.modal('hide');
+                jConfirm("Are you sure you want to delete this auto payment?", function(){
+                    $("##deleteEventGenerator").submit();
+                    $modalDiv.modal('hide');
+                }, function(){
+                    $modalDiv.modal('show');
+                    enableButtons();
+                });
             });
 
             $closeBtn.click(function(){
