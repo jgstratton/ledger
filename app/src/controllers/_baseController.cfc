@@ -42,7 +42,7 @@ component name="_baseController" output="false"  accessors=true {
 			if (!rc.keyExists('response')) {
 				throw(type="missingResponse", message="Response does not exist in request context.  Unable to render data");
 			}
-			variables.fw.renderData().data( rc.response ).type( metaDataService.getMethodAnnotation(this, methodName, "renderResponse"));
+			variables.fw.renderData().data( rc.response ).type( metaDataService.getMethodAnnotation(this, methodName, "renderData"));
 		}
 	}
 
