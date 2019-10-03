@@ -45,7 +45,7 @@ component extends="testbox.system.BaseSpec" {
                 it("will use custom api getter function if defined", function() {
                     var apiData = new beans.apiData();
                     var apiStruct = apiDataPopulatorService.populateApiData(account, apiData);
-                    expect(apiStruct.inSummary).toBeTrue();
+                    expect(apiStruct.summary).toBeTrue();
                 });
 
                 it("will populate a subComponent in a one-to-many relationship", function() {

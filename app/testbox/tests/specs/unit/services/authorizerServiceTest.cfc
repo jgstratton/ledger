@@ -9,7 +9,13 @@ component extends="testbox.system.BaseSpec" {
 
 		describe("The authorizer service", function() {
 			beforeEach(function(){
-				authorizerService = createMock("services.authorizerService");
+				transactionService = createMock("services.transaction");
+				accountService = createMock("services.account");
+				eventGeneratorService = createMock("services.eventGenerator");
+				authorizerService = createMock("services.authorizerService")
+					.$("getTransactionService", transactionService, false)
+					.$("getAccountService", accountService, false)
+					.$("getEventGeneratorService", eventGeneratorService, false);
 			});
 
 			describe("checks if the current user", function() {
@@ -46,6 +52,28 @@ component extends="testbox.system.BaseSpec" {
 
 				});
 
+				describe("is authorized to access a given transaction (by id)", function() {
+					beforeEach( function() {
+						account = createMock("beans.account");
+						transaction = createMock("beans.transaction")
+							.$("getAccount",account, false);
+						transactionService.$("getTransactionById", transaction);
+					});
+
+					it("throws an error if they do not have access to the transaction", function() {
+						account.$("getUser", otherUser, false);
+						expect(function(){
+							authorizerService.authorizeByTransactionId(1);
+						}).toThrow("UnauthorizedUser");
+					});
+
+					it("does not throw and error if they do have access to the transaction", function() {
+						account.$("getUser", currentUser, false);
+						authorizerService.authorizeByTransactionId(1);
+					});
+
+				});
+
 				describe("is authorized to access a given account", function() {
 					beforeEach( function() {
 						account = createMock("beans.account");
@@ -63,7 +91,62 @@ component extends="testbox.system.BaseSpec" {
 						authorizerService.authorizeByAccount(account);
 					});
 				});
-				
+
+				describe("is authorized to access a given account (by account id)", function() {
+					beforeEach( function() {
+						account = createMock("beans.account");
+						accountService.$("getAccountById", account);
+					});
+
+					it("throws an error if they do not have access to the account", function() {
+						account.$("getUser", otherUser, false);
+						expect(function(){
+							authorizerService.authorizeByAccountId(1);
+						}).toThrow("UnauthorizedUser");
+					});
+
+					it("does not throw and error if they do have access to the account", function() {
+						account.$("getUser", currentUser, false);
+						authorizerService.authorizeByAccountId(1);
+					});
+				});
+
+				describe("is authorized to access an event generator", function() {
+					beforeEach( function() {
+						eventGenerator = createMock("beans.generators.eventGenerator");
+					});
+
+					it("throws an error if they do not have access to the eventGenerator", function() {
+						eventGenerator.$("getUser", otherUser, false);
+						expect(function(){
+							authorizerService.authorizeByeventGenerator(eventGenerator);
+						}).toThrow("UnauthorizedUser");
+					});
+
+					it("does not throw and error if they do have access to the eventGenerator", function() {
+						eventGenerator.$("getUser", currentUser, false);
+						authorizerService.authorizeByeventGenerator(eventGenerator);
+					});
+				});
+
+				describe("is authorized to access an event generator (by id)", function() {
+					beforeEach( function() {
+						eventGenerator = createMock("beans.generators.eventGenerator");
+						eventGeneratorService.$("getEventGeneratorById", eventGenerator);
+					});
+
+					it("throws an error if they do not have access to the eventGenerator", function() {
+						eventGenerator.$("getUser", otherUser, false);
+						expect(function(){
+							authorizerService.authorizeByEventGeneratorId(1);
+						}).toThrow("UnauthorizedUser");
+					});
+
+					it("does not throw and error if they do have access to the eventGenerator", function() {
+						eventGenerator.$("getUser", currentUser, false);
+						authorizerService.authorizeByEventGeneratorId(1);
+					});
+				});
 			});
 		});
 	}
