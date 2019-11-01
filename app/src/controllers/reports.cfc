@@ -3,7 +3,7 @@ component name="account" output="false"  accessors=true {
         variables.fw=arguments.fw;
     }
 
-    public void function view( struct rc = {}){
+    public void function accountChart( struct rc = {}){
         rc.viewModel = new viewModels.accountChart(rc);
     }
 
