@@ -6,8 +6,8 @@ component name="account" output="false" accessors=true extends="_baseController"
 
     public void function before( required struct rc ){
 		param name="rc.returnTo" default="#variables.fw.getSectionAndItem()#";
-		runAuthorizer(rc, true);
-		updateLayoutAndView();
+        updateLayoutAndView();
+        super.before(rc);
     }
 
     public void function after( struct rc = {} ){
@@ -91,8 +91,6 @@ component name="account" output="false" accessors=true extends="_baseController"
         rc.jsonResponse.verifiedLinkedBalance = account.getVerifiedLinkedBalance();
         rc.jsonResponse.lastVerifiedId = transactionService.getLastVerifiedID(account);
     }
-
-
 
     private void function update( required struct rc ){
         var transaction = rc.transaction;

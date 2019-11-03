@@ -18,9 +18,11 @@ component output="false" accessors=true {
 		}
 	}
 
-	public void function authorizeByAccountId(required numeric accountId) {
-		var account = verifyAuthComponent(getAccountService().getAccountById(accountId));
-        authorizeByAccount(account);
+	public void function authorizeByAccountId(required string accountsList) {
+		for (var accountId in listToArray(accountsList)) {
+			var account = verifyAuthComponent(getAccountService().getAccountById(accountId));
+			authorizeByAccount(account);
+		}
 	}
 
 	public void function authorizeByAccount( required component account) {

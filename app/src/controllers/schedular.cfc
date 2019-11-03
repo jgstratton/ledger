@@ -5,19 +5,23 @@ component name="schedular" output="false" accessors=true extends="_baseControlle
     }
 
     public void function before( required struct rc ){
-		runAuthorizer(rc, false);
-		updateLayoutAndView();
+        updateLayoutAndView();
+        super.before(rc);
     }
 
     public void function after( struct rc = {} ){
         runRenderData(rc);
     }
 
+    /**
+     * @authorizer noAuthorizer
+     */
     public void function autoPaymentList(required struct rc){
         rc.generators = eventGeneratorService.getEventGenerators(); 
     }
 
     /**
+     * @authorizer noAuthorizer
      * @layout "ajax"
      * @view "schedular.autoPaymentModal"
      */
@@ -31,6 +35,7 @@ component name="schedular" output="false" accessors=true extends="_baseControlle
     }
 
     /**
+     * @authorizer noAuthorizer
      * @layout "ajax"
      * @view "schedular.autoPaymentModal"
      */
@@ -44,6 +49,7 @@ component name="schedular" output="false" accessors=true extends="_baseControlle
     }
 
     /**
+     * @authorizer noAuthorizer
      * @renderData "json"
      */
     public void function validateTransactionGeneratorForm(required struct rc){
@@ -52,6 +58,7 @@ component name="schedular" output="false" accessors=true extends="_baseControlle
     }
 
     /**
+     * @authorizer noAuthorizer
      * @renderData "json"
      */
     public void function validateTransferGeneratorForm(required struct rc){
@@ -59,6 +66,9 @@ component name="schedular" output="false" accessors=true extends="_baseControlle
         rc.response = validatorService.runValidators(validators, arguments.rc);
     }
 
+    /**
+     * @authorizer noAuthorizer
+     */
     public void function saveGeneratorForm(required struct rc) {
         param name="rc.schedularStatus" default="0";
         param name="rc.generatorType" default="";

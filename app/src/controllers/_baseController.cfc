@@ -13,17 +13,23 @@ component name="_baseController" output="false"  accessors=true {
 	property schedularService;
 	property validatorService;
 	
-	private void function runAuthorizer(required struct rc, boolean throwErrorOnMissingAuthorizer = false) {
+	public void function before( required struct rc ){
+		runAuthorizer(rc);
+	}
+	
+	private void function runAuthorizer(required struct rc) {
 		var methodName = variables.fw.getItem();
 		if (!metaDataService.methodHasAnnotation(this, methodName, "authorizer")) {
-			if (throwErrorOnMissingAuthorizer){
-				throw(type="missingauthorizer", message="#methodName# of the transaction service is missing an authorizer");
-			}
+			throw(type="missingauthorizer", message="#methodName# of the transaction service is missing an authorizer");
 			return;
 		}
 
 		var authorizer = metaDataService.getMethodAnnotation(this, methodName, "authorizer");
-		invoke(this, authorizer, {rc:rc});
+		var authorizerArguments = {rc:rc};
+		if (metaDataService.methodHasAnnotation(this, methodName, "authorizerField")) {
+			authorizerArguments.authorizerField =  metaDataService.getMethodAnnotation(this, methodName, "authorizerField");
+		}
+		invoke(this, authorizer, authorizerArguments);
 	}
 
 	private void function updateLayoutAndView(){
@@ -46,14 +52,19 @@ component name="_baseController" output="false"  accessors=true {
 		}
 	}
 
+	private void function noAuthorizer() {
+		return;
+	}
+
 	private void function authorizeByTransactionId( required struct rc ) {
 		checkAuthKeyInRequest(rc, 'transactionId');
 		authorizerService.authorizeByTransactionId(rc.transactionId);
 	}
 	
-	private void function authorizeByAccountId (required struct rc ) {
-		checkAuthKeyInRequest(rc, 'accountId');
-        authorizerService.authorizeByAccountId(rc.accountId);
+	private void function authorizeByAccountId (required struct rc, string authorizerField ) {
+		var field = arguments.authorizerField ?: 'accountId';
+		checkAuthKeyInRequest(rc, field);
+        authorizerService.authorizeByAccountId(rc[field]);
 	}
 
 	private void function authorizeByEventGeneratorId (required struct rc ) {
