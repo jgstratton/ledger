@@ -4,10 +4,17 @@ component name="reports" output="false" accessors=true extends="_baseController"
 	}
 
 	/**
-	 * @authorizer noAuthorizer
+	 * @authorizer "noAuthorizer"
 	 */
 	public void function accountChart( struct rc = {}){
 		rc.viewModel = new viewModels.accountChart(rc);
+	}
+
+	/**
+	 * @authorizer "noAuthorizer"
+	 */
+	public void function spendingReport( struct rc = {}){
+		rc.viewModel = new viewModels.spendingReport(rc);
 	}
 
 	/**
