@@ -7,8 +7,18 @@ component accessors="true" {
 	//values that come from the rc struct when viewModel is initialized
 	property name="user" rcProperty="true";
 
-	public struct function getReportData() {
-		return {};
+	public struct function getChartData() {
+		var chartData = {
+			'datasets' : [],
+			'labels' : []
+		};
+		for (var record in getReportData()) {
+			chartData.datasets.append({
+				'label': record.catgory_name,
+				'data': record.total
+			});
+		}
+		return chartData;
 	}
 
 	public component function init(required struct rc) {
@@ -18,6 +28,34 @@ component accessors="true" {
 		setDefaultValues();
 		populateInputsFromRc(rc);
 		return this;
+	}
+
+	public array function getReportData() {
+		if (!variables.keyExists('reportData')) {
+			transaction{
+				var reportQuery = queryExecute("
+					SELECT category_name, count(vw.id) as recordCount, SUM(signedAmount) * -1 AS total
+					FROM  vw_transactionData vw 
+					LEFT JOIN accounts a on vw.account_id = a.id
+					LEFT JOIN categories c on vw.category_id = c.id
+					LEFT JOIN categoryTypes ct on c.categoryType_id = ct.id
+					WHERE 
+						(vw.account_id in (:accountidList) or a.linkedAccount in (:accountidList))
+						AND vw.transactionDate >= :startDate
+						AND (vw.transactionDate <= :endDate)
+						AND ct.name = 'Expenses'
+					GROUP  BY category_name
+					HAVING sum(signedAmount) < 0
+					ORDER BY category_name
+				",{
+					accountidList: {value: getAccounts().getValue(), list:true},
+					startDate: getStartDate().getSqlValue(),
+					endDate: getEndDate().getSqlValue()
+				});
+			}
+			variables.reportData = getQueryUtilService().queryToArray(reportQuery);
+		}
+		return variables.reportData;
 	}
 
 	/**
@@ -91,5 +129,9 @@ component accessors="true" {
 
 	private component function getAccountService() {
 		return request.beanfactory.getBean("accountService");
+	}
+	
+	private component function getQueryUtilService() {
+		return request.beanfactory.getBean("queryUtilService");
 	}
 }

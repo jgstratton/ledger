@@ -108,6 +108,7 @@ function removeSpinner($btn) {
 
 //format dollar amounts
 function htmlFormatMoney(n, addSpan) {
+    var addSpan = typeof addSpan == 'undefined' ? false : addSpan;
     var c = 2,
         dollarClass = n < 0 ? 'dollar-negative' : '',
         i = String(parseInt((n = Math.abs(Number(n) || 0).toFixed(c)))),
@@ -122,7 +123,7 @@ function htmlFormatMoney(n, addSpan) {
                       .toFixed(c)
                       .slice(2)
                 : '');
-    return '<span class="' + dollarClass + '">' + result + '</span>';
+    return addSpan ? '<span class="' + dollarClass + '">' + result + '</span>' : result;
 }
 
 //post form data using javascript

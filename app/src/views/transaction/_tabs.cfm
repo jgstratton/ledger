@@ -6,6 +6,9 @@
 	<a href="#buildURL('reports.accountChart?accounts=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm float-right mr-1" title="View Account Balance History">
 		<i class="fa fa-chart-line"></i>
 	</a>
+	<a href="#buildURL('reports.spendingReport?accounts=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm float-right mr-1" title="View Account Spending Report">
+		<i class="fas fa-file-contract"></i>
+	</a>
 	<ul class="nav nav-tabs">
 		<li class="nav-item">
 			<a class="nav-link #matchDisplay(getItem(),'newTransaction','active disabled')#" href="#buildurl('transaction.newTransaction?accountid=#rc.account.getid()#')#">Add Entry</a>
