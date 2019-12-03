@@ -15,8 +15,8 @@
         <link rel="stylesheet" href="./assets/lib/jquery-ui-themes/smoothness.jquery-ui.min.css" />
         <link rel="stylesheet" href="./assets/lib/bootstrap/bootstrap.min.css" />
         <link rel="stylesheet" href="./assets/lib/multiple-select/multiple-select.min.css">
-        <link rel="stylesheet" href="./assets/lib/datatables/jquery.dataTables.min.css">
-        <link rel="stylesheet" href="./assets/lib/datatables/responsive.dataTables.min.css">
+        <link rel="stylesheet" href="./assets/lib/datatables/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="./assets/lib/datatables/css/responsive.dataTables.min.css">
         <link rel="stylesheet" href="./assets/lib/daterangepicker/daterangepicker.css">
         <!--- include application styles --->
         <link rel="stylesheet" type="text/css" href="./assets/css/app.css?v=#application.version#" />
@@ -109,8 +109,8 @@
         <script src="./assets/lib/jquery-validate/additional-methods.min.js"></script>
         <script src="./assets/lib/jquery-touch-events/jquery.mobile-events.min.js"></script>
         <script src="./assets/lib/multiple-select/multiple-select.min.js"></script>
-        <script src="./assets/lib/datatables/jquery.dataTables.min.js"></script>
-        <script src="./assets/lib/datatables/dataTables.responsive.min.js"></script>
+        <script src="./assets/lib/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="./assets/lib/datatables/js/dataTables.responsive.min.js"></script>
         <script src="./assets/lib/moment/moment.min.js"></script>
         <script src="./assets/lib/moment/moment.min.js"></script>
         <script src="./assets/lib/chart/chart.min.js"></script>
