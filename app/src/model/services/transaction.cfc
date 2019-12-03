@@ -37,13 +37,21 @@ component output="false" accessors="true" {
         }
     }
 
-    public array function searchTransactions(required struct searchParams) {
+    /**
+     * @returnType: 'objects' or 'simple'
+     */
+    public array function searchTransactions(required struct searchParams, string returnType = 'objects') {
         var conditions = "a.user = :user";
         var parameters = {user: userService.getCurrentUser()};
 
         if (keyIsSet(arguments.searchParams,'accountId')) {
             conditions &= " and a.id = :accountId";
             parameters['accountId'] = searchParams.accountId;
+        }
+
+        if (keyIsSet(arguments.searchParams,'accountIds')) {
+            conditions &= " and a.id in (:accountIds)";
+            parameters['accountIds'] = listToArray(searchParams.accountIds);
         }
 
         if (keyIsSet(arguments.searchParams,'keyWords')) {
@@ -61,11 +69,23 @@ component output="false" accessors="true" {
             parameters['categoryId'] = arguments.searchParams.CategoryId;
         }
 
+        var selectString = 't';
+        if (returnType == 'simple') {
+            selectString = "new map (
+                t.transactionDate as TRANSACTION_DATE, 
+                t.name as NAME,
+                t.note as NOTE,
+                c.name as CATEGORY_NAME,
+                ct.multiplier * t.amount as SIGNED_AMOUNT
+            )";
+        }
+
         return ORMexecuteQuery("
-            SELECT t
+            SELECT #selectString#
             FROM transaction t
             JOIN t.account a
             JOIN t.category c
+            JOIN c.type ct 
             WHERE #conditions#
             ORDER BY t.transactionDate desc
         ", parameters, {maxResults:variables.limitedResultsCount});

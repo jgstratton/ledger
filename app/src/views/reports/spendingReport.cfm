@@ -51,7 +51,7 @@
 		</div>
 	</form>
 	<div class="row">
-		<div class="col-6">
+		<div class="col-md-6">
 			<table id="spendingReportTable" class="table">
 				<thead>
 					<tr>
@@ -64,11 +64,17 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="col-6">
+		<div class="col-md-6">
 			<canvas></canvas>
 		</div>
 	</div>
-
+	<div class="row">
+		<div class="col-md-6">
+			<div id="transactionsList">
+				#view("transaction/_list")#
+			</div>
+		</div>
+	</div>
 </cfoutput>
 
 <script>
@@ -82,9 +88,10 @@
 		var $multiSelects = $templateDiv.find("[data-multiselect]");
 		var color = Chart.helpers.color;
 		var $submitBtn = $form.find("button[type='submit']");
+		var smallGroupPercentage = 10;
 
 		var chart = new Chart($canvas, {
-			type: 'pie',
+			type: 'doughnut',
 			data: {},
 			options: {
 				responsive: true,
@@ -107,6 +114,11 @@
 			}
 		});
 		
+		var transactionList = new TransactionList({
+			parentSelector: "#transactionsList",
+			url: routerUtil.buildUrl('transactions.searchTransactions')
+		});
+
 		$form.submit(function(e){
 			startSpinner();
 			getReportData();
@@ -124,8 +136,8 @@
 				data:formData
 			})
 			.done(function(reportData){
+				reportData = prepareReportData(reportData);
 				var chartData = getChartDataFromReportData(reportData);
-				console.log(chartData);
 				populateReport(reportData);
 				setDatasetColors(chartData);
 				chart.data = chartData;
@@ -137,13 +149,25 @@
 			});
 		}
 
+		function prepareReportData(reportData) {
+			var totalSpent = 0;
+			for (var i=0; i<reportData.length; i++) {
+				totalSpent += reportData[i].total;
+				reportData[i].color = color(chartUtil.getRandomColor());
+			}
+			reportData.sort(function(a,b) {
+				return a.total > b.total;
+			});
+			return reportData;
+		}
+
 		function populateReport(reportData) {
 			var $tbody = $reportTable.find('tbody');
 			$tbody.html('');
 			for (var i=0; i<reportData.length; i++) {
 				$tbody.append(`
 					<tr>
-						<td>${reportData[i].category_name}</td>
+						<td><span class="btn btn-link" data-category="${reportData[i].category_id}">${reportData[i].category_name}</span></td>
 						<td>${reportData[i].recordCount}</td>
 						<td class="text-right">${htmlFormatMoney(reportData[i].total)}</td>
 					</tr>
@@ -159,7 +183,6 @@
 				chartData.datasets[0].data.push(reportData[i].total);
 				chartData.labels.push(reportData[i].category_name);
 			}
-			console.log(chartData);
 			return chartData;
 		}
 
@@ -169,8 +192,6 @@
 			for (var i=0; i < data.datasets[0].data.length; i++) {
 				var c = color(chartUtil.getRandomColor());
 				data.datasets[0].backgroundColor.push(c.rgbString());
-				//dataset.borderColor = c.rgbString();
-				//dataset.fill = false;
 			}
 		}
 
@@ -193,6 +214,16 @@
 				$inputEnd.val(picker.endDate.format('MM/DD/YYYY'));
 			});
 
+		});
+
+		$("#spendingReportTable").on("click", "[data-category]", function(){
+			var data = formUtil.objectifyForm($("#spendingReportForm"));
+			data.categoryId = $(this).data('category');
+			formUtil.renameInputs(data, {
+				accounts: 'accountIds'
+			});
+			transactionList.loadData(data);
+		
 		});
 
 		function startSpinner() {

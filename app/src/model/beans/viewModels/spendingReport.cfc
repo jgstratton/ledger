@@ -15,7 +15,8 @@ component accessors="true" {
 		for (var record in getReportData()) {
 			chartData.datasets.append({
 				'label': record.catgory_name,
-				'data': record.total
+				'data': record.total,
+				'id': record.category_id
 			});
 		}
 		return chartData;
@@ -34,7 +35,7 @@ component accessors="true" {
 		if (!variables.keyExists('reportData')) {
 			transaction{
 				var reportQuery = queryExecute("
-					SELECT category_name, count(vw.id) as recordCount, SUM(signedAmount) * -1 AS total
+					SELECT category_name, vw.category_id, count(vw.id) as recordCount, SUM(signedAmount) * -1 AS total
 					FROM  vw_transactionData vw 
 					LEFT JOIN accounts a on vw.account_id = a.id
 					LEFT JOIN categories c on vw.category_id = c.id
@@ -44,7 +45,7 @@ component accessors="true" {
 						AND vw.transactionDate >= :startDate
 						AND (vw.transactionDate <= :endDate)
 						AND ct.name = 'Expenses'
-					GROUP  BY category_name
+					GROUP  BY category_name, vw.category_id
 					HAVING sum(signedAmount) < 0
 					ORDER BY category_name
 				",{

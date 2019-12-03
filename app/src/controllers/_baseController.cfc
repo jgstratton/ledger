@@ -26,8 +26,8 @@ component name="_baseController" output="false"  accessors=true {
 
 		var authorizer = metaDataService.getMethodAnnotation(this, methodName, "authorizer");
 		var authorizerArguments = {rc:rc};
-		if (metaDataService.methodHasAnnotation(this, methodName, "authorizerField")) {
-			authorizerArguments.authorizerField =  metaDataService.getMethodAnnotation(this, methodName, "authorizerField");
+		if (metaDataService.methodHasAnnotation(this, methodName, "authorizerFields")) {
+			authorizerArguments.authorizerFields =  metaDataService.getMethodAnnotation(this, methodName, "authorizerFields");
 		}
 		invoke(this, authorizer, authorizerArguments);
 	}
@@ -61,9 +61,9 @@ component name="_baseController" output="false"  accessors=true {
 		authorizerService.authorizeByTransactionId(rc.transactionId);
 	}
 	
-	private void function authorizeByAccountId (required struct rc, string authorizerField ) {
-		var field = arguments.authorizerField ?: 'accountId';
-		checkAuthKeyInRequest(rc, field);
+	private void function authorizeByAccountId (required struct rc, string authorizerFields ) {
+		var fields = arguments.authorizerFields ?: 'accountId';
+		var field = checkAuthKeyInRequest(rc, fields);
         authorizerService.authorizeByAccountId(rc[field]);
 	}
 
@@ -72,9 +72,13 @@ component name="_baseController" output="false"  accessors=true {
     	authorizerService.authorizeByEventGeneratorId(rc.eventGeneratorId);
 	}
 	
-	private void function checkAuthKeyInRequest (required struct rc, required string varName) {
-		if (!rc.keyExists(varName)){
-			throw(type="missingAuthorizerKey", message="The variable #varname# is required to authorize the action but it was not provided in the request scope.");
+	private string function checkAuthKeyInRequest (required struct rc, required string fields) {
+		for(var field in listToArray(fields)) {
+			if (rc.keyExists(field)){
+				return field;
+			}
 		}
+		//no authorizer field was found in request.
+		throw(type="missingAuthorizerKey", message="A variable (#fields#) is required to authorize the action but it was not provided in the request scope.");
 	}
 }

@@ -12,7 +12,7 @@ component name="reports" output="false" accessors=true extends="_baseController"
 
 	/**
 	 * @authorizer "authorizeByAccountId"
-	 * @authorizerField "accounts"
+	 * @authorizerFields "accounts"
 	 */
 	public void function getChartData( struct rc = {}){
 		rc.viewModel = new viewModels.accountChart(rc);
@@ -29,7 +29,7 @@ component name="reports" output="false" accessors=true extends="_baseController"
 
 	/**
 	 * @authorizer "authorizeByAccountId"
-	 * @authorizerField "accounts"
+	 * @authorizerFields "accounts"
 	 */
 	public void function getSpendingReportData( struct rc = {}){
 		rc.viewModel = new viewModels.spendingReport(rc);
