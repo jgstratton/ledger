@@ -72,11 +72,12 @@ component output="false" accessors="true" {
         var selectString = 't';
         if (returnType == 'simple') {
             selectString = "new map (
-                t.transactionDate as TRANSACTION_DATE, 
-                t.name as NAME,
-                t.note as NOTE,
-                c.name as CATEGORY_NAME,
-                ct.multiplier * t.amount as SIGNED_AMOUNT
+                date_format(t.transactionDate, '%m/%d/%Y')   as date, 
+                t.name as name,
+                a.name as account,
+                t.note as note,
+                c.name as category,
+                ct.multiplier * t.amount as amount
             )";
         }
 

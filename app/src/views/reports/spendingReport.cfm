@@ -69,7 +69,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-6 col-lg-12">
 			<div id="transactionsList">
 				#view("transaction/_list")#
 			</div>
@@ -104,7 +104,7 @@
 					callbacks: {
 						// this callback is used to create the tooltip label
 						label: function(tooltipItem, data) {
-							var amount = htmlFormatMoney(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+							var amount = formatUtil.htmlFormatMoney(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
 							var label = data.labels[tooltipItem.index];
 
 							return label + ": " + amount;
@@ -169,7 +169,7 @@
 					<tr>
 						<td><span class="btn btn-link" data-category="${reportData[i].category_id}">${reportData[i].category_name}</span></td>
 						<td>${reportData[i].recordCount}</td>
-						<td class="text-right">${htmlFormatMoney(reportData[i].total)}</td>
+						<td class="text-right">${formatUtil.htmlFormatMoney(reportData[i].total)}</td>
 					</tr>
 				`);
 			}

@@ -20,7 +20,7 @@ component name="_baseController" output="false"  accessors=true {
 	private void function runAuthorizer(required struct rc) {
 		var methodName = variables.fw.getItem();
 		if (!metaDataService.methodHasAnnotation(this, methodName, "authorizer")) {
-			throw(type="missingauthorizer", message="#methodName# of the transaction service is missing an authorizer");
+			throw(type="missingauthorizer", message="Method '#methodName#' of component '#getMetaData(this).name#' is missing an authorizer");
 			return;
 		}
 

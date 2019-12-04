@@ -7,8 +7,6 @@ component name="account" output="false"  accessors=true extends="_baseController
 		variables.fw=arguments.fw;
 	}
 
-/** Lifecycle functions **/
-
 	public void function after( struct rc = {} ){
 		rc.accounts = accountService.getAccounts();
 	}
@@ -17,8 +15,6 @@ component name="account" output="false"  accessors=true extends="_baseController
 		updateLayoutAndView();
 		super.before(rc);
 	}
-
-/** Controller Actions **/
 
 	/**
 	 * @authorizer "noAuthorizer"

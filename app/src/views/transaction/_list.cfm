@@ -1,7 +1,7 @@
 <cfoutput>
 	<div class="table-wrap" style="display:none">
-		<table class="table">
-			<col style="width:20px">
+		<div class="data-table"></div>
+		<table class="table" style="width:100%">
 			<thead>
 				<tr>
 					<th>Date</th>
@@ -12,16 +12,6 @@
 					<th>Amount</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>         
-					<td class="text-right"></td>
-				</tr>
-			</tbody>
 		</table>
 	</div>
 
@@ -47,10 +37,28 @@
 					searching: false,
 					paging:true,
 					responsive: true,
+					columns:[
+						{ data: 'date' },
+						{ data: "name" },
+						{ data: "account" },
+						{ data: "note" },
+						{ data: "category" },
+						{ data: "amount" },
+					],
 					columnDefs: [
+						{ defaultContent: "-", targets: "_all" },
+						{ type: "date", targets: 0 },
 						{ responsivePriority: 1, targets: 0 },
+						{ responsivePriority: 3, targets: 1 },
 						{ responsivePriority: 2, targets: -1 },
-						{ responsivePriority: 3, targets: 1 }
+						{ 
+							targets: -1,
+							className: "text-right", 
+							responsivePriority: 2,
+							render:  function ( data, type, row, meta ) {
+								return formatUtil.htmlFormatMoney(data, true);
+							}
+						},
 					]
 				});
 
@@ -62,11 +70,11 @@
 						dataType: "json",
 						data: searchParams
 					})
-					.done(function(transactionData){
+					.done(function(response){
 						self.dataTable.clear();
-						self.dataTable.rows.add(transactionData);
+						self.dataTable.rows.add(response.transactions);
 						self.dataTable.draw();
-						self.$tableWrap.show();  
+						self.$tableWrap.show(); 
 					})
 					.fail(function(a, b){
 						$("body").append(a.responseText);
