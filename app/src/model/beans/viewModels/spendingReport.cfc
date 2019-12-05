@@ -32,6 +32,8 @@ component accessors="true" {
 	}
 
 	public array function getReportData() {
+		var linkedClause = getincludeLinked().getValue() ? " or a.linkedAccount in (:accountidList)" : "";
+
 		if (!variables.keyExists('reportData')) {
 			transaction{
 				var reportQuery = queryExecute("
@@ -41,7 +43,7 @@ component accessors="true" {
 					LEFT JOIN categories c on vw.category_id = c.id
 					LEFT JOIN categoryTypes ct on c.categoryType_id = ct.id
 					WHERE 
-						(vw.account_id in (:accountidList) or a.linkedAccount in (:accountidList))
+						(vw.account_id in (:accountidList) #linkedClause#)
 						AND vw.transactionDate >= :startDate
 						AND (vw.transactionDate <= :endDate)
 						AND ct.name = 'Expenses'

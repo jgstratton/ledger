@@ -1,6 +1,7 @@
 component output="false" accessors="true" {
     property userService;
     property name="limitedResultsCount" default=1000;
+    property logger;
 
     public component function getTransactionByid(required numeric id){
         
@@ -43,14 +44,15 @@ component output="false" accessors="true" {
     public array function searchTransactions(required struct searchParams, string returnType = 'objects') {
         var conditions = "a.user = :user";
         var parameters = {user: userService.getCurrentUser()};
+        var incluedLinked = keyIsSet(arguments.searchParams, 'includeLinked') && arguments.searchParams.includeLinked;
 
         if (keyIsSet(arguments.searchParams,'accountId')) {
-            conditions &= " and a.id = :accountId";
+            conditions &= " and (a.id = :accountId #(includeLinked ? 'or a.linkedAccount = :accountId' : '')# )";
             parameters['accountId'] = searchParams.accountId;
         }
 
         if (keyIsSet(arguments.searchParams,'accountIds')) {
-            conditions &= " and a.id in (:accountIds)";
+            conditions &= " and (a.id in (:accountIds) #(includeLinked ? 'or a.linkedAccount in (:accountIds)' : '')# )";
             parameters['accountIds'] = listToArray(searchParams.accountIds);
         }
 
@@ -67,6 +69,16 @@ component output="false" accessors="true" {
         if (keyIsSet(arguments.searchParams, 'CategoryId')) {
             conditions &= " and c.id = :categoryId";
             parameters['categoryId'] = arguments.searchParams.CategoryId;
+        }
+
+        if (keyIsSet(arguments.searchParams, 'StartDate')) {
+            conditions &= " and t.transactionDate >= :startDate";
+            parameters['startDate'] = arguments.searchParams.StartDate;
+        }
+
+        if (keyIsSet(arguments.searchParams, 'EndDate')) {
+            conditions &= " and t.transactionDate <= :endDate";
+            parameters['endDate'] = arguments.searchParams.endDate;
         }
 
         var selectString = 't';
