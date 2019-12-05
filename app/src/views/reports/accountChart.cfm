@@ -1,4 +1,5 @@
-<cfparam name="rc.viewModel" required="true">
+<cfparam name="rc.viewModel">
+
 <cfoutput>
     <h4 class="mb-4"><i class="fa fa-line-chart"></i> Account Balance</h4>
 
@@ -142,7 +143,7 @@
         function getChartData() {
             var formData = $form.serialize();
             $.ajax({
-                url: routerUtil.buildUrl('accountChart.getChartData'),
+                url: routerUtil.buildUrl('reports.getChartData'),
                 type: "POST",
                 dataType: "json",
                 data:formData

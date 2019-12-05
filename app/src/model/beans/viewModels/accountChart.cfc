@@ -28,12 +28,13 @@ component accessors="true" {
         return chartData;
     }
 
-    private void function init(required struct rc) {
+    public component function init(required struct rc) {
         initializeInputs();
         populatePropertiesFromRc(rc);
         setOptions();
         setDefaultValues();
         populateInputsFromRc(rc);
+        return this;
     }
 
     /**
