@@ -65,7 +65,9 @@
 			</table>
 		</div>
 		<div class="col-md-6">
-			<canvas></canvas>
+			<div class="chart-container" style="position:relative;margin:auto">
+				<canvas></canvas>
+			</div>
 		</div>
 	</div>
 	<div class="row">
@@ -89,6 +91,12 @@
 		var color = Chart.helpers.color;
 		var $submitBtn = $form.find("button[type='submit']");
 		var smallGroupPercentage = 10;
+		var resizing = false;
+
+		var chartResizeOptions = {
+			maxWidth: 500,
+			maxHeight: 500
+		}
 
 		var chart = new Chart($canvas, {
 			type: 'doughnut',
@@ -141,7 +149,7 @@
 				populateReport(reportData);
 				setDatasetColors(chartData);
 				chart.data = chartData;
-				chart.update();
+				chart.update();				
 				stopSpinner();     
 			})
 			.fail(function(a, b){
@@ -224,6 +232,18 @@
 			});
 			transactionList.loadData(data);
 		
+		});
+
+		
+		chartUtil.resizeChartContainer($(".chart-container"), chartResizeOptions);
+		$(window).on('resize', function(){
+			if (!resizing) {
+				resizing = true;
+				setTimeout(() => {
+					resizing = false;
+					chartUtil.resizeChartContainer($(".chart-container"), chartResizeOptions);
+				}, 500);
+			}
 		});
 
 		function startSpinner() {

@@ -44,7 +44,7 @@ component output="false" accessors="true" {
     public array function searchTransactions(required struct searchParams, string returnType = 'objects') {
         var conditions = "a.user = :user";
         var parameters = {user: userService.getCurrentUser()};
-        var incluedLinked = keyIsSet(arguments.searchParams, 'includeLinked') && arguments.searchParams.includeLinked;
+        var includeLinked = keyIsSet(arguments.searchParams, 'includeLinked') && arguments.searchParams.includeLinked;
 
         if (keyIsSet(arguments.searchParams,'accountId')) {
             conditions &= " and (a.id = :accountId #(includeLinked ? 'or a.linkedAccount = :accountId' : '')# )";
