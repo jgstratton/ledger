@@ -14,6 +14,7 @@ component extends="framework.one" output="false" {
 	this.mappings["/beans"] = "/model/beans";
 	this.mappings["/viewModels"] = "/model/beans/viewModels";
 	this.mappings["/api"] = "/controllers/api";
+	this.mappings["/abstract"] = "/model/abstract";
 
 	// FW/1 settings
 	variables.framework = {
