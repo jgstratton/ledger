@@ -1,5 +1,4 @@
 component output="false" {
-
 	public boolean function methodHasAnnotation(required component obj, required string methodName, required string annotation) {
 		return getMetaFunction(obj,methodName).keyExists(annotation);
 	}
@@ -25,6 +24,11 @@ component output="false" {
 		}     
 
 		return false; 
+	}
+
+	public boolean function implements(required component obj, required string interfaceName) {
+		var metaData = getMetaData(obj);
+		return (metaData.keyExists('implements') && metaData.implements.keyExists(interfaceName) );
 	}
 
 	private struct function getMetaFunction(required component obj, required string methodName) {

@@ -1,4 +1,4 @@
-component accessors="true" extends="abstract.reconciler.aRecLedger" {
+component accessors="true" extends="reconciler.aRecLedger" {
 	
 	//this implementation is going to use an array of structs to hold the transaction data
 	public void function addTransaction(required struct transaction) {

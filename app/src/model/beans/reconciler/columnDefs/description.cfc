@@ -1,4 +1,4 @@
-component accessors="true" extends="abstract.reconciler.aRecColumnDef" {
+component accessors="true" extends="reconciler.aRecColumnDef" {
 	public void function init() {
 		super.init({
 			name: 'description',

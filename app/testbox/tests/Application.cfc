@@ -55,6 +55,7 @@ component {
 	this.mappings[ "/services" ] = this.rootPath & "src/model/services";
 	this.mappings[ "/utils" ] = this.rootPath & "src/model/utils";
 	this.mappings[ "/migrations" ] =this.rootPath & "src/database/migrations";
+	this.mappings[ "/reconciler" ] = this.rootPath & "/src/model/reconciler";
 
 	this.ormenabled = true;
 	this.ormSettings.cfclocation = [this.mappings[ "/beans" ]];

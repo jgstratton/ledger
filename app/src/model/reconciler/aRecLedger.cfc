@@ -10,6 +10,7 @@ abstract component {
 
 		variables.columnDefinitions = local.properties.columnDefinitions;
 		variables.transactions = local.properties.columnDefinitions;
+		return this;
 	}
 	
 	public void function addTransaction(required any transaction) {
