@@ -33,6 +33,25 @@ component extends="testbox.system.BaseSpec" {
 					}).ToThrow("invalidMethodName");
 				});
 			});
+
+			describe("checks if an object inherits from another", function(){
+				it("if the object's parent is the target, then it returns true", function(){
+					child = new resources.inheritance.child();
+					expect(service.inheritsFrom(child, "resources.inheritance.parent")).toBeTrue();
+				});
+				it("if the target exists anywhere in the inheritence tree, then it retunrs true", function(){
+					child = new resources.inheritance.child();
+					expect(service.inheritsFrom(child, "resources.inheritance.grandParent")).toBeTrue();
+				});
+				it("if the target doesn't exist in the inheritance tree, then it returns false", function(){
+					child = new resources.inheritance.child();
+					expect(service.inheritsFrom(child, "resources.inheritance.nonRelative")).toBeFalse();
+				});
+				it("if the target doesn't extend anything, then it returns false", function(){
+					grandParent = new resources.inheritance.grandParent();
+					expect(service.inheritsFrom(grandParent, "resources.inheritance.grandParent")).toBeFalse();
+				});
+			});
 		});
 	}
 
