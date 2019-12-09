@@ -8,4 +8,8 @@ component accessors="true" implements="reconciler.iRecTransaction" {
 	public void function populate(required struct){
 		
 	}
+
+	public string function getRecTransactionId() {
+		return getId();
+	}
 }

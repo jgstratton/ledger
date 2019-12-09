@@ -1,4 +1,4 @@
-component persistent="true" table="transactions" accessors="true" extends="_entity" {
+component persistent="true" table="transactions" accessors="true" extends="_entity" implements="reconciler.iRecTransaction" {
     property name="id" generator="native" ormtype="integer" fieldtype="id";
     property name="account" fieldtype="many-to-one" cfc="account" fkcolumn="account_id";
     property name="category" fieldtype="many-to-one" cfc="category" fkcolumn="category_id";
@@ -34,6 +34,11 @@ component persistent="true" table="transactions" accessors="true" extends="_enti
         return errors;
 
     }
+
+    //required for iRecTransaction interface
+    public string function getRecTransactionId() {
+		return getId();
+	}
 
     public any function getCategoryId(){
         if(this.hasCategory()){

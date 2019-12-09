@@ -3,24 +3,20 @@ component extends="testbox.system.BaseSpec" {
 
 		describe("The reconciler service", function() {
 			beforeEach(function(){
+				metaDataService = createMock("services.metaDataService");
 				service = createMock("services.reconciler")
-					.$property(propertyName="metadataService", mock = new services.metaDataService());
+					.$property(propertyName="metadataService", mock = metaDataService);
 			});
 
 			describe("Creates new ledger objects for reconciling", function(){
 				it("creates a new ledger object", function(){
-					var columnDef = createStub();
-					var ledger = service.createLedger([columnDef]);
+					var ledger = service.createLedger();
 				});
 			});		
 
 			describe("It populates existing ledger objects", function(){
 				beforeEach(function(){
-					columnDef = createStub();
-					ledger = service.createLedger([
-						createStub().$("getName", "column1"),
-						createStub().$("getName", "column2")
-					]);
+					ledger = service.createLedger();
 				});
 
 				it("If the data contains a non component, it throws an error.", function(){
@@ -29,12 +25,17 @@ component extends="testbox.system.BaseSpec" {
 					}).toThrow("invalidTransactionType");
 				});
 
-				it("If the data does not inherit from 'aRecTransaction, it throws an error.", function(){
+				it("If the data does not implement iRecTransaction, it throws an error.", function(){
 					expect(function(){
 						service.populateLedger(ledger, [this]);
 					}).toThrow("invalidTransactionType");
 				});
 
+				it("If the data in the array implements iRecTransaction, it doesn't throw an error an error.", function(){
+					var transaction = createStub();
+					metaDataService.$("implements", true);
+					service.populateLedger(ledger, [transaction]);
+				});
 			});
 		});
 	}
