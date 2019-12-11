@@ -10,53 +10,37 @@ component extends="testbox.system.BaseSpec" {
 					.$property(propertyName="arrayUtil", mock = arrayUtil);
 			});
 
-			describe("Creates new ledger objects for reconciling", function(){
-				it("creates a new ledger object", function(){
-					var ledger = service.createLedger();
-				});
-			});		
+			createTransaction = function(struct options) {
+				var allOptions = options.Append({
+					id: 0,
+					amount: 0,
+					description: '',
+					category: '',
+					transactionDate: '01/01/2000'
+				},false);
+				return createStub()
+					.$("getId", allOptions.id)
+					.$("getAmount", allOptions.amount)
+					.$("getDescription", allOptions.description)
+					.$("getCategory", allOptions.category)
+					.$("getTransactionDate", allOptions.transactionDate);
+			}
+	
+			compareTransactions = function(struct options1, struct options2) {
+				return service.compareTransactions(createTransaction(options1), createTransaction(options2));
+			}
 
-			describe("It populates existing ledger objects", function(){
-				beforeEach(function(){
-					ledger = service.createLedger();
-				});
-
-				it("If the data contains a non component, it throws an error.", function(){
-					expect(function(){
-						service.populateLedger(ledger, ["not an object"]);
-					}).toThrow("invalidTransactionType");
-				});
-
-				it("If the data does not implement iRecTransaction, it throws an error.", function(){
-					expect(function(){
-						service.populateLedger(ledger, [this]);
-					}).toThrow("invalidTransactionType");
-				});
-
-				it("If the data in the array implements iRecTransaction, it doesn't throw an error an error.", function(){
-					var transaction = createStub();
-					metaDataService.$("implements", true);
-					service.populateLedger(ledger, [transaction]);
-				});
-			});
+			reconcile = function(array transactionArray1, array transactionArray2) {
+				for (var i = 1; i <= transactionArray1.len(); i++){
+					transactionArray1[i] = createTransaction(transactionArray1[i]);
+				}
+				for (var i = 1; i <= transactionArray2.len(); i++){
+					transactionArray2[i] = createTransaction(transactionArray2[i]);
+				}
+				return service.reconcile(transactionArray1, transactionArray2);
+			}
 
 			describe("compares two transactions and assigns an numeric match index", function(){
-				createTransaction = function(struct options) {
-					var allOptions = options.Append({
-						amount: 0,
-						description: '',
-						category: '',
-						transactionDate: '01/01/2000'
-					},false);
-					return createStub()
-						.$("getAmount", allOptions.amount)
-						.$("getDescription", allOptions.description)
-						.$("getCategory", allOptions.category)
-						.$("getTransactionDate", allOptions.transactionDate);
-				}
-				compareTransactions = function(struct options1, struct options2) {
-					return service.compareTransactions(createTransaction(options1), createTransaction(options2));
-				}
 
 				it("Transactions that have a matching amount should have a higher index than ones that don't", function(){
 					var index1 = compareTransactions({amount: 1}, {amount:1});
@@ -88,6 +72,54 @@ component extends="testbox.system.BaseSpec" {
 					var index2 = compareTransactions({amount: '51', date: '01/01/2000'}, {amount:'52', date: '01/01/2000'});
 					expect(index1).toBeGT(index2);
 				});
+			});
+
+			describe("reconciles two ledgers and returns a reconcile results object", function(){
+				it("When transactions in both ledgers have the same amount and date, they should be matched", function(){
+					var matchResults = reconcile(
+						[
+							{id:'1', amount: '50', date: '01/01/2000'}
+						], 
+						[
+							{id:'2', amount: '50', date: '01/01/2000'},
+							{id:'3', amount: '51', date: '01/01/2000'},
+						]
+					);
+					expect(matchResults.getMatchMaps()).toBe({'1':'2'});
+				});
+	
+				it("Transactions with the same amount and a matching keyword should match before a transaction with just a matching amount", function(){
+					var matchResults = reconcile(
+						[
+							{id:'1', amount: '50', description:'Wine and Sprits'}
+						], 
+						[
+							{id:'1', amount: '50', description: 'ATM'},
+							{id:'2', amount: '50', description: 'The wine store'},
+						]
+					);
+					expect(matchResults.getMatchMaps()).toBe({'1':'2'});
+				});
+
+				it("If two transactions combined match to a single transaction, then they should have a combined match", function(){
+					var matchResults = reconcile(
+						[	
+							{id:'google', amount: '125', description: 'Google Pay'},
+							{id:'utility', amount: '450', description: 'Utilities'}
+						], 
+						[
+							{id:'gas', amount: '250', description: 'Evil Gas Inc'},
+							{id:'electric', amount: '200', description: 'ElectricForYou'},
+							{id:'thing', amount: '125', description: 'Paid for that thing that day'}
+						]
+					);
+					expect(matchResults.getMatchMaps()).toBe({
+						'google': 'thing',
+						'utility': ['gas','electric']
+					});
+				});
+
+
 			});
 		});
 	}
