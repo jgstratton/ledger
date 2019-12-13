@@ -27,7 +27,7 @@ component extends="testbox.system.BaseSpec" {
 			}
 	
 			compareTransactions = function(struct options1, struct options2) {
-				return service.compareTransactions(createTransaction(options1), createTransaction(options2));
+				return service.compareTransactions(createTransaction(options1), [createTransaction(options2)]);
 			}
 
 			reconcile = function(array transactionArray1, array transactionArray2) {

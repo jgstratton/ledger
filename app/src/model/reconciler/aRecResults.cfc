@@ -4,7 +4,7 @@
 abstract component {
 
 	/**
-	 * Sets two transactions as matched
+	 * Matches transactions
 	 */
 	abstract void function setMatch(transaction1, transaction2);
 
