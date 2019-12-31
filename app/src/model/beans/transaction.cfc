@@ -1,4 +1,4 @@
-component persistent="true" table="transactions" accessors="true" extends="_entity" implements="reconciler.iRecTransaction" {
+component persistent="true" table="transactions" accessors="true" entityName="transaction" extends="_entity" implements="reconciler.iRecTransaction" {
     property name="id" generator="native" ormtype="integer" fieldtype="id";
     property name="account" fieldtype="many-to-one" cfc="account" fkcolumn="account_id";
     property name="category" fieldtype="many-to-one" cfc="category" fkcolumn="category_id";
