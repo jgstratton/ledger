@@ -1,17 +1,8 @@
-component accessors="true" extends="reconciler.aRecResults" {
-	ledgers = [[],[]];
-	ledgerMaps = [{},{}];
-	matches = [{},{}];
+component accessors="true" {
+	property name="matches" type="array";
 
-	public component function init(required array ledger1, required array ledger2){
-		ledgers[1] = arguments.ledger1;
-		ledgers[2] = arguments.ledger2;
-		
-		ledgers.each(function(ledger, index){
-			ledger.each(function(transaction){
-				ledgerMaps[index][transaction.getId()] = transaction;
-			});
-		});
+	public component function init(){
+		setMatches([]);
 		return this;
 	}
 
@@ -19,23 +10,28 @@ component accessors="true" extends="reconciler.aRecResults" {
 		if (isArray(transaction1) && isArray(transaction2)) {
 			throw(type="InvalidArguments", message="At least one argument to the setMatch function must be a transaction");
 		}
-		if (isArray(transaction1)) {
-			matches[2][transaction2.getId()] = transaction1.map(function(transaction){
-				return getId();
-			});
-		} else if (isArray(transaction2)) {
-			matches[1][transaction1.getId()] = transaction2.map(function(transaction){
-				return getId();
-			});
-		} else {
-			matches[1][transaction1.getId()] = transaction2.getId();
-			matches[2][transaction2.getId()] = transaction1.getId();
+		getMatches().append([transaction1, transaction2], false);
+	}
+
+	/**
+	 * Convert the matches from transaction objects to ids.
+	 */
+	public array function getMatchMaps() {
+		var matchMaps = [];
+		for (var match in getMatches()) {
+			var matchMap = [];
+			for (var index in [1,2]) {
+				if(isArray(match[index])) {
+					matchMap[index] = [];
+					for (var transaction in match[index]) {
+						matchMap[index].append(transaction.getRecTransactionId());
+					}
+				} else {
+					matchMap[index] = match[index].getRecTransactionId();
+				}
+			}
+			matchMaps.append(matchMap,false);
 		}
+		return matchMaps;
 	}
-
-	public struct function getMatchMaps(boolean reverseMap = false) {
-		return matches[ reverseMap ? 2 : 1];
-	}
-
-
 }

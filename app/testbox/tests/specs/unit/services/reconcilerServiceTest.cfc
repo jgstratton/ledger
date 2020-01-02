@@ -23,7 +23,8 @@ component extends="testbox.system.BaseSpec" {
 					.$("getAmount", allOptions.amount)
 					.$("getDescription", allOptions.description)
 					.$("getCategory", allOptions.category)
-					.$("getTransactionDate", allOptions.transactionDate);
+					.$("getTransactionDate", allOptions.transactionDate)
+					.$("getRecTransactionId", allOptions.id);
 			}
 	
 			compareTransactions = function(struct options1, struct options2) {
@@ -85,7 +86,7 @@ component extends="testbox.system.BaseSpec" {
 							{id:'3', amount: '51', date: '01/01/2000'},
 						]
 					);
-					expect(matchResults.getMatchMaps()).toBe({'1':'2'});
+					expect(matchResults.getMatchMaps()).toBe([['1','2']]);
 				});
 	
 				it("Transactions with the same amount and a matching keyword should match before a transaction with just a matching amount", function(){
@@ -98,7 +99,7 @@ component extends="testbox.system.BaseSpec" {
 							{id:'2', amount: '50', description: 'The wine store'},
 						]
 					);
-					expect(matchResults.getMatchMaps()).toBe({'1':'2'});
+					expect(matchResults.getMatchMaps()).toBe([['1','2']]);
 				});
 
 				it("If two transactions combined match to a single transaction, then they should have a combined match", function(){
@@ -106,20 +107,60 @@ component extends="testbox.system.BaseSpec" {
 						[	
 							{id:'google', amount: '125', description: 'Google Pay'},
 							{id:'utility', amount: '450', description: 'Utilities'}
-						], 
+						],
 						[
 							{id:'gas', amount: '250', description: 'Evil Gas Inc'},
 							{id:'electric', amount: '200', description: 'ElectricForYou'},
 							{id:'thing', amount: '125', description: 'Paid for that thing that day'}
 						]
 					);
-					expect(matchResults.getMatchMaps()).toBe({
-						'google': 'thing',
-						'utility': ['gas','electric']
-					});
+					expect(matchResults.getMatchMaps()).toBe([
+						['google', 'thing'],
+						['utility', ['gas','electric']]
+					]);
 				});
 
+				it("If one transaction matches to two transactions combined, then they should have a combined match", function(){
+					var matchResults = reconcile(
+						[
+							{id:'gas', amount: '250', description: 'Evil Gas Inc'},
+							{id:'electric', amount: '200', description: 'ElectricForYou'},
+							{id:'thing', amount: '125', description: 'Paid for that thing that day'}
+						],
+						[	
+							{id:'google', amount: '125', description: 'Google Pay'},
+							{id:'utility', amount: '450', description: 'Utilities'}
+						]	
+					);
+					expect(matchResults.getMatchMaps()).toBe([
+						['thing', 'google'],
+						[['gas','electric'], 'utility']
+					]);
+				});
 
+				it("combinations in both directions can work in the same set", function(){
+					var matchResults = reconcile(
+						[	
+							{id:'google', amount: '125', description: 'Google Pay'},
+							{id:'utility', amount: '450', description: 'Utilities'},
+							{id:'amazon1', amount: '50', description: 'First Amazon Purchase'},
+							{id:'amazon2', amount: '50', description: 'Second Amazon Purchase'},
+							{id:'amazon3', amount: '50', description: 'Third Amazon Purchase'},
+						],
+						[
+							{id:'gas', amount: '250', description: 'Evil Gas Inc'},
+							{id:'electric', amount: '200', description: 'ElectricForYou'},
+							{id:'thing', amount: '125', description: 'Paid for that thing that day'},
+							{id:'amazon', amount: '150', description: 'Combined amazon purchases'}
+						]
+							
+					);
+					expect(matchResults.getMatchMaps()).toBe([
+						['google', 'thing'],
+						['utility',['gas','electric']],
+						[['amazon1','amazon2','amazon3'], 'amazon']
+					]);
+				});
 			});
 		});
 	}

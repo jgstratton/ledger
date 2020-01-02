@@ -62,7 +62,8 @@ component accessors="true" extends="reconciler.aReconcileService" {
 		};
 
 		setMatches(state);
-		setCombinedMatches(state);
+		setAllCombinedMatchesLeft(state);
+		setAllCombinedMatchesRight(state);
 		return recResult;
 	}
 
@@ -84,9 +85,97 @@ component accessors="true" extends="reconciler.aReconcileService" {
 		}
 	}
 
-	private void function setCombinedMatches(required struct state) {
-		for (var i=2; i <= reconcileSettings.combinationDepth; i++) {
-			
+	private void function setAllCombinedMatchesLeft(required struct state) {
+
+		for (var depth = 2; depth <= reconcileSettings.combinationDepth; depth++) {
+			state.currentLevel = reconcileSettings.matchRange[2];
+			if (state.ledger2.len() >= depth) {
+
+				var combinedLedger2 = new beans.combinations(state.ledger2, depth, function(transaction){
+					return transaction.getRecTransactionId();
+				});
+				var combinations = combinedLedger2.getCombinations();
+
+				while (state.currentLevel >= reconcileSettings.matchRange[1]){
+					var matched = false;
+					for (var i = 1; i <= combinations.len(); i++) {
+						for (var j = 1; j <= state.ledger1.len(); j++) {
+							if (compareTransactions(state.ledger1[j], combinations[i]) >= state.currentLevel) {
+								state.recResult.setMatch(state.ledger1[j], combinations[i]);
+								state.ledger1.deleteAt(j);
+
+								for (var transaction in combinations[i]) {
+									combinedLedger2.removeItem(transaction);
+
+									//this needs improved
+									for (var k = 1; k <= state.ledger2.len(); k++) {
+										if (state.ledger2[k].getRecTransactionId() == transaction.getRecTransactionId()) {
+											state.ledger2.deleteAt(k);
+										}
+									}
+								}
+								matched = true;
+								break;
+							}
+						}
+						if (matched) {
+							break;
+						}
+					}
+					if (state.currentLevel >= reconcileSettings.matchRange[1]) {
+						state.currentLevel -= 1;
+					}
+				}
+			}
 		}
+	}
+
+	private void function setAllCombinedMatchesRight(required struct state) {
+		for (var depth = 2; depth <= reconcileSettings.combinationDepth; depth++) {
+			state.currentLevel = reconcileSettings.matchRange[2];
+
+			if (state.ledger1.len() >= depth) {
+
+				var combinedLedger1 = new beans.combinations(state.ledger1, depth, function(transaction){
+					return transaction.getRecTransactionId();
+				});
+				var combinations = combinedLedger1.getCombinations();
+				while (state.currentLevel >= reconcileSettings.matchRange[1]){
+					var matched = false;
+					for (var i = 1; i <= combinations.len(); i++) {
+
+						for (var j = 1; j <= state.ledger2.len(); j++) {
+							if (compareTransactions(state.ledger2[j], combinations[i]) >= state.currentLevel) {
+								state.recResult.setMatch(combinations[i], state.ledger2[j]);
+								state.ledger2.deleteAt(j);
+
+								for (var transaction in combinations[i]) {
+									combinedLedger1.removeItem(transaction);
+
+									//this needs improved
+									for (var k = 1; k <= state.ledger1.len(); k++) {
+										if (state.ledger1[k].getRecTransactionId() == transaction.getRecTransactionId()) {
+											state.ledger1.deleteAt(k);
+										}
+									}
+								}
+								matched = true;
+								break;
+							}
+						}
+						if (matched) {
+							break;
+						}
+					}
+					if (state.currentLevel >= reconcileSettings.matchRange[1]) {
+						state.currentLevel -= 1;
+					}
+				}
+			}
+		}
+	}
+
+	private void function setCombinedMatches(required struct state) {
+
 	}
 }
