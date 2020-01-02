@@ -1,4 +1,4 @@
-component accessors="true" extends="reconciler.aReconcileService" {
+component accessors="true" {
 	property metaDataService;
 	property arrayUtil;
 	property combinatoricsUtil;
@@ -52,8 +52,8 @@ component accessors="true" extends="reconciler.aReconcileService" {
 	}
 
 	//compare two ledger components and return a results component back
-	public component function reconcile(required array ledger1, required array ledger2){
-		var recResult = new beans.reconciler.recResults(ledger1, ledger2);
+	public component function reconcile(required component ledger1, required component ledger2){
+		var recResult = new beans.reconciler.recResults();
 		var state = {
 			ledger1: ledger1, 
 			ledger2: ledger2, 
@@ -70,25 +70,23 @@ component accessors="true" extends="reconciler.aReconcileService" {
 		state.currentLevel = reconcileSettings.matchRange[2];
 		while (state.currentLevel >= reconcileSettings.matchRange[1]) {
 			var matched = false;
-			for (var i = 1; i <= state.ledger1.len(); i++) {
-				for (var j = 1; j <= state.ledger2.len(); j++) {
-					if (compareTransactions(state.ledger1[i], [state.ledger2[j]]) >= state.currentLevel) {
-						state.recResult.setMatch(state.ledger1[i], state.ledger2[j]);
-						state.ledger2.deleteAt(j);
-						state.ledger1.deleteAt(i);
+			state.ledger1.iterate( function(transaction1) {
+				state.ledger2.iterate( function(transaction2) {
+					if (compareTransactions(transaction1, [transaction2]) >= state.currentLevel) {
+						state.recResult.setMatch(transaction1, transaction2);
+						state.ledger1.deleteTransaction(transaction1);
+						state.ledger2.deleteTransaction(transaction2);
 						matched = true;
-						break;
 					}
-				}
-				if (matched) {
-					break;
-				}
-			}
+					return !matched;
+				});
+				return !matched;
+			});
+
 			if (!matched && state.currentLevel >= reconcileSettings.matchRange[1]) {
 				state.currentLevel -= 1;
 			}
 		}
-
 	}
 
 	private void function setCombinedMatches(required struct state) {
@@ -106,37 +104,32 @@ component accessors="true" extends="reconciler.aReconcileService" {
 				state.currentLevel = maxMatchLevel;
 				if (multiTransactionLedger.len() >= depth) {
 
-					var combinationObj = new beans.combinations(multiTransactionLedger, depth, function(transaction){
+					var combinationObj = new beans.combinations(multiTransactionLedger.getTransactions(), depth, function(transaction){
 						return transaction.getRecTransactionId();
 					});
+					
 					var combinations = combinationObj.getCombinations();
 
 					while (state.currentLevel >= reconcileSettings.matchRange[1]){
 						var matched = false;
 						for (var i = 1; i <= combinations.len(); i++) {
-							for (var j = 1; j <= singleTransactionLedger.len(); j++) {
-								if (compareTransactions(singleTransactionLedger[j], combinations[i]) >= state.currentLevel) {
+							singleTransactionLedger.iterate( function(compareTransaction) {
+								if (compareTransactions(compareTransaction, combinations[i]) >= state.currentLevel) {
 									if (direction == 'left') {
-										state.recResult.setMatch(singleTransactionLedger[j], combinations[i]);
+										state.recResult.setMatch(compareTransaction, combinations[i]);
 									} else {
-										state.recResult.setMatch(combinations[i], singleTransactionLedger[j]);
+										state.recResult.setMatch(combinations[i], compareTransaction);
 									}	
-									singleTransactionLedger.deleteAt(j);
+									singleTransactionLedger.deleteTransaction(compareTransaction);
 
 									for (var transaction in combinations[i]) {
 										combinationObj.removeItem(transaction);
-
-										//this needs improved
-										for (var k = 1; k <= multiTransactionLedger.len(); k++) {
-											if (multiTransactionLedger[k].getRecTransactionId() == transaction.getRecTransactionId()) {
-												multiTransactionLedger.deleteAt(k);
-											}
-										}
+										multiTransactionLedger.deleteTransaction(transaction);
 									}
-									matched = true;
-									break;
+									matched = true;									
 								}
-							}
+								return !matched;
+							});
 							if (matched) {
 								break;
 							}

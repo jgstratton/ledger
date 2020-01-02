@@ -38,7 +38,10 @@ component extends="testbox.system.BaseSpec" {
 				for (var i = 1; i <= transactionArray2.len(); i++){
 					transactionArray2[i] = createTransaction(transactionArray2[i]);
 				}
-				return service.reconcile(transactionArray1, transactionArray2);
+				return service.reconcile(
+					new beans.reconciler.recLedger(transactionArray1), 
+					new beans.reconciler.recLedger(transactionArray2)
+				);
 			}
 
 			describe("compares two transactions and assigns an numeric match index", function(){
