@@ -56,7 +56,7 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a href="##" class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
-                                <div class="dropdown-menu">
+                                <div class="dropdown-menu dropdown-dark">
                                     <a class="dropdown-item" href="#buildUrl('schedular.autoPaymentList')#">Automatic Payments</a>
                                     <a class="dropdown-item" href="#buildUrl('user.checkbookRounding')#">Add Auto Rounding</a>
                                     <a class="dropdown-item" href="#buildUrl('category.manageCategories')#">Manage Categories</a>

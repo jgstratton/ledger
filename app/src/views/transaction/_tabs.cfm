@@ -1,14 +1,36 @@
 <cfoutput>
 	
-	<a title="Edit Account" href="#buildURL('account.edit?accountid=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm float-right d-none d-md-inline-block" data-close>
-		<i class="fa fa-gear" title="account settings"></i>
-	</a>
-	<a href="#buildURL('reports.accountChart?accounts=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm float-right mr-1" title="View Account Balance History">
-		<i class="fa fa-chart-line"></i>
-	</a>
-	<a href="#buildURL('reports.spendingReport?accounts=' & rc.account.getid())#" class="btn btn-outline-secondary btn-sm float-right mr-1" title="View Account Spending Report">
-		<i class="fas fa-file-contract"></i>
-	</a>
+	<div class="float-right">
+		<div class="dropdown">
+			<button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+				More...
+			</button>
+			<div class="dropdown-menu dropdown-light">
+				<div class="dropdown-item">
+					<a title="Edit Account" href="#buildURL('account.edit?accountid=' & rc.account.getid())#" class="btn btn-link" data-close>
+						<i class="fa fa-fw fa-gear" title="account settings"></i> Account Settings
+					</a>
+				</div>
+				<div class="dropdown-item">
+					<a href="#buildURL('reports.accountChart?accounts=' & rc.account.getid())#" class="btn btn-link" title="View Account Balance History">
+						<i class="fa fa-fw fa-chart-line"></i> Balance Report
+					</a>
+				</div>
+				<div class="dropdown-item">
+					<a href="#buildURL('reports.spendingReport?accounts=' & rc.account.getid())#" class="btn btn-link" title="View Account Spending Report">
+						<i class="fas fa-fw fa-file-contract"></i> Spending Report
+					</a>
+				</div>
+				<div class="dropdown-item">
+					<a href="#buildURL('reconciler.dashboard?accountId=' & rc.account.getid())#" class="btn btn-link" title="View Account Spending Report">
+						<i class="fas fa-fw fa-clipboard-check"></i> Reconcile Account
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
 	<ul class="nav nav-tabs">
 		<li class="nav-item">
 			<a class="nav-link #matchDisplay(getItem(),'newTransaction','active disabled')#" href="#buildurl('transaction.newTransaction?accountid=#rc.account.getid()#')#">Add Entry</a>
