@@ -12,8 +12,20 @@ component name="account" output="false" accessors=true extends="_baseController"
 
 	/**
 	 * @authorizer "authorizeByAccountId"
+	 * @authorizerFields "accounts"
+	 */
+	public void function reconcileForm( struct rc = {} ){
+		rc.account = accountService.getAccountByID(rc.accounts);
+	}
+
+	
+	/**
+	 * @authorizer "authorizeByAccountId"
+	 * @authorizerFields "accounts"
+	 * @view "main.jsonresponse"
 	 */
 	public void function reconcile( struct rc = {} ){
-		rc.account = accountService.getAccountByID(rc.accountid);
+		rc.account = accountService.getAccountByID(rc.accounts);
+		rc.jsonResponse.success = true;
 	}
 }

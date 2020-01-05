@@ -1,7 +1,7 @@
 CsvReader = function(options) {
 	var self = this;
 	this.data = [];
-	this.headings = [];
+	this.headers = [];
 
 	let defaults = {
 		buttonSelector: "input[type='file']",
@@ -31,7 +31,7 @@ CsvReader = function(options) {
 	this.getData = function() {
 		return {
 			data: self.data,
-			headings: self.headings
+			headers: self.headers
 		};
 	};
 
@@ -56,9 +56,9 @@ CsvReader = function(options) {
 				var items = lines[i].split(',');
 				if (i == 0) {
 					for (var j = 0; j < items.length; j++) {
-						self.headings.push(items[j]);
+						self.headers.push(items[j]);
 					}
-				} else {
+				} else if (items.length == self.headers.length) {
 					var newRecord = [];
 					for (var j = 0; j < items.length; j++) {
 						newRecord[j] = items[j];

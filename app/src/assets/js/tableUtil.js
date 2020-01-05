@@ -3,7 +3,8 @@ tableUtil = (function() {
 		buildHtmlTable: function createTable(argOptions) {
 			let defaults = {
 				data: [],
-				headers: []
+				headers: [],
+				class: ''
 			};
 
 			var options = Object.assign({}, defaults, argOptions);
@@ -38,7 +39,10 @@ tableUtil = (function() {
 						.join('')}
 				</tbody>`
 				: '';
-			return $('<table>' + thead + tbody + '</table>');
+			return $(`
+				<table class="${options.class}"> 
+					${thead + tbody} 
+				</table>`);
 		}
 	};
 
