@@ -13,7 +13,7 @@ component name="account" output="false" accessors=true extends="_baseController"
 	/**
 	 * @authorizer "authorizeByAccountId"
 	 */
-	public void function dashboard( struct rc = {} ){
+	public void function reconcile( struct rc = {} ){
 		rc.account = accountService.getAccountByID(rc.accountid);
 	}
 }

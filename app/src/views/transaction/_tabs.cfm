@@ -22,7 +22,7 @@
 					</a>
 				</div>
 				<div class="dropdown-item">
-					<a href="#buildURL('reconciler.dashboard?accountId=' & rc.account.getid())#" class="btn btn-link" title="View Account Spending Report">
+					<a href="#buildURL('reconciler.reconcile?accountId=' & rc.account.getid())#" class="btn btn-link" title="View Account Spending Report">
 						<i class="fas fa-fw fa-clipboard-check"></i> Reconcile Account
 					</a>
 				</div>
