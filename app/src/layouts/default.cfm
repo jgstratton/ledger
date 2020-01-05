@@ -22,7 +22,14 @@
         <link rel="stylesheet" type="text/css" href="./assets/css/app.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="./assets/css/transactions.css?v=#application.version#" />
         <link rel="stylesheet" type="text/css" href="./assets/css/classes.css?v=#application.version#" />
-       
+        
+        <!--- include template specific style sheets --->
+        <cfif request.keyExists('_viewIncludes') && request._viewIncludes.keyExists('stylesheets') >
+            <cfloop list="#request._viewIncludes.stylesheets.keyList()#" index="styleSheetName">
+                <link rel="stylesheet" type="text/css" href="./assets/css/#styleSheetName#?v=#application.version#" />
+            </cfloop>
+        </cfif>
+
         <script src="./assets/js/viewScripts.js?v=#application.version#"></script>
         
 
@@ -116,14 +123,18 @@
         <script src="./assets/lib/chart/chart.min.js"></script>
         <script src="./assets/lib/daterangepicker/daterangepicker.js"></script>
         
-
-
         <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
         <script src="#application.root_path#/assets/js/dateUtil.js?v=#application.version#"></script>
         <script src="#application.root_path#/assets/js/chartUtil.js?v=#application.version#"></script>
         <script src="#application.root_path#/assets/js/routerUtil.js?v=#application.version#"></script>
         <script src="#application.root_path#/assets/js/formUtil.js?v=#application.version#"></script>
         <script src="#application.root_path#/assets/js/formatUtil.js?v=#application.version#"></script>
+
+        <cfif request.keyExists('_viewIncludes') && request._viewIncludes.keyExists('scripts') >
+            <cfloop list="#request._viewIncludes.scripts.keyList()#" index="scriptName">
+                <script src="#application.root_path#/assets/js/#scriptName#?v=#application.version#"></script>
+            </cfloop>
+        </cfif>
 
         <!--- add global js variables --->
         <script>
