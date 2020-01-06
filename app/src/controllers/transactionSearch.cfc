@@ -25,7 +25,7 @@ component name="account" output="false"  accessors=true extends="_baseController
 
 	/**
 	 * @authorizer "authorizeByAccountId"
-	 * @authorizerFields "accountId,accountIds"
+	 * @authorizerFields "accountId,accountIds,accounts"
 	 * @view "main.jsonresponse"
 	 */
 	public void function getSearchResultsData( struct rc = {} ) {

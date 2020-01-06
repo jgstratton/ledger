@@ -30,8 +30,22 @@
             </cfloop>
         </cfif>
 
+        <!--- include js libraries / dependencies--->
+        <script src="./assets/lib/jquery/jquery.min.js"></script>
         <script src="./assets/js/viewScripts.js?v=#application.version#"></script>
-        
+        <script src="./assets/lib/popper/popper.min.js"></script>
+        <script src="./assets/lib/bootstrap/bootstrap.min.js"></script>
+        <script src="./assets/lib/jquery-ui/jquery-ui.min.js"></script>
+        <script src="./assets/lib/jquery-validate/jquery.validate.min.js"></script>
+        <script src="./assets/lib/jquery-validate/additional-methods.min.js"></script>
+        <script src="./assets/lib/jquery-touch-events/jquery.mobile-events.min.js"></script>
+        <script src="./assets/lib/multiple-select/multiple-select.min.js"></script>
+        <script src="./assets/lib/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="./assets/lib/datatables/js/dataTables.responsive.min.js"></script>
+        <script src="./assets/lib/moment/moment.min.js"></script>
+        <script src="./assets/lib/moment/moment.min.js"></script>
+        <script src="./assets/lib/chart/chart.min.js"></script>
+        <script src="./assets/lib/daterangepicker/daterangepicker.js"></script>
 
 	</head>
 
@@ -106,23 +120,7 @@
                 </div>
             </div>
         </main>
-
-        <!--- include js libraries / dependencies--->
-        <script src="./assets/lib/jquery/jquery.min.js"></script>
-        <script src="./assets/lib/popper/popper.min.js"></script>
-        <script src="./assets/lib/bootstrap/bootstrap.min.js"></script>
-        <script src="./assets/lib/jquery-ui/jquery-ui.min.js"></script>
-        <script src="./assets/lib/jquery-validate/jquery.validate.min.js"></script>
-        <script src="./assets/lib/jquery-validate/additional-methods.min.js"></script>
-        <script src="./assets/lib/jquery-touch-events/jquery.mobile-events.min.js"></script>
-        <script src="./assets/lib/multiple-select/multiple-select.min.js"></script>
-        <script src="./assets/lib/datatables/js/jquery.dataTables.min.js"></script>
-        <script src="./assets/lib/datatables/js/dataTables.responsive.min.js"></script>
-        <script src="./assets/lib/moment/moment.min.js"></script>
-        <script src="./assets/lib/moment/moment.min.js"></script>
-        <script src="./assets/lib/chart/chart.min.js"></script>
-        <script src="./assets/lib/daterangepicker/daterangepicker.js"></script>
-        
+      
         <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
         <script src="#application.root_path#/assets/js/dateUtil.js?v=#application.version#"></script>
         <script src="#application.root_path#/assets/js/chartUtil.js?v=#application.version#"></script>

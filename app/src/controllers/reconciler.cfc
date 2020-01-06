@@ -16,6 +16,7 @@ component name="account" output="false" accessors=true extends="_baseController"
 	 */
 	public void function reconcileForm( struct rc = {} ){
 		rc.account = accountService.getAccountByID(rc.accounts);
+		rc.viewModel = new viewModels.reconciler(rc);
 	}
 
 	
@@ -26,6 +27,7 @@ component name="account" output="false" accessors=true extends="_baseController"
 	 */
 	public void function reconcile( struct rc = {} ){
 		rc.account = accountService.getAccountByID(rc.accounts);
+		rc.viewModel = new viewModels.reconciler(rc);
 		rc.jsonResponse.success = true;
 	}
 }

@@ -14,3 +14,11 @@
 	bottom: 0;
 	background: linear-gradient(transparent 60%, white);
 }
+
+.preview-table td,
+.preview-table thead th {
+	background-color: #eee;
+	border-color: #333;
+	font-style: Verdana;
+	font-size: 11px;
+}

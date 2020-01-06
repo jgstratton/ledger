@@ -45,7 +45,7 @@
 				var $table = tableUtil.buildHtmlTable({
 					data: csvData.data,
 					headers: csvData.headers,
-					class: 'table table-bordered table-sm'	
+					class: 'table table-bordered table-sm preview-table'	
 				});
 				$("#filePreview").html($table);
 				validateUpload();
