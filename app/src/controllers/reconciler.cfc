@@ -19,15 +19,14 @@ component name="account" output="false" accessors=true extends="_baseController"
 		rc.viewModel = new viewModels.reconciler(rc);
 	}
 
-	
 	/**
 	 * @authorizer "authorizeByAccountId"
 	 * @authorizerFields "accounts"
-	 * @view "main.jsonresponse"
+	 * @view "reconciler.results"
+	 * @layout "none"
 	 */
-	public void function reconcile( struct rc = {} ){
+	public void function results( struct rc = {} ){
 		rc.account = accountService.getAccountByID(rc.accounts);
 		rc.viewModel = new viewModels.reconciler(rc);
-		rc.jsonResponse.success = true;
 	}
 }

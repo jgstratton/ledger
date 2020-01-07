@@ -1,6 +1,6 @@
 <cfoutput>
 	#includeStylesheet('reconcile.css')#
-
+	#includeScript('tableUtil.js')#
 
 	<h4 class="mb-4"><i class="fas fa-fw fa-clipboard-check"></i> Reconcile Account with External Transaction File</h4>
 
@@ -48,6 +48,8 @@
 					</div>
 				</div>
 			</form>
+			<div id="searchPreview" class="preview-box"></div>
+
 		</div>
 	</div>
 </cfoutput>
@@ -59,6 +61,9 @@
 	</div>
 	<div class="card-body">
 		<button id="btnReconcile" type="button" class="btn btn-primary">Process</button>
+		<div id="reconcileResults">
+
+		</div>
 	</div>
 </div>
 
@@ -66,14 +71,13 @@
 	viewScripts.add(function(){
 		
 		$("#btnReconcile").click(function(){
-			var formData = {
-				accounts: '1'
-			}; //$form.serialize();
+			var formData = formUtil.objectifyForm($("#searchTransactions"));
+			formData[csvData] = $("#csvData").val();
 			$.ajax({
-				url: routerUtil.buildUrl('reconciler.reconcile'),
+				url: routerUtil.buildUrl('reconciler.results'),
 				data: formData
 			}).done(function(results){
-				console.log(results);
+				$("#reconcileResults").html(results);
 			});
 		});
 
@@ -86,7 +90,19 @@
 				data: $("#searchTransactions").serialize()
 			})
 			.done(function(response){
-				console.log(response);
+				
+				var $table = tableUtil.buildHtmlTable({
+					data: response.transactions,
+					dataType: 'object',
+					class: 'table table-bordered table-sm preview-table',
+					headerMap: {
+						'date':'Transaction Data',
+						'name' : 'Description',
+						'category': 'Category',
+						'amount': 'Amount'
+					}
+				});
+				$("#searchPreview").append($table);
 			});
 		});
 		

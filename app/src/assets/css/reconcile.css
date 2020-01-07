@@ -1,11 +1,11 @@
-.file-preview {
+.preview-box {
 	max-height: 150px;
 	overflow-y: hidden;
 	position: relative;
 	margin-top: 15px;
 }
 
-.file-preview:after {
+.preview-box:after {
 	content: '';
 	display: block;
 	position: absolute;
