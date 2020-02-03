@@ -27,7 +27,13 @@
 	Upload CSV File
 </button>
 <input type="file" id="btnUpload" value="Upload CSV File" hidden>
-<div id="filePreview" class="preview-box"></div>
+
+<div class="preview-box-wrap">
+	<div id="filePreview" class="preview-box">
+	</div>
+</div>
+
+
 
 <script>
 	viewScripts.add( function(){

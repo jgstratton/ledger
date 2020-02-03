@@ -24,12 +24,14 @@
 		</div>
 		<div class="card-body">
 			<form id="searchTransactions" method="post" style="max-width:600px" class="mb-5">  
+				<input type="hidden" name="includeLinked" value="true">
+				<input type="hidden" name="excludeInternalTransfers" value="true">
 				<div class="row">
 					<label class="col-3 col-form-label">Accounts:</label>
 					<div class="col-9">
 						#view('controls/userAccounts', {
 							accountsInput: rc.viewModel.getAccounts(),
-							linkedInput: rc.viewModel.getIncludeLinked()
+							parentAccountsOnly: true
 						})#
 					</div>
 				</div>
@@ -48,8 +50,10 @@
 					</div>
 				</div>
 			</form>
-			<div id="searchPreview" class="preview-box"></div>
-
+			
+			<div class="preview-box-wrap">
+				<div id="searchPreview" class="preview-box"></div>
+			</div>
 		</div>
 	</div>
 </cfoutput>
@@ -75,7 +79,8 @@
 			formData[csvData] = $("#csvData").val();
 			$.ajax({
 				url: routerUtil.buildUrl('reconciler.results'),
-				data: formData
+				data: formData,
+				method: 'post'
 			}).done(function(results){
 				$("#reconcileResults").html(results);
 			});
