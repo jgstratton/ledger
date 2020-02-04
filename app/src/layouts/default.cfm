@@ -81,7 +81,8 @@
                                     <a class="dropdown-item" href="#buildUrl('schedular.autoPaymentList')#">Automatic Payments</a>
                                     <a class="dropdown-item" href="#buildUrl('user.checkbookRounding')#">Add Auto Rounding</a>
                                     <a class="dropdown-item" href="#buildUrl('category.manageCategories')#">Manage Categories</a>
-                                    <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
+                                    <a class="dropdown-item" href="#buildUrl('reports.spendingReport')#">Spending Report</a>
+                                    <a class="dropdown-item" href="#buildUrl('reconciler.reconcileForm')#">Reconcile Account</a>
                                     <cfif getEnvironment() eq "Dev">
                                         <a class="dropdown-item" href="#buildUrl('admin.devToggles')#">Dev toggles</a>
                                     </cfif>

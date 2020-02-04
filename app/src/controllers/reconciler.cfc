@@ -11,11 +11,9 @@ component name="account" output="false" accessors=true extends="_baseController"
 	}
 
 	/**
-	 * @authorizer "authorizeByAccountId"
-	 * @authorizerFields "accounts"
+	 * @authorizer "noAuthorizer"
 	 */
 	public void function reconcileForm( struct rc = {} ){
-		rc.account = accountService.getAccountByID(rc.accounts);
 		rc.viewModel = new viewModels.reconciler(rc);
 	}
 
