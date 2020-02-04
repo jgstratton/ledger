@@ -95,7 +95,6 @@
 				data: $("#searchTransactions").serialize()
 			})
 			.done(function(response){
-				
 				var $table = tableUtil.buildHtmlTable({
 					data: response.transactions,
 					dataType: 'object',
@@ -107,7 +106,7 @@
 						'amount': 'Amount'
 					}
 				});
-				$("#searchPreview").append($table);
+				$("#searchPreview").html($table);
 			});
 		});
 		
