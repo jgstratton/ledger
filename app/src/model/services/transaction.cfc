@@ -81,6 +81,23 @@ component output="false" accessors="true" {
             parameters['endDate'] = arguments.searchParams.endDate;
         }
 
+        //this doesn't work ... the logic is all wrong....
+        //we need exclude where.... blah I'm going to sleep.
+        if (keyIsSet(arguments.searchParams, 'ExcludeInternalTransfers')) {
+            conditions &= " 
+                and t.id not in (
+                    SELECT transactionId1
+                    FROM internalTransfer
+                    WHERE user_id = :user_id
+                )
+                and t.id not in (
+                    SELECT transactionId2
+                    FROM internalTransfer
+                    WHERE user_id = :user_id
+                )";
+            parameters['user_id'] = userService.getCurrentUser().getId();
+        }
+
         var selectString = 't';
         if (returnType == 'simple') {
             selectString = "new map (
@@ -100,7 +117,7 @@ component output="false" accessors="true" {
             JOIN t.category c
             JOIN c.type ct 
             WHERE #conditions#
-            ORDER BY t.transactionDate desc
+            ORDER BY  t.id desc
         ", parameters, {maxResults:variables.limitedResultsCount});
     }
 
