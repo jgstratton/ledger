@@ -70,13 +70,19 @@ header {
 	color: #16181b !important;
 }
 
-.dropdown-menu .dropdown-dark {
+.dropdown-menu.dropdown-dark {
 	background-color: #343a40 !important;
 	border: none;
 }
-.dropdown-item {
+
+.dropdown-dark .dropdown-item {
 	color: rgba(255, 255, 255, 0.5);
 }
+
+.dropdown-light .dropdown-item {
+	color: rgba(255, 255, 255, 0.5);
+}
+
 .dropdown-item:focus,
 .dropdown-item:hover {
 	color: rgba(255, 255, 255, 0.75);
