@@ -19,12 +19,33 @@
         <link rel="stylesheet" href="./assets/lib/datatables/css/responsive.dataTables.min.css">
         <link rel="stylesheet" href="./assets/lib/daterangepicker/daterangepicker.css">
         <!--- include application styles --->
-        <link rel="stylesheet" type="text/css" href="./assets/css/app.css?v=#application.version#" />
-        <link rel="stylesheet" type="text/css" href="./assets/css/transactions.css?v=#application.version#" />
-        <link rel="stylesheet" type="text/css" href="./assets/css/classes.css?v=#application.version#" />
-       
-        <script src="./assets/js/viewScripts.js?v=#application.version#"></script>
+        <link rel="stylesheet" type="text/css" href="./assets/css/app.css?v=#application.cache#" />
+        <link rel="stylesheet" type="text/css" href="./assets/css/transactions.css?v=#application.cache#" />
+        <link rel="stylesheet" type="text/css" href="./assets/css/classes.css?v=#application.cache#" />
         
+        <!--- include template specific style sheets --->
+        <cfif request.keyExists('_viewIncludes') && request._viewIncludes.keyExists('stylesheets') >
+            <cfloop list="#request._viewIncludes.stylesheets.keyList()#" index="styleSheetName">
+                <link rel="stylesheet" type="text/css" href="./assets/css/#styleSheetName#?v=#application.cache#" />
+            </cfloop>
+        </cfif>
+
+        <!--- include js libraries / dependencies--->
+        <script src="./assets/lib/jquery/jquery.min.js"></script>
+        <script src="./assets/js/viewScripts.js?v=#application.cache#"></script>
+        <script src="./assets/lib/popper/popper.min.js"></script>
+        <script src="./assets/lib/bootstrap/bootstrap.min.js"></script>
+        <script src="./assets/lib/jquery-ui/jquery-ui.min.js"></script>
+        <script src="./assets/lib/jquery-validate/jquery.validate.min.js"></script>
+        <script src="./assets/lib/jquery-validate/additional-methods.min.js"></script>
+        <script src="./assets/lib/jquery-touch-events/jquery.mobile-events.min.js"></script>
+        <script src="./assets/lib/multiple-select/multiple-select.min.js"></script>
+        <script src="./assets/lib/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="./assets/lib/datatables/js/dataTables.responsive.min.js"></script>
+        <script src="./assets/lib/moment/moment.min.js"></script>
+        <script src="./assets/lib/moment/moment.min.js"></script>
+        <script src="./assets/lib/chart/chart.min.js"></script>
+        <script src="./assets/lib/daterangepicker/daterangepicker.js"></script>
 
 	</head>
 
@@ -56,11 +77,12 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a href="##" class="nav-link dropdown-toggle" data-toggle="dropdown">Other Features</a>
-                                <div class="dropdown-menu">
+                                <div class="dropdown-menu dropdown-dark">
                                     <a class="dropdown-item" href="#buildUrl('schedular.autoPaymentList')#">Automatic Payments</a>
                                     <a class="dropdown-item" href="#buildUrl('user.checkbookRounding')#">Add Auto Rounding</a>
                                     <a class="dropdown-item" href="#buildUrl('category.manageCategories')#">Manage Categories</a>
-                                    <a class="dropdown-item" href="TRN_300.php">Cost Breakdown</a>
+                                    <a class="dropdown-item" href="#buildUrl('reports.spendingReport')#">Spending Report</a>
+                                    <a class="dropdown-item" href="#buildUrl('reconciler.reconcileForm')#">Reconcile Account</a>
                                     <cfif getEnvironment() eq "Dev">
                                         <a class="dropdown-item" href="#buildUrl('admin.devToggles')#">Dev toggles</a>
                                     </cfif>
@@ -99,31 +121,19 @@
                 </div>
             </div>
         </main>
+      
+        <script src="#application.root_path#/assets/js/app.js?v=#application.cache#"></script>
+        <script src="#application.root_path#/assets/js/dateUtil.js?v=#application.cache#"></script>
+        <script src="#application.root_path#/assets/js/chartUtil.js?v=#application.cache#"></script>
+        <script src="#application.root_path#/assets/js/routerUtil.js?v=#application.cache#"></script>
+        <script src="#application.root_path#/assets/js/formUtil.js?v=#application.cache#"></script>
+        <script src="#application.root_path#/assets/js/formatUtil.js?v=#application.cache#"></script>
 
-        <!--- include js libraries / dependencies--->
-        <script src="./assets/lib/jquery/jquery.min.js"></script>
-        <script src="./assets/lib/popper/popper.min.js"></script>
-        <script src="./assets/lib/bootstrap/bootstrap.min.js"></script>
-        <script src="./assets/lib/jquery-ui/jquery-ui.min.js"></script>
-        <script src="./assets/lib/jquery-validate/jquery.validate.min.js"></script>
-        <script src="./assets/lib/jquery-validate/additional-methods.min.js"></script>
-        <script src="./assets/lib/jquery-touch-events/jquery.mobile-events.min.js"></script>
-        <script src="./assets/lib/multiple-select/multiple-select.min.js"></script>
-        <script src="./assets/lib/datatables/js/jquery.dataTables.min.js"></script>
-        <script src="./assets/lib/datatables/js/dataTables.responsive.min.js"></script>
-        <script src="./assets/lib/moment/moment.min.js"></script>
-        <script src="./assets/lib/moment/moment.min.js"></script>
-        <script src="./assets/lib/chart/chart.min.js"></script>
-        <script src="./assets/lib/daterangepicker/daterangepicker.js"></script>
-        
-
-
-        <script src="#application.root_path#/assets/js/app.js?v=#application.version#"></script>
-        <script src="#application.root_path#/assets/js/dateUtil.js?v=#application.version#"></script>
-        <script src="#application.root_path#/assets/js/chartUtil.js?v=#application.version#"></script>
-        <script src="#application.root_path#/assets/js/routerUtil.js?v=#application.version#"></script>
-        <script src="#application.root_path#/assets/js/formUtil.js?v=#application.version#"></script>
-        <script src="#application.root_path#/assets/js/formatUtil.js?v=#application.version#"></script>
+        <cfif request.keyExists('_viewIncludes') && request._viewIncludes.keyExists('scripts') >
+            <cfloop list="#request._viewIncludes.scripts.keyList()#" index="scriptName">
+                <script src="#application.root_path#/assets/js/#scriptName#?v=#application.cache#"></script>
+            </cfloop>
+        </cfif>
 
         <!--- add global js variables --->
         <script>
@@ -133,7 +143,7 @@
         
         <!--- Show the layout/view wrappers if dev toggle is on --->
         <cfif application.devToggles.showTemplateWrappers>
-            <script src="#application.root_path#/assets/js/templateViewer.js?v=#application.version#"></script>
+            <script src="#application.root_path#/assets/js/templateViewer.js?v=#application.cache#"></script>
         </cfif>
 	</body>
 </html>

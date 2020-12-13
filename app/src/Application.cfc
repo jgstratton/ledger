@@ -14,6 +14,7 @@ component extends="framework.one" output="false" {
 	this.mappings["/beans"] = "/model/beans";
 	this.mappings["/viewModels"] = "/model/beans/viewModels";
 	this.mappings["/api"] = "/controllers/api";
+	this.mappings["/reconciler"] = "/model/reconciler";
 
 	// FW/1 settings
 	variables.framework = {
@@ -125,7 +126,7 @@ component extends="framework.one" output="false" {
 		lock scope="application" timeout="300" {
 			buildRootPath();
 			application.src_dir = "#expandPath(".")#";
-			application.version = "#this.version#";
+			application.cache = "#createuuid()#";
 			application.facebook = createobject("component","model/services/facebook").init(
 				this.getEnvVar('FACEBOOK_APPID'),
 				this.getEnvVar('FACEBOOK_APPSECRET'),

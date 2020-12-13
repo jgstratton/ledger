@@ -1,0 +1,25 @@
+.preview-box-wrap {
+	position: relative;
+}
+.preview-box {
+	max-height: 150px;
+	overflow-y: scroll;
+	margin-top: 15px;
+}
+
+.preview-box:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 150px;
+	width: 100%;
+	background: linear-gradient(transparent 60%, white);
+	pointer-events: none;
+}
+
+.preview-table td,
+.preview-table thead th {
+	font-size: 11px;
+}

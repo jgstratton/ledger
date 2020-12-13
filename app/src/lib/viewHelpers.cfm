@@ -130,4 +130,24 @@
         return preserveKeys;
     }
 
+    public void function includeScript(required string scriptName) {
+        if (!request.keyExists('_viewIncludes')) {
+            request['_viewIncludes'] = {};
+        }
+        if (!request._viewIncludes.keyExists('scripts')) {
+            request._viewIncludes.scripts = {};
+        }
+        request._viewIncludes.scripts[scriptName] = 1;
+    }
+
+    public void function includeStylesheet(required string stylesheetName) {
+        if (!request.keyExists('_viewIncludes')) {
+            request['_viewIncludes'] = {};
+        }
+        if (!request._viewIncludes.keyExists('stylesheets')) {
+            request._viewIncludes.stylesheets = {};
+        }
+        request._viewIncludes.stylesheets[stylesheetName] = 1;
+    }
+
 </cfscript>

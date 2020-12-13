@@ -12,6 +12,7 @@ component name="_baseController" output="false"  accessors=true {
     property transferService;
 	property schedularService;
 	property validatorService;
+	property reconcilerService;
 	
 	public void function before( required struct rc ){
 		runAuthorizer(rc);
@@ -35,7 +36,12 @@ component name="_baseController" output="false"  accessors=true {
 	private void function updateLayoutAndView(){
 		var methodName = variables.fw.getItem();
 		if (metaDataService.methodHasAnnotation(this, methodName, "layout")) {
-			variables.fw.setLayout(metaDataService.getMethodAnnotation(this, methodName, "layout"));
+			var layout = metaDataService.getMethodAnnotation(this, methodName, "layout");
+			if (layout == 'none') {
+				variables.fw.disableLayout();
+			} else {
+				variables.fw.setLayout(layout);
+			}
 		}
 		if (metaDataService.methodHasAnnotation(this, methodName, "view")) {
 			variables.fw.setView(metaDataService.getMethodAnnotation(this, methodName, "view"));
