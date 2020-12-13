@@ -70,7 +70,7 @@ component name="account" output="false" accessors=true extends="_baseController"
      */
     public void function clear( struct rc = {} ){
         var transaction = transactionService.getTransactionById(rc.transactionId);
-        var account = transaction.getAccount();
+        var account = accountService.getAccountById(rc.accountId);
 
         transactionService.verifyTransaction(transaction);
 
@@ -84,7 +84,7 @@ component name="account" output="false" accessors=true extends="_baseController"
      */
     public void function undo( struct rc = {} ){
         var transaction = transactionService.getTransactionById(rc.transactionId);
-        var account = transaction.getAccount();
+        var account = accountService.getAccountById(rc.accountId);
         
         transactionService.unverifyTransaction(transaction);
 

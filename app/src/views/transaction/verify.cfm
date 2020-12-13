@@ -122,11 +122,12 @@
                         updateSummary('#buildUrl('transaction.undo')#', transactionId);
                     },
                     
-                    updateSummary = function(actionUrl,trnID){
+                    updateSummary = function(actionUrl, trnID){
                         postJSON( actionUrl, {
-                            transactionId: trnID
+                            transactionId: trnID,
+                            accountId: #rc.accountId#
                         }, function(data){
-                            jsHook.getElement('linkedBalanceVerified').html("$" + data.verifiedLinkedBalance);
+                            jsHook.getElement('linkedBalanceVerified').html(formatUtil.htmlFormatMoney(data.verifiedLinkedBalance));
                             $transactionRows.removeClass('last-verified');
                             $transactionRows.filter("[data-trn='" + data.lastVerifiedId + "']").addClass('last-verified');
                         });
