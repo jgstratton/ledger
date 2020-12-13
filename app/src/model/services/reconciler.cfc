@@ -1,4 +1,4 @@
-component accessors="true" {
+component output="false" accessors="true" {
 	property metaDataService;
 	property arrayUtil;
 	property combinatoricsUtil;
@@ -141,5 +141,29 @@ component accessors="true" {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Takes a json string and generates a ledger object from it.  Expected syntax:
+	 * data: [
+	 * 	[id,date,description,amount,category],...
+	 * ]
+	 */
+	public component function createLedgerFromRawJson(required string jsonData) {
+		var jsonData = deserializeJSON(jsonData);
+		var transactions = [];
+		//delete the header row
+		jsonData.data.deleteAt(1);
+
+		for (var rawTransaction in jsonData.data) {
+			var transaction = new beans.reconciler.recTransaction(rawTransaction)
+			transaction.populateByRawArray(rawTransaction);
+			transactions.append(transaction);
+		}
+		return new beans.reconciler.recLedger(transactions);
+	}
+
+	public component function createTransactionLedger(required array transactions) {
+		return new beans.reconciler.recLedger(transactions);
 	}
 }

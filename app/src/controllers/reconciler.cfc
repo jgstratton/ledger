@@ -1,7 +1,8 @@
-component name="account" output="false" accessors=true extends="_baseController" {
+component name="reconciler" output="true" accessors=true extends="_baseController" {
 
-	public void function init(fw){
+	public component function init(fw){
 		variables.fw=arguments.fw;
+		return this;
 	}
 
 	public void function before( required struct rc ){
@@ -25,6 +26,8 @@ component name="account" output="false" accessors=true extends="_baseController"
 	 */
 	public void function results( struct rc = {} ){
 		rc.account = accountService.getAccountByID(rc.accounts);
-		rc.viewModel = new viewModels.reconciler(rc);
+		var externalLedger = reconcilerService.createLedgerFromRawJson(rc.csvData);
+		var internalLedger = reconcilerService.createTransactionLedger(transactionService.searchTransactions(rc));
+		rc.results = reconcilerService.reconcile(externalLedger, internalLedger);
 	}
 }

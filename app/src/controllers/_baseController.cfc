@@ -12,6 +12,7 @@ component name="_baseController" output="false"  accessors=true {
     property transferService;
 	property schedularService;
 	property validatorService;
+	property reconcilerService;
 	
 	public void function before( required struct rc ){
 		runAuthorizer(rc);

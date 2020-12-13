@@ -76,7 +76,7 @@
 		
 		$("#btnReconcile").click(function(){
 			var formData = formUtil.objectifyForm($("#searchTransactions"));
-			formData[csvData] = $("#csvData").val();
+			formData.csvData = $("#csvData").val();
 			$.ajax({
 				url: routerUtil.buildUrl('reconciler.results'),
 				data: formData,

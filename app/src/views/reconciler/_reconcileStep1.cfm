@@ -11,10 +11,11 @@
 		<p>
 			The csv must have the following columns in order to reconcile the transactions against the account:
 			<ul>
+				<li>ID</li>
 				<li>Transaction Date</li>
 				<li>Description</li>
-				<li>Category</li>
 				<li>Amount</li>
+				<li>Category</li>
 			</ul>
 		</p>
 	</div>
@@ -63,7 +64,7 @@
 			var results = {
 				errors: []
 			};
-			if (csvData.headers.length != 4) {
+			if (csvData.headers.length != 5) {
 				results.errors.push('Invalid number of columns');
 			}
 			displayUploadResults(results);

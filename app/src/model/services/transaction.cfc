@@ -83,20 +83,20 @@ component output="false" accessors="true" {
 
         //this doesn't work ... the logic is all wrong....
         //we need exclude where.... blah I'm going to sleep.
-        if (keyIsSet(arguments.searchParams, 'ExcludeInternalTransfers')) {
-            conditions &= " 
-                and t.id not in (
-                    SELECT transactionId1
-                    FROM internalTransfer
-                    WHERE user_id = :user_id
-                )
-                and t.id not in (
-                    SELECT transactionId2
-                    FROM internalTransfer
-                    WHERE user_id = :user_id
-                )";
-            parameters['user_id'] = userService.getCurrentUser().getId();
-        }
+        // if (keyIsSet(arguments.searchParams, 'ExcludeInternalTransfers')) {
+        //     conditions &= " 
+        //         and t.id not in (
+        //             SELECT transactionId1
+        //             FROM internalTransfer
+        //             WHERE user_id = :user_id
+        //         )
+        //         and t.id not in (
+        //             SELECT transactionId2
+        //             FROM internalTransfer
+        //             WHERE user_id = :user_id
+        //         )";
+        //     parameters['user_id'] = userService.getCurrentUser().getId();
+        // }
 
         var selectString = 't';
         if (returnType == 'simple') {

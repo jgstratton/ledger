@@ -40,6 +40,9 @@ component persistent="true" table="transactions" accessors="true" entityName="tr
 		return getId();
 	}
 
+    public string function getDescription() {
+        return getName();
+    }
     public any function getCategoryId(){
         if(this.hasCategory()){
             return this.getCategory().getid();
