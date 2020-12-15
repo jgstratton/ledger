@@ -9,11 +9,25 @@ component accessors="true" implements="reconciler.iRecTransaction" {
 		setId(rawData[1]);
 		setTransactionDate(rawData[2]);
 		setDescription(rawData[3]);
-		setAmount(rawData[4]);
-		setCategory(rawData[5]);
+		setCategory(rawData[4]);
+		setAmount(rawData[5]);
 	}
 
 	public string function getRecTransactionId() {
 		return getId();
+	}
+
+	/**
+	 * Required for iRecTransaction interface
+	 */
+	public string function getCategoryName() {
+		return getCategory();
+	}
+
+	/**
+	 * Required for iRecTransaction interface
+	 */
+	public numeric function getSignedAmount() {
+		return getAmount();
 	}
 }
