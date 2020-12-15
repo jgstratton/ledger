@@ -20,10 +20,10 @@ component output="false" accessors="true" {
 		var matchIndex = 0;
 		
 		var combinedAmount = transaction2Array.reduce(function(amount, transaction){
-			return amount + transaction.getAmount();
+			return amount + transaction.getSignedAmount();
 		}, 0);
 
-		if (transaction1.getAmount() == combinedAmount) {
+		if (transaction1.getSignedAmount() == combinedAmount) {
 			matchIndex += compareSettings.amountMatchPoints;
 		}
 
@@ -42,12 +42,11 @@ component output="false" accessors="true" {
 		var matchIndex += (descriptionMatchCount >= compareSettings.maxDescriptionPoints) ? compareSettings.maxDescriptionPoints : descriptionMatchCount;
 
 		var combinedCategories = transaction2Array.reduce(function(list, transaction){
-			return listAppend(list, transaction.getCategory(), " ");
+			return listAppend(list, transaction.getCategoryName(), " ");
 		}, "");
 
-		var categoryMatchCount = getArrayUtil().arrayIntersect(listToArray(transaction1.getCategory()," "), listToArray(combinedCategories," ")).len();
+		var categoryMatchCount = getArrayUtil().arrayIntersect(listToArray(transaction1.getCategoryName()," "), listToArray(combinedCategories," ")).len();
 		var matchIndex += (categoryMatchCount >= compareSettings.maxCategoryPoints) ? compareSettings.maxCategoryPoints : categoryMatchCount;
-		
 		return matchIndex;
 	}
 

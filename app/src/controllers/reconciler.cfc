@@ -20,12 +20,12 @@ component name="reconciler" output="true" accessors=true extends="_baseControlle
 
 	/**
 	 * @authorizer "authorizeByAccountId"
-	 * @authorizerFields "accounts"
+	 * @authorizerFields "accountIds"
 	 * @view "reconciler.results"
 	 * @layout "none"
 	 */
 	public void function results( struct rc = {} ){
-		rc.account = accountService.getAccountByID(rc.accounts);
+		rc.account = accountService.getAccountByID(rc.accountIds);
 		var externalLedger = reconcilerService.createLedgerFromRawJson(rc.csvData);
 		var internalLedger = reconcilerService.createTransactionLedger(transactionService.searchTransactions(rc));
 		rc.results = reconcilerService.reconcile(externalLedger, internalLedger);

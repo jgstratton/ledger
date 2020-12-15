@@ -10,7 +10,7 @@ component accessors="true" {
 		variables.formBase.initializeInputs()
 			.populateInputsFromRc(rc);
 		variables.rc = rc;
-
+		variables.accounts.setName('accountIds');
 		setDefaultValues();	
 		return this;
 	}

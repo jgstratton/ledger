@@ -22,7 +22,7 @@ component extends="testbox.system.BaseSpec" {
 					.$("getId", allOptions.id)
 					.$("getAmount", allOptions.amount)
 					.$("getDescription", allOptions.description)
-					.$("getCategory", allOptions.category)
+					.$("getCategoryName", allOptions.category)
 					.$("getTransactionDate", allOptions.transactionDate)
 					.$("getRecTransactionId", allOptions.id);
 			}
