@@ -3,27 +3,27 @@ jConfirm = function(confirmMessage, fncOk, fncCancel) {
 
 	var modalString =
 		`
-        <div id="modalConfirmDiv" tabindex="-1" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>` +
+		<div id="modalConfirmDiv" tabindex="-1" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirm</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>` +
 		confirmMessage +
 		`</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Ok</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                </div>
-                </div>
-            </div>
-        </div>`;
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success">Ok</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+				</div>
+				</div>
+			</div>
+		</div>`;
 
 	$(modalString).appendTo('body');
 
@@ -61,14 +61,14 @@ function getAlertIconHtml(alertType) {
 function getAlertHtml(alertType, alertTitle) {
 	return (
 		`
-        <div>
-            <i class="` +
+		<div>
+			<i class="` +
 		getAlertIconHtml(alertType) +
 		`"></i> 
-            ` +
+			` +
 		alertTitle +
 		`
-        </div>`
+		</div>`
 	);
 }
 
@@ -84,17 +84,17 @@ function getAlertErrorListHtml(alertErrors) {
 function createAlert(alertType, alertTitle, alertErrors) {
 	return (
 		`
-        <div class="alert alert-` +
+		<div class="alert alert-` +
 		alertType +
 		`">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            ` +
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			` +
 		getAlertHtml(alertType, alertTitle) +
 		getAlertErrorListHtml(alertErrors) +
 		`
-        </div>`
+		</div>`
 	);
 }
 
@@ -151,9 +151,9 @@ postJSON = function(url, data, callback) {
 $('.temp-highlight-row.table-success').removeClass('table-success');
 
 /* 
-    Get elements by the data-js-hook attribute  (which can be a list of hooks)
-     1. Get all elements that contain the jsHook variable
-     2. Only return results that match a list item
+	Get elements by the data-js-hook attribute  (which can be a list of hooks)
+	 1. Get all elements that contain the jsHook variable
+	 2. Only return results that match a list item
 */
 var jsHook = {
 	getElement: function(hookName) {
@@ -172,3 +172,8 @@ var jsHook = {
 		});
 	}
 };
+
+jQuery.validator.addMethod("money", function(value, element) {
+	var isValidMoney = /^\d{0,4}(\.\d{0,2})?$/.test(value);
+	return this.optional(element) || isValidMoney;
+}, "Invalid value for currency");

@@ -20,6 +20,12 @@ component name="account" output="false"  accessors=true extends="_baseController
 	 * @authorizer "noAuthorizer"
 	 */
 	public void function search( struct rc = {} ){
+		rc.startDate = new viewModels.inputs.date()
+			.setValue(dateFormat(dateadd('yyyy',-10,now()), "mm/dd/yyyy"))
+			.setName('startDate');
+		rc.endDate = new viewModels.inputs.date()
+			.setValue(dateFormat(now(), "mm/dd/yyyy"))
+			.setName('endDate');
 		rc.categories = categoryService.getCategories();
 	}
 
