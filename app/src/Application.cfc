@@ -58,7 +58,7 @@ component extends="framework.one" output="false" {
 		dialect="MySQL",         
 		eventhandling="true",
 		eventhandler="model.beans.eventhandler",
-		logsql="true",
+		logsql="false",
 		flushatrequestend=false
 	};
 

@@ -1,6 +1,6 @@
 component output="false" accessors="true" {
 	property userService;
-	property name="limitedResultsCount" default=1000;
+	property name="limitedResultsCount" default=300;
 	property logger;
 
 	public component function getTransactionByid(required numeric id){
@@ -193,14 +193,14 @@ component output="false" accessors="true" {
 			if (arguments.verified) {
 				verifiedCondition = "is not null";
 			}
-
 			return ORMExecuteQuery("
 				SELECT t
 				FROM transaction t
 				JOIN t.account a
-				WHERE (a = :account #includeSubAccountsClause#)
-				AND   t.verifiedDate #verifiedCondition#
-				and   isHidden = 0
+				WHERE
+					(a = :account #includeSubAccountsClause#)
+					AND	t.verifiedDate #verifiedCondition#
+					AND	isHidden = 0
 				ORDER BY t.transactionDate desc",
 			{account:arguments.account}, false, 
 			{maxResults:variables.limitedResultsCount} );
