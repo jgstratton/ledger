@@ -15,6 +15,7 @@ component extends="framework.one" output="false" {
 	this.mappings["/viewModels"] = "/model/beans/viewModels";
 	this.mappings["/api"] = "/controllers/api";
 	this.mappings["/reconciler"] = "/model/reconciler";
+	this.mappings["/sendgrid"] = "/modules/sendgridcfc";
 
 	// FW/1 settings
 	variables.framework = {
@@ -133,6 +134,12 @@ component extends="framework.one" output="false" {
 				"#getAuthReturnPath(false)#",
 				"#getAuthReturnPath(true)#"
 			);
+			application.sendgrid = {
+				key: this.getEnvVar('SENDGRID_API_KEY'),
+				fromEmail: this.getEnvVar('SENDGRID_FROM_EMAIL'),
+				toEmail: this.getEnvVar('SENDGRID_TO_EMAIL')
+			};
+			application.adminKey = this.getEnvVar('ADMIN_OVERRIDE_KEY');
 			application.beanfactory = this.getBeanFactory();
 		}
 		migrate();

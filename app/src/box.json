@@ -1,0 +1,8 @@
+{
+    "dependencies":{
+        "sendgridcfc":"^1.0.0"
+    },
+    "installPaths":{
+        "sendgridcfc":"modules/sendgridcfc/"
+    }
+}

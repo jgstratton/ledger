@@ -56,7 +56,7 @@
         <div class="row">
             <label class="col-3 col-form-label">Amount:</label>
             <div class="col-9">
-                <input type="text" name="Amount" value="#rc.transaction.getAmount()#" class="form-control form-control-sm">
+                <input type="text" name="Amount" value="#rc.transaction.getAmount()#" class="form-control form-control-sm" autocomplete="off">
             </div>
         </div>
 

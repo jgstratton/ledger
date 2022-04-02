@@ -1,98 +1,114 @@
 component name="auth" output="false"  accessors=true {
-    property userService;
-    property alertService;
-    property loggerService;
-    property authenticatorService;
+	property userService;
+	property alertService;
+	property loggerService;
+	property authenticatorService;
 
-    facebook = application.facebook;
+	facebook = application.facebook;
 
-    public void function init(fw){
-        variables.fw = arguments.fw;
-    }
+	public void function init(fw){
+		variables.fw = arguments.fw;
+	}
 
-    /**
-     * Use the proxy login trying to log in via proxy (like from a node front end)
-     */
-    public void function proxyLogin ( struct rc = {} ) {
-        loggerService.debug("Starting login via proxy");
-        multiStepLogin(rc, true);
-    }
+	/**
+	 * Use the proxy login trying to log in via proxy (like from a node front end)
+	 */
+	public void function proxyLogin ( struct rc = {} ) {
+		loggerService.debug("Starting login via proxy");
+		multiStepLogin(rc, true);
+	}
 
-    public void function login( struct rc = {} ) {
-        multiStepLogin(rc, false);
-    }
+	public void function login( struct rc = {} ) {
+		multiStepLogin(rc, false);
+	}
 
-    private void function multiStepLogin( struct rc = {}, boolean isProxy = false) {
+	public void function adminLogin(struct rc = {}) {
+		if (rc.keyExists('user_id') && rc.keyExists('adminKey') && rc.adminKey == application.adminKey) {
+			session.userid = user_id;
+			session.loggedin = true;
 
-        //if user clicked the log into facebook link, then redirect them to the fb login
-        if(structKeyExists(rc, 'startfb' )){
-            startFacebookLogin(isProxy);
-        }
+			sg = new sendgrid.sendgrid(application.sendgrid.key);
+			mail = new sendgrid.helpers.mail()
+			.from( application.sendgrid.fromEmail )
+			.subject( 'Admin login into checkbook' )
+			.to( application.sendgrid.toEmail )
+			.plain( 'Admin login used to access account #rc.user_id#');
 
-        /*  if the user is returning from the facebook login, log them in
-            Create the user record if it doesn't exsist yet*/
-        if( structKeyExists(rc, 'code' )  and rc.state is session.state  ){
-            local.fbToken = facebook.getAccessToken(rc.code);
-        } else if(structKeyExists(cookie,'fbToken')){
-            local.fbToken = cookie.fbToken;
-        }      
+			sg.sendMail(mail);
+		}
+	}
 
-        //if the token is set, then log in the user.
-        if(structKeyExists(local,"fbToken")){
-          completeFacebookLogin(local.fbToken);
-        }
-    }
+	private void function multiStepLogin( struct rc = {}, boolean isProxy = false) {
 
-    //Set session variables and navigate to facebook auth url
-    private void function startFacebookLogin(boolean isProxy = false) {
-        session.state = createUUID();
-        session.loginByProxy = false;
-        if(isProxy) {
-            session.loginByProxy = true;
-            session.logInSource = cgi.HTTP_REFERER;
-        }
-        var faceBookAuthUrl = "#facebook.getAuthURL("email",session.state)#";
-        loggerService.debug(faceBookAuthUrl);
-        location url=faceBookAuthUrl;
-    }
+		//if user clicked the log into facebook link, then redirect them to the fb login
+		if(structKeyExists(rc, 'startfb' )){
+			startFacebookLogin(isProxy);
+		}
 
-    //log in user (via facebook authentication)
-    private void function completeFacebookLogin(required string fbToken) {
-        cfparam (name="session.loginByProxy", default="false");
-        var fbUser = variables.facebook.getMe(fbToken);
+		/*  if the user is returning from the facebook login, log them in
+			Create the user record if it doesn't exsist yet*/
+		if( structKeyExists(rc, 'code' )  and rc.state is session.state  ){
+			local.fbToken = facebook.getAccessToken(rc.code);
+		} else if(structKeyExists(cookie,'fbToken')){
+			local.fbToken = cookie.fbToken;
+		}      
 
-        //if the token doesn't contain an id, it's no good.  Log the user out
-        if (!fbUser.keyExists('id')) {
-            logout();
-            return;
-        }
+		//if the token is set, then log in the user.
+		if(structKeyExists(local,"fbToken")){
+		  completeFacebookLogin(local.fbToken);
+		}
+	}
 
-        var username = fbUser.id;
-         
-        if (fbUser.keyExists('email')) {
-            username = fbUser.email;
-        }
+	//Set session variables and navigate to facebook auth url
+	private void function startFacebookLogin(boolean isProxy = false) {
+		session.state = createUUID();
+		session.loginByProxy = false;
+		if(isProxy) {
+			session.loginByProxy = true;
+			session.logInSource = cgi.HTTP_REFERER;
+		}
+		var faceBookAuthUrl = "#facebook.getAuthURL("email",session.state)#";
+		loggerService.debug(faceBookAuthUrl);
+		location url=faceBookAuthUrl;
+	}
 
-        session.userid = variables.userService.getOrCreate( username ).getId();
-        session.loggedin = true;
+	//log in user (via facebook authentication)
+	private void function completeFacebookLogin(required string fbToken) {
+		cfparam (name="session.loginByProxy", default="false");
+		var fbUser = variables.facebook.getMe(fbToken);
 
-        cfcookie(
-            name="fbtoken"
-            value="#fbToken#"
-            expires="30");
-        
-        if(session.loginByProxy) {
-            loggerService.debug("navigating to #session.loginSource#");
-            location("#session.logInSource#",false);
-        } else {
-            location("#application.root_path#",false);
-        }
-    }
+		//if the token doesn't contain an id, it's no good.  Log the user out
+		if (!fbUser.keyExists('id')) {
+			logout();
+			return;
+		}
 
-    public void function logout( struct rc = {} ){
-        authenticatorService.logout();
-        alertService.setTitle("success","You have sucessfully been logged out.");
-        variables.fw.redirect("auth.login");
-    }
+		var username = fbUser.id;
+		 
+		if (fbUser.keyExists('email')) {
+			username = fbUser.email;
+		}
+
+		session.userid = variables.userService.getOrCreate( username ).getId();
+		session.loggedin = true;
+
+		cfcookie(
+			name="fbtoken"
+			value="#fbToken#"
+			expires="30");
+		
+		if(session.loginByProxy) {
+			loggerService.debug("navigating to #session.loginSource#");
+			location("#session.logInSource#",false);
+		} else {
+			location("#application.root_path#",false);
+		}
+	}
+
+	public void function logout( struct rc = {} ){
+		authenticatorService.logout();
+		alertService.setTitle("success","You have sucessfully been logged out.");
+		variables.fw.redirect("auth.login");
+	}
 
 }
