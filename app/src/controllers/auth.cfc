@@ -70,7 +70,7 @@ component name="auth" output="false"  accessors=true {
 		if( structKeyExists(rc, 'code' )  and rc.state is session.state  ){
 			loggerService.debug("Received Facebook code, obtaining access token");
 			local.fbToken = facebook.getAccessToken(rc.code);
-		} else if(structKeyExists(cookie,'fbToken')){
+		} else if(structKeyExists(cookie,'fbToken') && len(trim(cookie.fbToken))){
 			loggerService.debug("Facebook cookie already exists, using existing token");
 			local.fbToken = cookie.fbToken;
 		}
