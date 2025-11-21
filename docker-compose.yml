@@ -19,21 +19,6 @@ services:
         networks:
             - localnet
 
-    db_tests:
-        build: ./data
-        container_name: '${CONTAINER_PREFIX}_db_tests'
-        command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --init-connect='SET NAMES UTF8;'
-        ports:
-            - '3307:3306'
-        environment:
-            - MYSQL_DATABASE=tests
-            - MYSQL_ROOT_PASSWORD
-            - MYSQL_USER
-            - MYSQL_PASSWORD
-            - TZ
-        networks:
-            - localnet
-
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:4.8.2
         container_name: '${CONTAINER_PREFIX}_phpmyadmin'
