@@ -68,14 +68,15 @@ component name="auth" output="false"  accessors=true {
 		/*  if the user is returning from the facebook login, log them in
 			Create the user record if it doesn't exsist yet*/
 		if( structKeyExists(rc, 'code' )  and rc.state is session.state  ){
+			loggerService.debug("Received Facebook code, obtaining access token");
 			local.fbToken = facebook.getAccessToken(rc.code);
 		} else if(structKeyExists(cookie,'fbToken')){
+			loggerService.debug("Facebook cookie already exists, using existing token");
 			local.fbToken = cookie.fbToken;
 		}
 
 		//if the token is set, then log in the user.
 		if(structKeyExists(local,"fbToken")){
-			loggerService.debug("Facebook token found, completing login");
 			completeFacebookLogin(local.fbToken);
 		}
 	}
