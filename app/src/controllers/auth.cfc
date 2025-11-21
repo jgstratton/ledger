@@ -131,6 +131,7 @@ component name="auth" output="false"  accessors=true {
 	public void function logout( struct rc = {} ){
 		authenticatorService.logout();
 		alertService.setTitle("success","You have sucessfully been logged out.");
+		loggerService.debug("User logged out, redirecting to login page");
 		variables.fw.redirect("auth.login");
 	}
 
