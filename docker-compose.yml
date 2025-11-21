@@ -94,24 +94,6 @@ services:
             - SENDGRID_TO_EMAIL
             - ADMIN_OVERRIDE_KEY
 
-    react:
-        container_name: '${CONTAINER_PREFIX}_react'
-        build:
-            context: ./client
-            dockerfile: Dockerfile
-        ports:
-            - ${REACT_PORT}:${REACT_PORT}
-        environment:
-            - PORT=${REACT_PORT}
-            - REACT_PORT
-            - LUCEE_PORT
-            - ${CERT_BASE_PATH}:/certs
-            - TIER
-        expose:
-            - ${REACT_PORT}
-        networks:
-            - localnet
-
     cron:
         build: ./cron
         container_name: '${CONTAINER_PREFIX}_cron'
