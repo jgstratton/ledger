@@ -61,6 +61,7 @@ component name="auth" output="false"  accessors=true {
 
 		//if user clicked the log into facebook link, then redirect them to the fb login
 		if(structKeyExists(rc, 'startfb' )){
+			loggerService.debug("Starting Facebook login");
 			startFacebookLogin(isProxy);
 		}
 
@@ -70,11 +71,12 @@ component name="auth" output="false"  accessors=true {
 			local.fbToken = facebook.getAccessToken(rc.code);
 		} else if(structKeyExists(cookie,'fbToken')){
 			local.fbToken = cookie.fbToken;
-		}      
+		}
 
 		//if the token is set, then log in the user.
 		if(structKeyExists(local,"fbToken")){
-		  completeFacebookLogin(local.fbToken);
+			loggerService.debug("Facebook token found, completing login");
+			completeFacebookLogin(local.fbToken);
 		}
 	}
 
