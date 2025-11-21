@@ -192,8 +192,10 @@ component extends="framework.one" output="false" {
 		getLogger().debug("Started request on controller #getSectionAndItem()#");
 		//user is used in most controllers and views
 		if(session.loggedin){
+			getLogger().debug("User is logged in, continuing request");
 			rc.user = request.user;
 		} else if (arrayfind(["auth", "public", "api"], getSection()) == 0) {
+			getLogger().debug("User not logged in, redirecting to login");
 			redirect("auth.login","all");
 		}
 	}

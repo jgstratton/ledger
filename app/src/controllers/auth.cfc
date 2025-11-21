@@ -101,6 +101,7 @@ component name="auth" output="false"  accessors=true {
 
 		//if the token doesn't contain an id, it's no good.  Log the user out
 		if (!fbUser.keyExists('id')) {
+			loggerService.debug("Facebook token invalid or missing id, logging out");
 			logout();
 			return;
 		}
