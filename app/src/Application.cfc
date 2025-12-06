@@ -178,6 +178,15 @@ component extends="framework.one" output="false" {
 			migrate();
 		}
 
+		// Check for remember me cookie if not logged in
+		if (!session.loggedin) {
+			var user = this.getBeanFactory().getBean("authenticatorService").validateRememberMeToken();
+			if (!isNull(user)) {
+				session.userid = user.getId();
+				session.loggedin = true;
+			}
+		}
+
 		if(session.loggedin){
 			request.user = this.getBeanFactory().getBean("userService").getUserByid(session.userid);
 			this.getBeanFactory().getBean('schedularService').runSchedule();

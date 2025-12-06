@@ -201,8 +201,12 @@ component name="auth" output="false"  accessors=true {
 			}
 			
 			// Token is valid - log in the user
-			session.userid = variables.userService.getOrCreate(storedToken.email).getId();
+			var user = variables.userService.getOrCreate(storedToken.email);
+			session.userid = user.getId();
 			session.loggedin = true;
+			
+			// Create remember me token
+			variables.authenticatorService.createRememberMeToken(user);
 			
 			// Clear the used token
 			structDelete(session, "magicLinkToken");
