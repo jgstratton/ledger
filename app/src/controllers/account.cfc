@@ -77,4 +77,25 @@ component name="account" output="false"  accessors=true {
         variables.fw.redirect('account.list');
     }
 
+    public void function manage( struct rc = {} ) {
+        rc.accounts = accountService.getAllAccounts();
+    }
+
+    public void function updateStatus( struct rc = {} ) {
+        param name="rc.accountIds" default="";
+        
+        var allAccounts = accountService.getAllAccounts();
+        
+        for (var account in allAccounts) {
+            if (listFind(rc.accountIds, account.getId())) {
+                account.setDisabled(true);
+            } else {
+                account.setDisabled(false);
+            }
+            accountService.save(account);
+        }
+        
+        variables.fw.redirect("account.manage");
+    }
+
 }

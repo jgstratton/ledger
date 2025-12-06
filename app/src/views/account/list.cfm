@@ -4,7 +4,7 @@
             #moneyFormat(rc.summary)#
         </span>
         <span>- Accounts Summary</span>
-        
+        <a href="#buildUrl('account.manage')#" class="float-right text-dark" title="Manage Accounts"><i class="fa fa-cog"></i></a>
     </div>
 
     <div class="row">

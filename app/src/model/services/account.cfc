@@ -29,6 +29,18 @@ component output="false" {
             Select a
             FROM account a
             left join a.linkedAccount l
+            WHERE a.user = :user AND a.deleted IS NULL AND a.disabled = false
+            ORDER BY coalesce(l.type.id,a.type.id),
+                     coalesce(l.name,a.name),
+                     a.id", 
+            {user: request.user});
+    }
+
+    public any function getAllAccounts() {
+        return ormExecuteQuery("
+            Select a
+            FROM account a
+            left join a.linkedAccount l
             WHERE a.user = :user AND a.deleted IS NULL
             ORDER BY coalesce(l.type.id,a.type.id),
                      coalesce(l.name,a.name),

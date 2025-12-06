@@ -22,6 +22,7 @@ component output="false" accessors=true {
             JOIN a.linkedAccount l
             WHERE a.user = :user 
             AND a.deleted IS NULL
+            AND a.disabled = false
             AND l.summary = 'Y'
             AND a.summary = 'N'
             ORDER BY coalesce(l.type.id,a.type.id),

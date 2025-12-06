@@ -8,6 +8,7 @@ component persistent="true" table="accounts" accessors="true" {
     property name="created" ormtype="timestamp";
     property name="edited" ormtype="timestamp";
     property name="deleted" ormtype="timestamp";
+    property name="disabled" ormtype="boolean" default="false";
     property name="transactions" fieldtype="one-to-many" cfc="transaction" fkcolumn="account_id" singularname="transaction";
     property name="type" fieldtype="many-to-one" cfc="accountType" fkcolumn="accountType_id" apiDataPopulatorFnc="getTypeName";;
 
@@ -30,7 +31,8 @@ component persistent="true" table="accounts" accessors="true" {
             from account a 
             where a.linkedAccount = :account
             and a <> :account
-            and a.deleted is null" , 
+            and a.deleted is null
+            and a.disabled = false" , 
         {account: this});
     }
 

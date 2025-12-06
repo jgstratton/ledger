@@ -22,6 +22,7 @@ component persistent="true" table="users" accessors="true" {
             FROM account a
             WHERE user = :user 
             AND deleted IS NULL
+            AND a.disabled = false
             AND a.type.isVirtual = 0
             ORDER BY a.type.id,
                      a.name",
