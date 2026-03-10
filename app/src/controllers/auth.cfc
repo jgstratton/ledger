@@ -139,46 +139,41 @@ component name="auth" output="false"  accessors=true {
 		variables.fw.redirect("auth.login");
 	}
 
-	private void function sendMagicLink(required string email) {
-		try {
-			// Generate a secure token
-			var token = hash(createUUID() & now() & email, "SHA-256");
-			var expiresAt = dateAdd("h", 1, now()); // Token valid for 1 hour
+	private void function sendMagicLink(required string email) {	
+		// Generate a secure token
+		var token = hash(createUUID() & now() & email, "SHA-256");
+		var expiresAt = dateAdd("h", 1, now()); // Token valid for 1 hour
+		
+		// Store token in session or database (using session for simplicity)
+		session.magicLinkToken = {
+			token: token,
+			email: email,
+			expiresAt: expiresAt
+		};
+		
+		// Create magic link URL
+		var magicLinkUrl = "#application.root_path#?action=auth.login&email_auth=1&token=#token#";
+		
+		// Send email via Resend
+		var resend = new resend.resend(application.resend.key);
+		var emailResult = resend.sendEmail(
+			from = application.resend.fromEmail,
+			to = email,
+			subject = 'Sign in to Checkbook',
+			html = '
+				<h2>Sign In to Checkbook</h2>
+				<p>Click the link below to sign in. This link will expire in 1 hour.</p>
+				<p><a href="#magicLinkUrl#" style="background-color: ##4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Sign In</a></p>
+				<p>Or copy and paste this link into your browser:</p>
+				<p>#magicLinkUrl#</p>
+				<p>If you didn''t request this email, you can safely ignore it.</p>
+			',
+			text = 'Sign in to Checkbook. Click or copy this link: #magicLinkUrl#. This link expires in 1 hour.'
+		);
+		
+		alertService.setTitle("success", "Check your email! We've sent you a magic link to sign in.");
+		loggerService.debug("Magic link sent to: #email#");
 			
-			// Store token in session or database (using session for simplicity)
-			session.magicLinkToken = {
-				token: token,
-				email: email,
-				expiresAt: expiresAt
-			};
-			
-			// Create magic link URL
-			var magicLinkUrl = "#application.root_path#?action=auth.login&email_auth=1&token=#token#";
-			
-			// Send email via Resend
-			var resend = new resend.resend(application.resend.key);
-			var emailResult = resend.sendEmail(
-				from = application.resend.fromEmail,
-				to = email,
-				subject = 'Sign in to Checkbook',
-				html = '
-					<h2>Sign In to Checkbook</h2>
-					<p>Click the link below to sign in. This link will expire in 1 hour.</p>
-					<p><a href="#magicLinkUrl#" style="background-color: ##4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Sign In</a></p>
-					<p>Or copy and paste this link into your browser:</p>
-					<p>#magicLinkUrl#</p>
-					<p>If you didn''t request this email, you can safely ignore it.</p>
-				',
-				text = 'Sign in to Checkbook. Click or copy this link: #magicLinkUrl#. This link expires in 1 hour.'
-			);
-			
-			alertService.setTitle("success", "Check your email! We've sent you a magic link to sign in.");
-			loggerService.debug("Magic link sent to: #email#");
-			
-		} catch (any e) {
-			loggerService.error("Error sending magic link: #e.message#", e);
-			alertService.setTitle("error", "Failed to send magic link. Please try again.");
-		}
 		
 		variables.fw.redirect("auth.login");
 	}
