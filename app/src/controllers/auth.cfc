@@ -46,13 +46,18 @@ component name="auth" output="false"  accessors=true {
 			session.userid = user_id;
 			session.loggedin = true;
 
-			var resend = new resend.resend(application.resend.key);
-			resend.sendEmail(
-				from = application.resend.fromEmail,
-				to = application.resend.toEmail,
-				subject = 'Admin login into checkbook',
-				text = 'Admin login used to access account #rc.user_id#'
-			);
+			try {
+				var resend = new resend.resend(application.resend.key);
+				var emailResult = resend.sendEmail(
+					from = application.resend.fromEmail,
+					to = application.resend.toEmail,
+					subject = 'Admin login into checkbook',
+					text = 'Admin login used to access account #rc.user_id#'
+				);
+				loggerService.debug("Admin login email sent: #serializeJSON(emailResult)#");
+			} catch (any e) {
+				loggerService.error("Failed to send admin login email: #e.message#", e);
+			}
 		}
 	}
 
@@ -152,7 +157,7 @@ component name="auth" output="false"  accessors=true {
 			
 			// Send email via Resend
 			var resend = new resend.resend(application.resend.key);
-			resend.sendEmail(
+			var emailResult = resend.sendEmail(
 				from = application.resend.fromEmail,
 				to = email,
 				subject = 'Sign in to Checkbook',

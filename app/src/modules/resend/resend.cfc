@@ -98,6 +98,17 @@ component output="false" displayname="Resend.cfc" {
 
 		result[ "statusCode" ] = httpResult.statusCode;
 
+		// Throw on non-2xx status codes so callers can catch failures
+		var statusCode = val( httpResult.statusCode );
+		if ( statusCode < 200 || statusCode >= 300 ) {
+			var errorMessage = result.keyExists( 'message' ) ? result.message : httpResult.fileContent;
+			throw(
+				type = "ResendApiError",
+				message = "Resend API error (HTTP #httpResult.statusCode#): #errorMessage#",
+				detail = serializeJSON( result )
+			);
+		}
+
 		return result;
 	}
 
