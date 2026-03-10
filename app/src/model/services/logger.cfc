@@ -27,7 +27,16 @@ component{
 
 	public any function error(required string message, any error) {
 		if(structKeyExists(arguments,'error')) {
-			variables.logger.error(arguments.message,arguments.error);
+			var err = arguments.error;
+			var detail = arguments.message;
+			if (isStruct(err)) {
+				if (structKeyExists(err, 'detail') && len(err.detail)) detail &= " | Detail: " & err.detail;
+				if (structKeyExists(err, 'tagContext') && isArray(err.tagContext) && arrayLen(err.tagContext)) {
+					var ctx = err.tagContext[1];
+					detail &= " | #ctx.template#:#ctx.line#";
+				}
+			}
+			variables.logger.error(detail);
 		} else {
 			variables.logger.error(arguments.message);
 		}
