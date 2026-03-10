@@ -46,14 +46,13 @@ component name="auth" output="false"  accessors=true {
 			session.userid = user_id;
 			session.loggedin = true;
 
-			sg = new sendgrid.sendgrid(application.sendgrid.key);
-			mail = new sendgrid.helpers.mail()
-			.from( application.sendgrid.fromEmail )
-			.subject( 'Admin login into checkbook' )
-			.to( application.sendgrid.toEmail )
-			.plain( 'Admin login used to access account #rc.user_id#');
-
-			sg.sendMail(mail);
+			var resend = new resend.resend(application.resend.key);
+			resend.sendEmail(
+				from = application.resend.fromEmail,
+				to = application.resend.toEmail,
+				subject = 'Admin login into checkbook',
+				text = 'Admin login used to access account #rc.user_id#'
+			);
 		}
 	}
 
@@ -151,23 +150,22 @@ component name="auth" output="false"  accessors=true {
 			// Create magic link URL
 			var magicLinkUrl = "#application.root_path#?action=auth.login&email_auth=1&token=#token#";
 			
-			// Send email via SendGrid
-			var sg = new sendgrid.sendgrid(application.sendgrid.key);
-			var mail = new sendgrid.helpers.mail()
-				.from(application.sendgrid.fromEmail)
-				.subject("Sign in to Checkbook")
-				.to(email)
-				.html('
+			// Send email via Resend
+			var resend = new resend.resend(application.resend.key);
+			resend.sendEmail(
+				from = application.resend.fromEmail,
+				to = email,
+				subject = 'Sign in to Checkbook',
+				html = '
 					<h2>Sign In to Checkbook</h2>
 					<p>Click the link below to sign in. This link will expire in 1 hour.</p>
 					<p><a href="#magicLinkUrl#" style="background-color: ##4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Sign In</a></p>
 					<p>Or copy and paste this link into your browser:</p>
 					<p>#magicLinkUrl#</p>
 					<p>If you didn''t request this email, you can safely ignore it.</p>
-				')
-				.plain('Sign in to Checkbook. Click or copy this link: #magicLinkUrl#. This link expires in 1 hour.');
-			
-			sg.sendMail(mail);
+				',
+				text = 'Sign in to Checkbook. Click or copy this link: #magicLinkUrl#. This link expires in 1 hour.'
+			);
 			
 			alertService.setTitle("success", "Check your email! We've sent you a magic link to sign in.");
 			loggerService.debug("Magic link sent to: #email#");
