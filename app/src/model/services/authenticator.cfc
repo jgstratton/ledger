@@ -12,6 +12,7 @@ component output="false" accessors=true {
                 var loginToken = entityLoad("LoginToken", {token: token}, true);
                 if (!isNull(loginToken)) {
                     entityDelete(loginToken);
+                    ormFlush();
                 }
                 cfcookie(name="remember_me", expires="now");
             }
@@ -30,6 +31,7 @@ component output="false" accessors=true {
         loginToken.setExpires(expires);
         loginToken.setUser(arguments.user);
         entitySave(loginToken);
+        ormFlush();
 
         cfcookie(name="remember_me", value=token, expires="90");
         loggerService.debug("Created remember me token for user #user.getId()#");
@@ -49,6 +51,7 @@ component output="false" accessors=true {
                     // Token expired
                     loggerService.debug("Expired remember me token found");
                     entityDelete(loginToken);
+                    ormFlush();
                 }
             } else {
                 loggerService.debug("Invalid remember me token found");

@@ -144,12 +144,13 @@ component name="auth" output="false"  accessors=true {
 		var token = hash(createUUID() & now() & email, "SHA-256");
 		var expiresAt = dateAdd("h", 1, now()); // Token valid for 1 hour
 		
-		// Store token in session or database (using session for simplicity)
-		session.magicLinkToken = {
-			token: token,
-			email: email,
-			expiresAt: expiresAt
-		};
+		// Store token in database so it survives session expiration
+		var magicToken = entityNew("MagicLinkToken");
+		magicToken.setToken(token);
+		magicToken.setEmail(email);
+		magicToken.setExpires(expiresAt);
+		entitySave(magicToken);
+		ormFlush();
 		
 		// Create magic link URL
 		var magicLinkUrl = "#application.root_path#?action=auth.login&email_auth=1&token=#token#";
@@ -180,44 +181,39 @@ component name="auth" output="false"  accessors=true {
 
 	private void function verifyMagicLink(required struct rc) {
 		try {
-			// Check if token exists in session
-			if (!structKeyExists(session, "magicLinkToken")) {
-				rc.loginError = "No magic link token found";
+			// Look up token in database
+			var magicToken = entityLoad("MagicLinkToken", {token: rc.token}, true);
+			
+			if (isNull(magicToken)) {
 				throw(type="InvalidToken", message="No magic link token found");
 			}
 			
-			var storedToken = session.magicLinkToken;
-			
-			// Verify token matches
-			if (rc.token != storedToken.token) {
-				throw(type="InvalidToken", message="Token mismatch");
-			}
-			
 			// Check if token has expired
-			if (now() > storedToken.expiresAt) {
+			if (now() > magicToken.getExpires()) {
+				entityDelete(magicToken);
+				ormFlush();
 				throw(type="ExpiredToken", message="Token has expired");
 			}
 			
 			// Token is valid - log in the user
-			var user = variables.userService.getOrCreate(storedToken.email);
+			var email = magicToken.getEmail();
+			var user = variables.userService.getOrCreate(email);
 			session.userid = user.getId();
 			session.loggedin = true;
 			
 			// Create remember me token
 			variables.authenticatorService.createRememberMeToken(user);
 			
-			// Clear the used token
-			structDelete(session, "magicLinkToken");
+			// Delete the used token
+			entityDelete(magicToken);
+			ormFlush();
 			
-			loggerService.debug("User logged in via magic link: #storedToken.email#");
+			loggerService.debug("User logged in via magic link: #email#");
 			alertService.setTitle("success", "Welcome! You've successfully signed in.");
 			
 		} catch (any e) {
 			loggerService.error("Magic link verification failed: #e.message#", e);
 			alertService.setTitle("error", "Invalid or expired magic link. Please request a new one.");
-			
-			// Clear invalid token
-			structDelete(session, "magicLinkToken");
 		}
 	}
 }
